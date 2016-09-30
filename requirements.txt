@@ -1,6 +1,7 @@
 
-Django
-
-pytest
+Django==1.9
 
 git+https://github.com/arteria/django-compat
+
+pytest
+tox

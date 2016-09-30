@@ -1,5 +1,0 @@
-
-
-def apply_patches():
-
-

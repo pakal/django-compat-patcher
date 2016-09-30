@@ -36,7 +36,7 @@ setup(
     long_description=read("README.rst"),
 
     #package_dir={'': 'src'},
-    packages=["django_compat_patcher"],
+    packages=["django_compat_patcher", "django_compat_patcher.fixers"],
 
     # test_suite='your.module.tests',
 
