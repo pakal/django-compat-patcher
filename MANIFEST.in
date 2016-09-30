@@ -1,0 +1,7 @@
+include AUTHORS
+include CHANGELOG
+include LICENSE
+include VERSION
+include README.rst
+graft django_compat_patcher
+global-exclude *.orig *.pyc *.log *.swp

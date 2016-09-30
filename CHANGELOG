@@ -1,0 +1,5 @@
+
+Version 0.1
+=================
+
+* draft of dependency-injection architecture, to simplify the creation of fixers

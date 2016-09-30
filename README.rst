@@ -1,4 +1,5 @@
-# django-compat-patcher
+django-compat-patcher
+========================
 
 A "magic" package which adds retro/forward compatibility patches to Django, so that your app ecosystem doesn't get broken by trivial changes in the core of the framework.
 
