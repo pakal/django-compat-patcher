@@ -7,6 +7,15 @@ def get_django_version():
     return django.get_version()
 
 
+def inject_attribute(target_object, target_attrname, callable):
+    # TODO logging and warnings
+    setattr(target_object, target_attrname, callable)
+
+
+def inject_method(target_object, target_attrname, callable):
+    # TODO logging and warnings, as well as func.__name__ setup
+    setattr(target_object, target_attrname, callable)
+
 
 def inject_function_alias(source_object, source_attrname,
                           target_object, target_attrname):

@@ -25,5 +25,5 @@ def keep_request_post_get_mergedict(utils):
             self._request = datastructures.MergeDict(self.POST, self.GET)
         return self._request
 
-    WSGIRequest._get_request = _get_request_compat
-    WSGIRequest.REQUEST = property(_get_request_compat)
+    utils.inject_method(WSGIRequest, "_get_request", _get_request_compat)
+    utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request_compat))
