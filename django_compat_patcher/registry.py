@@ -22,7 +22,8 @@ def _extract_doc(func):
     return doc
 
 
-def register_compatibility_fixer(fixer_applied_from_django=None,
+def register_compatibility_fixer(fixer_family,
+                                   fixer_applied_from_django=None,
                                    fixer_applied_upto_django=None,
                                    feature_supported_from_django=None,
                                    feature_supported_upto_django=None):
@@ -36,13 +37,19 @@ def register_compatibility_fixer(fixer_applied_from_django=None,
 
     Version identifiers must be strings, eg. "1.9.1".
     """
+
+    assert fixer_family and fixer_family.startswith("django"), fixer_family
+
     def _register_simple_fixer(func):
-        new_fixer = dict(fixer_applied_from_django=_normalize_version(fixer_applied_from_django),
+        new_fixer = dict(fixer_callable=func,
+                         fixer_explanation=_extract_doc(func),
+                         fixer_id=func.__name__,
+                         fixer_family=fixer_family,
+                         fixer_applied_from_django=_normalize_version(fixer_applied_from_django),
                          fixer_applied_upto_django=_normalize_version(fixer_applied_upto_django),
                          feature_supported_from_django=_normalize_version(feature_supported_from_django),
-                         feature_supported_upto_django=_normalize_version(feature_supported_upto_django),
-                         fixer_callable=func,
-                         fixer_explanation=_extract_doc(func))
+                         feature_supported_upto_django=_normalize_version(feature_supported_upto_django),)
+
         FIXERS_REGISTRY.append(new_fixer)
         #print("FIXERS_REGISTRY", FIXERS_REGISTRY)
     return _register_simple_fixer

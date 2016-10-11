@@ -8,6 +8,7 @@ from ..deprecation import *
 
 
 django19_bc_fixer = partial(register_compatibility_fixer,
+                            fixer_family="django19",
                             fixer_applied_from_django="1.9")
 
 
