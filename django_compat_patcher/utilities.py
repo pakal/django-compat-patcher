@@ -1,5 +1,11 @@
 
 from functools import wraps, partial
+import warnings
+
+
+def warn(message, category=None, stacklevel=1):
+    # TODO put default category here ?
+    warnings.warn(message, category, stacklevel+1)
 
 
 def get_django_version():

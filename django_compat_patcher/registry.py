@@ -17,8 +17,7 @@ def _normalize_version(version):
 
 def _extract_doc(func):
     doc = func.__doc__
-    if not doc:
-        raise ValueError("Fixer %r must provide a help string" % func)
+    assert doc, "Fixer %r must provide a help string" % func
     return doc
 
 
