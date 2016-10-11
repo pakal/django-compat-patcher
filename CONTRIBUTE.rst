@@ -15,3 +15,4 @@ Recommendations:
 - also use functions from this "utils" object, to patch django code, not direct assignments
 - don't do global imports of django submodules or external libraries, import them from inside fixers instead
 - respect python/django standards for naming objects, spacings, etc.
+- make code py2/py3 compatible by using django.utils.six, and __future__ imports in all python files
