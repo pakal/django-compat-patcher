@@ -1,7 +1,7 @@
 
 import django
 
-from . import fixers, utils, registry
+from . import fixers, utilities, registry
 
 '''
 if not hasattr(django, "setup"):
@@ -15,4 +15,5 @@ def patch():
     print("Fixers are:", registry.FIXERS_REGISTRY)
     for fixer in sorted(registry.FIXERS_REGISTRY):
         #print("Applying fixer", fixer)
-        fixer["fixer_callable"](utils)
+        # TODO - create custom injected "utils" object with context information, logging, warnings, etc.
+        fixer["fixer_callable"](utilities)
