@@ -1,12 +1,19 @@
 
 import warnings
-from ..registry import register_backwards_compatibility_fixer
+from functools import partial
 
+from ..registry import register_compatibility_fixer
 from ..deprecation import *
 
 
-@register_backwards_compatibility_fixer()
+django19_bc_fixer = partial(register_compatibility_fixer,
+                            fixer_applied_from_django="1.9")
+
+
+@django19_bc_fixer()
 def keep_templatetags_future_url(utils):
+    "Preserve the `url` tag in the `future` templatetags library."
+    
     from django.template import defaulttags
     from django.templatetags import future
     new_tag = utils.inject_function_alias(defaulttags, "url",
@@ -14,8 +21,10 @@ def keep_templatetags_future_url(utils):
     future.register.tag(new_tag)
 
 
-@register_backwards_compatibility_fixer()
+@django19_bc_fixer()
 def keep_request_post_get_mergedict(utils):
+    "Preserve the `request.REQUEST` attribute, merging parameters from GET and POST (the latter has precedence)."
+
     from django.core.handlers.wsgi import WSGIRequest
     from .. import datastructures
     def _get_request_compat(self):

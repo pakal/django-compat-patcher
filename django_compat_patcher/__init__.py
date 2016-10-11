@@ -12,6 +12,7 @@ if not hasattr(django, "setup"):
 
 
 def patch():
-    for k, v in sorted(registry.FIXERS_REGISTRY.items()):
-        #print("Calling fixer", k)
-        v(utils)
+    print("Fixers are:", registry.FIXERS_REGISTRY)
+    for fixer in sorted(registry.FIXERS_REGISTRY):
+        #print("Applying fixer", fixer)
+        fixer["fixer_callable"](utils)
