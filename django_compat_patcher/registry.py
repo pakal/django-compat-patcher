@@ -63,6 +63,7 @@ def get_relevant_fixers(current_django_version,
                         # included_fixer_ids=None,
                         # excluded_families=None,
                         # excluded_fixer_ids=None
+                        # TODO define these filters, and fetch them from django settings
                         log=None):
     """
     Selects the fixers to be applied on the target django version, based on the

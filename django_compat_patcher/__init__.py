@@ -14,7 +14,8 @@ if not hasattr(django, "setup"):
 
 def patch():
     print("Fixers are:", registry.FIXERS_REGISTRY)
-    for fixer in registry.FIXERS_REGISTRY.values():
+    django_version = django.get_version()
+    for fixer in registry.get_relevant_fixers(current_django_version=django_version):
         #print("Applying fixer", fixer)
         # TODO - create custom injected "utils" object with context information, logging, warnings, etc.
         fixer["fixer_callable"](utilities)

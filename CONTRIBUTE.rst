@@ -9,7 +9,7 @@ It must be self-documented, using decorator arguments and docstrings (we do NOT 
 It must also be as robust as possible - this lib is supposed to workaround breakages, not introduce new ones.
 
 
-Recommendations:
+**Recommendations:**
 
 - in fixers : don't do logging or warnings by yourself, use the injected "utils" object instead
 - also use functions from this "utils" object, to patch django code, not direct assignments
