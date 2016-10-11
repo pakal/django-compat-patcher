@@ -1,8 +1,9 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
+import collections
 from django.utils import six
 
-FIXERS_REGISTRY = []
+FIXERS_REGISTRY = collections.OrderedDict()
 
 
 def _normalize_version(version):
@@ -41,16 +42,17 @@ def register_compatibility_fixer(fixer_family,
     assert fixer_family and fixer_family.startswith("django"), fixer_family
 
     def _register_simple_fixer(func):
+        fixer_id = func.__name__  # untouched ATM, not fully qualified
         new_fixer = dict(fixer_callable=func,
                          fixer_explanation=_extract_doc(func),
-                         fixer_id=func.__name__,
+                         fixer_id=fixer_id,
                          fixer_family=fixer_family,
                          fixer_applied_from_django=_normalize_version(fixer_applied_from_django),
                          fixer_applied_upto_django=_normalize_version(fixer_applied_upto_django),
                          feature_supported_from_django=_normalize_version(feature_supported_from_django),
                          feature_supported_upto_django=_normalize_version(feature_supported_upto_django),)
 
-        FIXERS_REGISTRY.append(new_fixer)
+        FIXERS_REGISTRY[fixer_id] = new_fixer
         #print("FIXERS_REGISTRY", FIXERS_REGISTRY)
     return _register_simple_fixer
 
