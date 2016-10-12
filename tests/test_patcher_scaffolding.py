@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-import os, sys
+import os, sys, random
 import pytest
 
 
@@ -16,15 +16,17 @@ from django_compat_patcher import patch
 def test_get_patcher_setting():
     with pytest.raises(AttributeError): 
         get_patcher_setting("DEBUG")  # only DCP settings allowed
-    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS") is None
-    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS",settings=dict(DCP_INCLUDE_FIXER_IDS=345)) == 345
+    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS") == "*"
+    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS", settings=dict(DCP_INCLUDE_FIXER_IDS=["a"])) == ["a"]
     
     # TODO patch django settings to check that they are used IFF no parameter "settings"
 
 
 def test_get_relevant_fixer_ids():
+    
+    settings = random.choice(({}, None))
 
-    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9")
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert fixer_ids == ['keep_templatetags_future_url', 'keep_request_post_get_mergedict']
 
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.10")
@@ -35,7 +37,35 @@ def test_get_relevant_fixer_ids():
 
     # TODO update this test when new fixers arrive, and test inclusion/exclusion filters
 
+    settings = dict(DCP_INCLUDE_FIXER_IDS="*",
+                    DCP_INCLUDE_FIXER_FAMILIES=[],
+                    DCP_EXCLUDE_FIXER_IDS=[],
+                    DCP_EXCLUDE_FIXER_FAMILIES=[])  
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert len(fixer_ids) >= 2
 
+    settings = dict(DCP_INCLUDE_FIXER_IDS=['keep_templatetags_future_url'],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django19"],
+                    DCP_EXCLUDE_FIXER_IDS=[],
+                    DCP_EXCLUDE_FIXER_FAMILIES=["django19"])  
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert fixer_ids == []
+
+    settings = dict(DCP_INCLUDE_FIXER_IDS=['keep_templatetags_future_url'],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django19"],
+                    DCP_EXCLUDE_FIXER_IDS=['keep_templatetags_future_url'],
+                    DCP_EXCLUDE_FIXER_FAMILIES=[])  
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert fixer_ids == ['keep_request_post_get_mergedict']
+
+    settings = dict(DCP_INCLUDE_FIXER_IDS=[],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django19"],
+                    DCP_EXCLUDE_FIXER_IDS=[],
+                    DCP_EXCLUDE_FIXER_FAMILIES="*")  
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert fixer_ids == []    
+    
+    
 def test_get_fixer_by_id():
 
     res = get_fixer_by_id("keep_templatetags_future_url")

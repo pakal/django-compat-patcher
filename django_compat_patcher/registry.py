@@ -81,6 +81,7 @@ def get_relevant_fixers(current_django_version,
 
     log = log or (lambda x: x)
 
+    ALL = "*"  # special value for patcher settings
     include_fixer_ids = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_IDS", settings=settings)
     include_fixer_families = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_FAMILIES", settings=settings)
     exclude_fixer_ids = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_IDS", settings=settings)
@@ -99,23 +100,24 @@ def get_relevant_fixers(current_django_version,
             assert False, "Please update tests to account for first 'fixer_applied_upto_django' usage"
             log("Skipping fixer %s, useful only in previous django versions" % fixer_id)
             continue
-        """
-        if include_fixer_ids is not None and (fixer_id not in include_fixer_ids):
-            log("Skipping fixer %s, not included by patcher settings" % fixer_id)
-            continue
-
-        if include_fixer_families is not None and (fixer["fixer_family"] not in include_fixer_families):
-            log("Skipping fixer %s, having family %s not included by patcher settings" % (fixer_id, fixer["fixer_family"]))
-            continue
         
-        if exclude_fixer_ids is not None and (fixer_id in exclude_fixer_ids):
+        included = False
+        if include_fixer_ids == ALL or (fixer_id in include_fixer_ids):
+            included = True
+        if include_fixer_families == ALL and (fixer["fixer_family"] in include_fixer_families):
+            included = True
+            
+        if not included:
+            log("Skipping fixer having neither id (%s) nor family (%s) included by patcher settings" % (fixer_id, fixer["fixer_family"]))
+        
+        if exclude_fixer_ids == ALL or (fixer_id in exclude_fixer_ids):
             log("Skipping fixer %s, excluded by patcher settings" % fixer_id)
             continue
 
-        if exclude_fixer_families is not None and (fixer["fixer_family"] in exclude_fixer_families):
+        if exclude_fixer_families == ALL or (fixer["fixer_family"] in exclude_fixer_families):
             log("Skipping fixer %s, having family %s excluded by patcher settings" % (fixer_id, fixer["fixer_family"]))
             continue
-         """
+
         # cheers, this fixer has passed all filters!
         relevant_fixers.append(fixer)
 
