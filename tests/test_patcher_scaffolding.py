@@ -9,7 +9,17 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import _test_utilities  # initializes django
 
 from django_compat_patcher.registry import get_relevant_fixers, get_relevant_fixer_ids, get_fixer_by_id
+from django_compat_patcher.utilities import get_patcher_setting
 from django_compat_patcher import patch
+
+
+def test_get_patcher_setting():
+    with pytest.raises(AttributeError): 
+        get_patcher_setting("DEBUG")  # only DCP settings allowed
+    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS") is None
+    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS",settings=dict(DCP_INCLUDE_FIXER_IDS=345)) == 345
+    
+    # TODO patch django settings to check that they are used IFF no parameter "settings"
 
 
 def test_get_relevant_fixer_ids():
