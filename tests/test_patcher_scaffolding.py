@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import _test_utilities  # initializes django
 
 from django_compat_patcher.registry import get_relevant_fixers, get_relevant_fixer_ids
-
+from django_compat_patcher import patch
 
 
 def test_get_relevant_fixers():
@@ -22,3 +22,9 @@ def test_get_relevant_fixers():
     assert fixer_ids == []
 
     # TODO update this test when new fixers arrive, and test inclusion/exclusion filters
+
+
+def test_django_patcher():
+    
+    applied_fixer_ids = patch()
+    assert len(applied_fixer_ids) > 0  # todo strengthen this tets?

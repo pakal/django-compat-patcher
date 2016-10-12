@@ -8,6 +8,8 @@ from django.utils import six
 
 from .deprecation import *
 
+# FIXME move this to "removed !!", since it's stuff from old django
+
 class MergeDict(object):
     """
     A simple class for creating new "virtual" dictionaries that actually look
