@@ -4,6 +4,8 @@ import logging
 import warnings
 from functools import wraps, partial
 
+from django.utils import six
+
 
 # use this logger, from inside fixers!
 logger = logging.getLogger("django.compat.patcher")
@@ -26,6 +28,8 @@ def get_patcher_setting(name, settings=None):
     settings = settings if isinstance(settings, dict) else settings.__dict__
     default = getattr(default_settings, name)  # will break if unknown setting
     setting = settings.get(name, default)
+    assert (setting == "*" or (isinstance(setting, list) and 
+                              all(isinstance(f, six.string_types) for f in setting))), setting
     return setting
 
 

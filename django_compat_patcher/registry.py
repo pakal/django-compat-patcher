@@ -71,8 +71,8 @@ def get_relevant_fixers(current_django_version,
     Selects the fixers to be applied on the target django version, based on the
     metadata of fixers, but also inclusion/exclusion lists provided as arguments.
 
-    For inclusion filters, a None value means "include all", for exclusion filters
-    it means "don't exclude any".
+    For inclusion/exclusion filters, a special "*" value means "all fixers", 
+    else a list of strings is expected.
     """
     
     current_django_version = _normalize_version(current_django_version)
@@ -99,7 +99,7 @@ def get_relevant_fixers(current_django_version,
             assert False, "Please update tests to account for first 'fixer_applied_upto_django' usage"
             log("Skipping fixer %s, useful only in previous django versions" % fixer_id)
             continue
-            
+        """
         if include_fixer_ids is not None and (fixer_id not in include_fixer_ids):
             log("Skipping fixer %s, not included by patcher settings" % fixer_id)
             continue
@@ -115,7 +115,7 @@ def get_relevant_fixers(current_django_version,
         if exclude_fixer_families is not None and (fixer["fixer_family"] in exclude_fixer_families):
             log("Skipping fixer %s, having family %s excluded by patcher settings" % (fixer_id, fixer["fixer_family"]))
             continue
-
+         """
         # cheers, this fixer has passed all filters!
         relevant_fixers.append(fixer)
 
