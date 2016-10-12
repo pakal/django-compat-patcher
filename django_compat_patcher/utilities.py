@@ -1,12 +1,18 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-from functools import wraps, partial
+import logging
 import warnings
+from functools import wraps, partial
 
 
-def warn(message, category=None, stacklevel=1):
+# use this logger, from inside fixers!
+logger = logging.getLogger("django.compat.patcher")
+
+
+def emit_warning(message, category=None, stacklevel=1):
     # TODO put default category here ?
     warnings.warn(message, category, stacklevel+1)
+
 
 
 def get_django_version():

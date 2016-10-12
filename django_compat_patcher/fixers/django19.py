@@ -32,7 +32,7 @@ def keep_request_post_get_mergedict(utils):
     from django.core.handlers.wsgi import WSGIRequest
     from .. import datastructures
     def _get_request_compat(self):
-        utils.warn('`request.REQUEST` is deprecated, use `request.GET` or '
+        utils.emit_warning('`request.REQUEST` is deprecated, use `request.GET` or '
                        '`request.POST` instead.', RemovedInDjango19Warning, 2)
         if not hasattr(self, '_request'):
             self._request = datastructures.MergeDict(self.POST, self.GET)
