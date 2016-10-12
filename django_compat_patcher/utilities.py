@@ -14,10 +14,19 @@ def emit_warning(message, category=None, stacklevel=1):
     warnings.warn(message, category, stacklevel+1)
 
 
-
 def get_django_version():
     import django
     return django.get_version()
+
+
+def get_patcher_setting(name, settings=None):
+    from django.conf import settings as django_settings
+    from . import default_settings
+    settings = settings if settings is not None else django_settings
+    settings = settings if isinstance(settings, dict) else settings.__dict__
+    default = getattr(default_settings, name)  # will break if unknown setting
+    setting = settings.get(name, default)
+    return setting
 
 
 def inject_attribute(target_object, target_attrname, callable):

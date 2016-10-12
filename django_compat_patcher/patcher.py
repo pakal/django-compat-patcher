@@ -5,7 +5,7 @@ from . import fixers, utilities, deprecation, registry
 def patch(settings=None):
     """Patches the Django package with relevant fixers.
     
-    A settings dict/objects can be provided, to prevent using Django settings.
+    A settings dict/objects can be provided, to REPLACE lookups in Django settings.
     
     Returns a list of ids of fixers applied.
     """
