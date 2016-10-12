@@ -99,9 +99,24 @@ def get_relevant_fixers(current_django_version,
             assert False, "Please update tests to account for first 'fixer_applied_upto_django' usage"
             log("Skipping fixer %s, useful only in previous django versions" % fixer_id)
             continue
+            
+        if include_fixer_ids is not None and (fixer_id not in include_fixer_ids):
+            log("Skipping fixer %s, not included by patcher settings" % fixer_id)
+            continue
 
-        # TODO - inclusion and exclusion filtering (and its logging)
+        if include_fixer_families is not None and (fixer["fixer_family"] not in include_fixer_families):
+            log("Skipping fixer %s, having family %s not included by patcher settings" % (fixer_id, fixer["fixer_family"]))
+            continue
+        
+        if exclude_fixer_ids is not None and (fixer_id in exclude_fixer_ids):
+            log("Skipping fixer %s, excluded by patcher settings" % fixer_id)
+            continue
 
+        if exclude_fixer_families is not None and (fixer["fixer_family"] in exclude_fixer_families):
+            log("Skipping fixer %s, having family %s excluded by patcher settings" % (fixer_id, fixer["fixer_family"]))
+            continue
+
+        # cheers, this fixer has passed all filters!
         relevant_fixers.append(fixer)
 
     return relevant_fixers
