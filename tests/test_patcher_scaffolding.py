@@ -1,16 +1,18 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os, sys
+import pytest
+
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import _test_utilities  # initializes django
 
-from django_compat_patcher.registry import get_relevant_fixers, get_relevant_fixer_ids
+from django_compat_patcher.registry import get_relevant_fixers, get_relevant_fixer_ids, get_fixer_by_id
 from django_compat_patcher import patch
 
 
-def test_get_relevant_fixers():
+def test_get_relevant_fixer_ids():
 
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9")
     assert fixer_ids == ['keep_templatetags_future_url', 'keep_request_post_get_mergedict']
@@ -22,6 +24,18 @@ def test_get_relevant_fixers():
     assert fixer_ids == []
 
     # TODO update this test when new fixers arrive, and test inclusion/exclusion filters
+
+
+def test_get_fixer_by_id():
+
+    res = get_fixer_by_id("keep_templatetags_future_url")
+    assert isinstance(res, dict)
+    assert res["fixer_id"] == "keep_templatetags_future_url"
+    
+    with pytest.raises(LookupError):
+        get_fixer_by_id("ddssdfsdfsdf")
+    
+    
 
 
 def test_django_patcher():

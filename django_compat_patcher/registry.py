@@ -3,6 +3,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import collections
 from django.utils import six
 
+from . import default_settings
+
 FIXERS_REGISTRY = collections.OrderedDict()
 
 
@@ -58,12 +60,17 @@ def register_compatibility_fixer(fixer_family,
     return _register_simple_fixer
 
 
+def get_fixer_by_id(fixer_id):
+    return FIXERS_REGISTRY[fixer_id]
+
+
 def get_relevant_fixers(current_django_version,
                         # included_families=None,
                         # included_fixer_ids=None,
                         # excluded_families=None,
                         # excluded_fixer_ids=None
                         # TODO define these filters, and fetch them from django settings
+                        settings=None,
                         log=None):
     """
     Selects the fixers to be applied on the target django version, based on the
@@ -76,6 +83,8 @@ def get_relevant_fixers(current_django_version,
     current_django_version = _normalize_version(current_django_version)
 
     relevant_fixers = []
+    settings = settings or default_settings
+    settings = settings if isinstance(settings, dict) else settings.__dict__ 
     log = log or (lambda x: x)
 
     for fixer_id, fixer in FIXERS_REGISTRY.items():
