@@ -45,30 +45,52 @@ def get_patcher_setting(name, settings=None):
 
 
 def inject_attribute(target_object, target_attrname, attribute):
+    """
+    :param target_object: The object to patch
+    :param target_attrname: The name given to the new attribute in the object to patch
+    :param attribute: The attribute to inject : must not be a class, or a callable (that is not a class)
+    """
     # TODO logging and warnings
     assert attribute is not None
     assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types))
     setattr(target_object, target_attrname, attribute)
 
 
-def inject_callable(target_object, target_attrname, patch_callable):
-    # TODO logging and warnings, as well as func.__name__ setup
+def inject_callable(target_object, target_callable_name, patch_callable):
+    """
+    :param target_object: The object to patch
+    :param target_callable_name: The name given to the new callable in the object to patch
+    :param patch_callable: The callable to inject : must me a callable, but not a class
+    """
+    # TODO logging and warnings
     assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial))
+
     _patch_object__name__(patch_callable)
-    setattr(target_object, target_attrname, patch_callable)
+    setattr(target_object, target_callable_name, patch_callable)
 
 
 def inject_module(target_module_name, target_module):
+    """
+    :param target_module_name:  The name of the new module
+    :param target_module: The new module
+    """
     # TODO logging and warnings
     target_module_name = str(target_module_name)  # Python2 compatibility
     assert isinstance(target_module, types.ModuleType)
     assert sys.modules.get(target_module_name) is None
+
     sys.modules[target_module_name] = target_module
 
 
 def inject_class(target_object, target_attrname, klass):
-    # TODO logging and warnings, as well as func.__name__ setup
+    """
+    :param target_object: The object to patch
+    :param target_attrname: The name given to the new class in the object to patch
+    :param klass: The class to inject : must be a class
+    """
+    # TODO logging and warnings
     assert isinstance(klass, six.class_types)
+
     _patch_object__name__(klass)
     setattr(target_object, target_attrname, klass)
 
