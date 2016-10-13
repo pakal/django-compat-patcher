@@ -27,11 +27,13 @@ def test_get_relevant_fixer_ids():
     settings = random.choice(({}, None))
 
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
-    assert [expected_fixer_id in fixer_ids for expected_fixer_id in ['keep_templatetags_future_url', 'keep_request_post_get_mergedict']]
+    assert [expected_fixer_id in fixer_ids for expected_fixer_id in
+            ['fix_deletion_templatetags_future_url', 'fix_deletion_request_post_get_mergedict']]
     assert len(fixer_ids) > 5
 
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.10")
-    assert [expected_fixer_id in fixer_ids for expected_fixer_id in ['keep_templatetags_future_url', 'keep_request_post_get_mergedict']]
+    assert [expected_fixer_id in fixer_ids for expected_fixer_id in
+            ['fix_deletion_templatetags_future_url', 'fix_deletion_request_post_get_mergedict']]
     assert len(fixer_ids) > 5
 
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.8")
@@ -46,19 +48,19 @@ def test_get_relevant_fixer_ids():
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert len(fixer_ids) >= 2
 
-    settings = dict(DCP_INCLUDE_FIXER_IDS=['keep_templatetags_future_url'],
+    settings = dict(DCP_INCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
                     DCP_INCLUDE_FIXER_FAMILIES=["django19"],
                     DCP_EXCLUDE_FIXER_IDS=[],
                     DCP_EXCLUDE_FIXER_FAMILIES=["django19"])  
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert fixer_ids == []
 
-    settings = dict(DCP_INCLUDE_FIXER_IDS=['keep_templatetags_future_url'],
+    settings = dict(DCP_INCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
                     DCP_INCLUDE_FIXER_FAMILIES=["django19"],
-                    DCP_EXCLUDE_FIXER_IDS=['keep_templatetags_future_url'],
+                    DCP_EXCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
                     DCP_EXCLUDE_FIXER_FAMILIES=[])  
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
-    assert 'keep_request_post_get_mergedict' in fixer_ids
+    assert 'fix_deletion_request_post_get_mergedict' in fixer_ids
 
     settings = dict(DCP_INCLUDE_FIXER_IDS=[],
                     DCP_INCLUDE_FIXER_FAMILIES=["django19"],
@@ -69,10 +71,9 @@ def test_get_relevant_fixer_ids():
     
     
 def test_get_fixer_by_id():
-
-    res = get_fixer_by_id("keep_templatetags_future_url")
+    res = get_fixer_by_id("fix_deletion_templatetags_future_url")
     assert isinstance(res, dict)
-    assert res["fixer_id"] == "keep_templatetags_future_url"
+    assert res["fixer_id"] == "fix_deletion_templatetags_future_url"
     
     with pytest.raises(LookupError):
         get_fixer_by_id("ddssdfsdfsdf")

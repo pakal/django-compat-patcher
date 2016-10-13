@@ -6,7 +6,6 @@ from functools import partial
 from ..registry import register_compatibility_fixer
 from ..deprecation import *
 
-
 # for backward-compatibility fixers
 django19_bc_fixer = partial(register_compatibility_fixer,
                             fixer_family="django19",
@@ -14,7 +13,7 @@ django19_bc_fixer = partial(register_compatibility_fixer,
 
 
 @django19_bc_fixer()
-def keep_templatetags_future_url(utils):
+def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guidelines
     "Preserve the `url` tag in the `future` templatetags library."
 
     from django.template import defaulttags
@@ -25,7 +24,67 @@ def keep_templatetags_future_url(utils):
 
 
 @django19_bc_fixer()
-def keep_request_post_get_mergedict(utils):
+def fix_deletion_utils_datastructures_MergeDict(utils):
+    """
+    Preserve the MergeDict util datastructure
+    """
+    from django.utils import datastructures as dj_datastructures
+    from ..removed.django19 import datastructures
+    utils.inject_attribute(dj_datastructures, "MergeDict", datastructures.MergeDict)
+
+
+@django19_bc_fixer()
+def fix_deletion_utils_datastructures_SortedDict(utils):
+    """
+    Preserve the SortedDict util datastructure
+    """
+    from django.utils import datastructures as dj_datastructures
+    from ..removed.django19 import datastructures
+    utils.inject_attribute(dj_datastructures, "SortedDict", datastructures.SortedDict)
+
+
+@django19_bc_fixer()
+def fix_deletion_utils_dictconfig(utils):
+    """
+    Preserve the dictconfig util file
+    """
+    from django import utils as dj_utils
+    from ..removed.django19 import utils_dictconfig
+    utils.inject_attribute(dj_utils, "dictconfig", utils_dictconfig)
+
+
+@django19_bc_fixer()
+def fix_deletion_utils_importlib(utils):
+    """
+    Preserve the importlib util file
+    """
+    from django import utils as dj_utils
+    from ..removed.django19 import utils_importlib
+    utils.inject_attribute(dj_utils, "importlib", utils_importlib)
+
+
+@django19_bc_fixer()
+def fix_deletion_utils_tzinfo(utils):
+    """
+    Preserve the tzinfo util file
+    """
+    from django import utils as dj_utils
+    from ..removed.django19 import utils_tzinfo
+    utils.inject_attribute(dj_utils, "tzinfo", utils_tzinfo)
+
+
+@django19_bc_fixer()
+def fix_deletion_utils_unittest(utils):
+    """
+    Preserve the unittest util file
+    """
+    from django import utils as dj_utils
+    from ..removed.django19 import utils_unittest
+    utils.inject_attribute(dj_utils, "unittest", utils_unittest)
+
+
+@django19_bc_fixer()
+def fix_deletion_request_post_get_mergedict(utils):  # TODO rename to fit new guidelines
     "Preserve the `request.REQUEST` attribute, merging parameters from GET "
     "and POST (the latter has precedence)."
 
@@ -33,7 +92,7 @@ def keep_request_post_get_mergedict(utils):
     from ..removed.django19 import datastructures
     def _get_request_compat(self):
         utils.emit_warning('`request.REQUEST` is deprecated, use `request.GET` or '
-                       '`request.POST` instead.', RemovedInDjango19Warning, 2)
+                           '`request.POST` instead.', RemovedInDjango19Warning, 2)
         if not hasattr(self, '_request'):
             self._request = datastructures.MergeDict(self.POST, self.GET)
         return self._request
@@ -41,8 +100,9 @@ def keep_request_post_get_mergedict(utils):
     utils.inject_method(WSGIRequest, "_get_request", _get_request_compat)
     utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request_compat))
 
+
 @django19_bc_fixer()
-def keep_modeladmin_get_formsets(utils):
+def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
     """
     Preserve the get_formsets method of ModelAdmin
     """
@@ -65,44 +125,3 @@ def keep_modeladmin_get_formsets(utils):
 
     utils.inject_method(ModelAdmin, "_get_formsets", _get_formsets_compat)
     utils.inject_method(ModelAdmin, "get_formsets", get_formsets_compat)
-
-
-@django19_bc_fixer()
-def keep_utils_dictconfig(utils):
-    """
-    Preserve the dictconfig util file
-    """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_dictconfig
-    utils.inject_attribute(dj_utils, "dictconfig", utils_dictconfig)
-
-
-@django19_bc_fixer()
-def keep_utils_importlib(utils):
-    """
-    Preserve the importlib util file
-    """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_importlib
-    utils.inject_attribute(dj_utils, "importlib", utils_importlib)
-
-
-@django19_bc_fixer()
-def keep_utils_tzinfo(utils):
-    """
-    Preserve the tzinfo util file
-    """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_tzinfo
-    utils.inject_attribute(dj_utils, "tzinfo", utils_tzinfo)
-
-
-@django19_bc_fixer()
-def keep_utils_unittest(utils):
-    """
-    Preserve the unittest util file
-    """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_unittest
-    utils.inject_attribute(dj_utils, "unittest", utils_unittest)
-

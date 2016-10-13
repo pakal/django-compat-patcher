@@ -47,17 +47,27 @@ def test_keep_modeladmin_get_formsets():
     assert ma.get_fieldsets(request=MockRequest()) == [(None, {'fields': ['name', 'age', 'is_active']})]
 
 
-def test_keep_utils_importlib():
+def test_fix_deletion_utils_datastructures_MergeDict():
+    from django.utils.datastructures import MergeDict
+    MergeDict()
+
+
+def test_deletion_utils_datastructures_SortedDict():
+    from django.utils.datastructures import SortedDict
+    SortedDict()
+
+
+def test_deletion_utils_importlib():
     from django.utils import importlib
 
 
-def test_keep_utils_tzinfo():
+def test_deletion_utils_tzinfo():
     from django.utils import tzinfo
 
 
-def test_keep_utils_dictconfig():
+def test_deletion_utils_dictconfig():
     from django.utils import dictconfig
 
 
-def test_keep_utils_unittest():
+def test_deletion_utils_unittest():
     from django.utils import unittest
