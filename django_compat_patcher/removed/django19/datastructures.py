@@ -6,9 +6,7 @@ from collections import OrderedDict
 
 from django.utils import six
 
-from .deprecation import *
-
-# FIXME move this to "removed !!", since it's stuff from old django
+from django_compat_patcher.deprecation import *
 
 class MergeDict(object):
     """

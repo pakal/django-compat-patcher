@@ -30,7 +30,7 @@ def keep_request_post_get_mergedict(utils):
     "and POST (the latter has precedence)."
 
     from django.core.handlers.wsgi import WSGIRequest
-    from .. import datastructures
+    from ..removed.django19 import datastructures
     def _get_request_compat(self):
         utils.emit_warning('`request.REQUEST` is deprecated, use `request.GET` or '
                        '`request.POST` instead.', RemovedInDjango19Warning, 2)
