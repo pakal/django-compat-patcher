@@ -143,3 +143,11 @@ def test_fix_deletion_django_core_management_base_AppCommand_handle_app():
 
     res = DummyAppCommand().handle_app_config(appconfig, other_arg=12)
     assert res == 33
+
+
+def __test_fix_deletion_contrib_sites_models_RequestSite():
+    from django.contrib.sites.models import RequestSite
+
+
+def __test_fix_deletion_contrib_sites_models_get_current_site():
+    from django.contrib.sites.models import get_current_site

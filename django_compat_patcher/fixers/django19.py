@@ -197,3 +197,29 @@ def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
             return handle_app(app_config.models_module, **options)
 
     utils.inject_callable(AppCommand, "handle_app_config", handle_app_config)
+
+
+#@django19_bc_fixer()
+def fix_deletion_contrib_sites_models_RequestSite(utils):
+    """Preserve contrib.sites.models.RequestSite alias."""
+    import django.contrib.sites.models
+    from django.contrib.sites.requests import RequestSite as RealRequestSite
+    class RequestSite(RealRequestSite):
+        def __init__(self, *args, **kwargs):
+            utils.emit_warning(
+                "Please import RequestSite from django.contrib.sites.requests.",
+                RemovedInDjango19Warning, stacklevel=2)
+            super(RequestSite, self).__init__(*args, **kwargs)
+    utils.inject_class(django.contrib.sites.models, "RequestSite", RequestSite)
+
+
+#@django19_bc_fixer()
+def fix_deletion_contrib_sites_models_get_current_site(utils):
+    """Preserve contrib.sites.models.get_current_site alias."""
+    from django.contrib.sites.shortcuts import get_current_site as real_get_current_site
+    def get_current_site(request):
+        utils.emit_warning(
+            "Please import get_current_site from django.contrib.sites.shortcuts.",
+            RemovedInDjango19Warning, stacklevel=2)
+        return real_get_current_site(request)
+    utils.inject_attribute(django.contrib.sites.models, "get_current_site", get_current_site)
