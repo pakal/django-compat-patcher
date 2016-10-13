@@ -117,7 +117,7 @@ def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
             yield inline.get_formset(request, obj)
 
     def get_formsets_compat(self, request, obj=None):
-        warnings.warn(
+        warnings.warn(  # TODO change all warnings.warn to emit_warning util
             "ModelAdmin.get_formsets() is deprecated Use ModelAdmin.get_formsets_with_inlines() instead.",
             RemovedInDjango19Warning, stacklevel=2
         )
