@@ -19,7 +19,7 @@ def fix_deletion_utils_datastructures_MergeDict(utils):
     Preserve the MergeDict util datastructure
     """
     from django.utils import datastructures as dj_datastructures
-    from ..removed.django19.datastructures import MergeDict as MergeDictCompat
+    from ..django_legacy.django19.datastructures import MergeDict as MergeDictCompat
     utils.inject_attribute(dj_datastructures, "MergeDict", MergeDictCompat)
 
 
@@ -29,7 +29,7 @@ def fix_deletion_utils_datastructures_SortedDict(utils):
     Preserve the SortedDict util datastructure
     """
     from django.utils import datastructures as dj_datastructures
-    from ..removed.django19.datastructures import SortedDict as SortedDictCompat
+    from ..django_legacy.django19.datastructures import SortedDict as SortedDictCompat
     utils.inject_attribute(dj_datastructures, "SortedDict", SortedDictCompat)
 
 
@@ -38,7 +38,7 @@ def fix_deletion_utils_dictconfig(utils):
     """
     Preserve the dictconfig util file
     """
-    from django_compat_patcher.removed.django19.utils import dictconfig as dictconfig_compat
+    from django_compat_patcher.django_legacy.django19.utils import dictconfig as dictconfig_compat
     utils.inject_module("django.utils.dictconfig", dictconfig_compat)
 
 
@@ -47,7 +47,7 @@ def fix_deletion_utils_importlib(utils):
     """
     Preserve the importlib util file
     """
-    from django_compat_patcher.removed.django19.utils import importlib as importlib_compat
+    from django_compat_patcher.django_legacy.django19.utils import importlib as importlib_compat
     utils.inject_module("django.utils.importlib", importlib_compat)
 
 
@@ -56,7 +56,7 @@ def fix_deletion_utils_tzinfo(utils):
     """
     Preserve the tzinfo util file
     """
-    from django_compat_patcher.removed.django19.utils import tzinfo as tzinfo_compat
+    from django_compat_patcher.django_legacy.django19.utils import tzinfo as tzinfo_compat
     utils.inject_module("django.utils.tzinfo", tzinfo_compat)
 
 
@@ -65,7 +65,7 @@ def fix_deletion_utils_unittest(utils):
     """
     Preserve the unittest util file
     """
-    from django_compat_patcher.removed.django19.utils import unittest as unittest_compat
+    from django_compat_patcher.django_legacy.django19.utils import unittest as unittest_compat
     utils.inject_module("django.utils.unittest", unittest_compat)
 
 
