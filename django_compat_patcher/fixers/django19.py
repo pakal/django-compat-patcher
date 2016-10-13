@@ -43,6 +43,9 @@ def keep_request_post_get_mergedict(utils):
 
 @django19_bc_fixer()
 def keep_modeladmin_get_formsets(utils):
+    """
+    Preserve the get_formsets method of ModelAdmin
+    """
     from django.contrib.admin import ModelAdmin
 
     def _get_formsets_compat(self, request, obj):
@@ -66,6 +69,9 @@ def keep_modeladmin_get_formsets(utils):
 
 @django19_bc_fixer()
 def keep_utils_dictconfig(utils):
+    """
+    Preserve the dictconfig util file
+    """
     from django import utils as dj_utils
     from ..removed.django19 import utils_dictconfig
     utils.inject_attribute(dj_utils, "dictconfig", utils_dictconfig)
@@ -73,6 +79,9 @@ def keep_utils_dictconfig(utils):
 
 @django19_bc_fixer()
 def keep_utils_importlib(utils):
+    """
+    Preserve the importlib util file
+    """
     from django import utils as dj_utils
     from ..removed.django19 import utils_importlib
     utils.inject_attribute(dj_utils, "importlib", utils_importlib)
@@ -80,6 +89,9 @@ def keep_utils_importlib(utils):
 
 @django19_bc_fixer()
 def keep_utils_tzinfo(utils):
+    """
+    Preserve the tzinfo util file
+    """
     from django import utils as dj_utils
     from ..removed.django19 import utils_tzinfo
     utils.inject_attribute(dj_utils, "tzinfo", utils_tzinfo)
@@ -87,6 +99,9 @@ def keep_utils_tzinfo(utils):
 
 @django19_bc_fixer()
 def keep_utils_unittest(utils):
+    """
+    Preserve the unittest util file
+    """
     from django import utils as dj_utils
     from ..removed.django19 import utils_unittest
     utils.inject_attribute(dj_utils, "unittest", utils_unittest)
