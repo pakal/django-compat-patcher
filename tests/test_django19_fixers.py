@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import _test_utilities  # initializes django
 
+class MockRequest:
+    pass
 
 def test_keep_templatetags_future_url():
     from compat import render_to_string
@@ -32,3 +34,30 @@ def test_keep_request_post_get_mergedict():
 
     request = factory.post('/homepage/?abc=66', data=dict(abc="aju"))
     assert request.REQUEST["abc"] == "aju"  # POST takes precedence over GET
+
+def test_keep_modeladmin_get_formsets():
+    from django.contrib.admin import ModelAdmin
+    from test_project.models import SimpleModel
+    from django.contrib.admin import AdminSite
+
+    assert hasattr(ModelAdmin, 'get_formsets')
+
+    ma = ModelAdmin(SimpleModel, AdminSite())
+
+    assert ma.get_fieldsets(request=MockRequest()) == [(None, {'fields': ['name', 'age', 'is_active']})]
+
+
+def test_keep_utils_importlib():
+    from django.utils import importlib
+
+
+def test_keep_utils_tzinfo():
+    from django.utils import tzinfo
+
+
+def test_keep_utils_dictconfig():
+    from django.utils import dictconfig
+
+
+def test_keep_utils_unittest():
+    from django.utils import unittest
