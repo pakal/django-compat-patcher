@@ -38,8 +38,10 @@ def fix_deletion_utils_dictconfig(utils):
     """
     Preserve the dictconfig util file
     """
+    import django.utils
     from django_compat_patcher.django_legacy.django19.utils import dictconfig
     utils.inject_module("django.utils.dictconfig", dictconfig)
+    utils.inject_attribute(django.utils, "dictconfig", dictconfig)
 
 
 @django19_bc_fixer()
@@ -47,8 +49,10 @@ def fix_deletion_utils_importlib(utils):
     """
     Preserve the importlib util file
     """
+    import django.utils
     from django_compat_patcher.django_legacy.django19.utils import importlib
     utils.inject_module("django.utils.importlib", importlib)
+    utils.inject_attribute(django.utils, "importlib", importlib)
 
 
 @django19_bc_fixer()
@@ -56,8 +60,10 @@ def fix_deletion_utils_tzinfo(utils):
     """
     Preserve the tzinfo util file
     """
+    import django.utils
     from django_compat_patcher.django_legacy.django19.utils import tzinfo
     utils.inject_module("django.utils.tzinfo", tzinfo)
+    utils.inject_attribute(django.utils, "tzinfo", tzinfo)
 
 
 @django19_bc_fixer()
@@ -65,8 +71,10 @@ def fix_deletion_utils_unittest(utils):
     """
     Preserve the unittest util file
     """
+    import django.utils
     from django_compat_patcher.django_legacy.django19.utils import unittest
     utils.inject_module("django.utils.unittest", unittest)
+    utils.inject_attribute(django.utils, "unittest", unittest)
 
 
 @django19_bc_fixer()

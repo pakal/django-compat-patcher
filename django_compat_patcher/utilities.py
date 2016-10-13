@@ -47,7 +47,7 @@ def get_patcher_setting(name, settings=None):
 def inject_attribute(target_object, target_attrname, attribute):
     # TODO logging and warnings
     assert attribute is not None
-    assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types, types.ModuleType))
+    assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types))
     setattr(target_object, target_attrname, attribute)
 
 
@@ -60,6 +60,7 @@ def inject_callable(target_object, target_attrname, patch_callable):
 
 def inject_module(target_module_name, target_module):
     # TODO logging and warnings
+    target_module_name = str(target_module_name)  # Python2 compatibility
     assert isinstance(target_module, types.ModuleType)
     assert sys.modules.get(target_module_name) is None
     sys.modules[target_module_name] = target_module

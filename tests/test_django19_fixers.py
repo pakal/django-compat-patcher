@@ -113,18 +113,22 @@ def test_fix_deletion_utils_datastructures_SortedDict():
 
 
 def test_fix_deletion_utils_importlib():
+    import django.utils.importlib
     from django.utils import importlib
 
 
 def test_fix_deletion_utils_tzinfo():
+    import django.utils.tzinfo
     from django.utils import tzinfo
 
 
 def test_fix_deletion_utils_dictconfig():
+    import django.utils.dictconfig
     from django.utils import dictconfig
 
 
 def test_fix_deletion_utils_unittest():
+    import django.utils.unittest
     from django.utils import unittest
 
 
