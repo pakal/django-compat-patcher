@@ -196,4 +196,4 @@ def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
                     % app_config.label)
             return handle_app(app_config.models_module, **options)
 
-    utils.inject_method(AppCommand, "handle_app_config", handle_app_config)
+    utils.inject_callable(AppCommand, "handle_app_config", handle_app_config)
