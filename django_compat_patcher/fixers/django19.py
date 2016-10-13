@@ -163,3 +163,37 @@ def fix_deletion_forms_fields_IPAddressField(utils):
         return super(OriginalIPAddressField, self).formfield(**defaults)
 
     utils.inject_callable(OriginalIPAddressField, "formfield", formfield)
+
+@django19_bc_fixer()
+def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
+    """Preserve the fallback to AppCommand.handle_app() method in django management commands."""
+
+    from django.core.management.base import CommandError, AppCommand
+
+    def handle_app_config(self, app_config, **options):
+        """
+        Perform the command's actions for app_config, an AppConfig instance
+        corresponding to an application label given on the command line.
+        """
+        try:
+            # During the deprecation path, keep delegating to handle_app if
+            # handle_app_config isn't implemented in a subclass.
+            handle_app = self.handle_app
+        except AttributeError:
+            # Keep only this exception when the deprecation completes.
+            raise NotImplementedError(
+                "Subclasses of AppCommand must provide "
+                "a handle_app_config() method.")
+        else:
+            utils.emit_warning(
+                "AppCommand.handle_app() is superseded by "
+                "AppCommand.handle_app_config().",
+                RemovedInDjango19Warning, stacklevel=2)
+            if app_config.models_module is None:
+                raise CommandError(
+                    "AppCommand cannot handle app '%s' in legacy mode "
+                    "because it doesn't have a models module."
+                    % app_config.label)
+            return handle_app(app_config.models_module, **options)
+
+    utils.inject_attribute(AppCommand, "handle_app_config", handle_app_config)

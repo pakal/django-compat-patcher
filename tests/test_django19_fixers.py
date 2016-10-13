@@ -126,3 +126,20 @@ def test_fix_deletion_utils_dictconfig():
 
 def test_fix_deletion_utils_unittest():
     from django.utils import unittest
+
+
+def test_fix_deletion_django_core_management_base_AppCommand_handle_app():
+
+    from django.core.management.base import AppCommand
+
+    class DummyAppconfig(object):
+        label = "my dummy app"
+        models_module = "fake_models_module"
+    appconfig = DummyAppconfig()
+
+    class DummyAppCommand(AppCommand):
+        def handle_app(self, models_module, **options):
+            return 33
+
+    res = DummyAppCommand().handle_app_config(appconfig, other_arg=12)
+    assert res == 33
