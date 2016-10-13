@@ -20,7 +20,7 @@ def fix_deletion_utils_datastructures_MergeDict(utils):
     """
     from django.utils import datastructures as dj_datastructures
     from ..django_legacy.django19.datastructures import MergeDict as MergeDictCompat
-    utils.inject_attribute(dj_datastructures, "MergeDict", MergeDictCompat)
+    utils.inject_class(dj_datastructures, "MergeDict", MergeDictCompat)
 
 
 @django19_bc_fixer()
@@ -30,7 +30,7 @@ def fix_deletion_utils_datastructures_SortedDict(utils):
     """
     from django.utils import datastructures as dj_datastructures
     from ..django_legacy.django19.datastructures import SortedDict as SortedDictCompat
-    utils.inject_attribute(dj_datastructures, "SortedDict", SortedDictCompat)
+    utils.inject_class(dj_datastructures, "SortedDict", SortedDictCompat)
 
 
 @django19_bc_fixer()
@@ -38,8 +38,8 @@ def fix_deletion_utils_dictconfig(utils):
     """
     Preserve the dictconfig util file
     """
-    from django_compat_patcher.django_legacy.django19.utils import dictconfig as dictconfig_compat
-    utils.inject_module("django.utils.dictconfig", dictconfig_compat)
+    from django_compat_patcher.django_legacy.django19.utils import dictconfig
+    utils.inject_module("django.utils.dictconfig", dictconfig)
 
 
 @django19_bc_fixer()
@@ -47,8 +47,8 @@ def fix_deletion_utils_importlib(utils):
     """
     Preserve the importlib util file
     """
-    from django_compat_patcher.django_legacy.django19.utils import importlib as importlib_compat
-    utils.inject_module("django.utils.importlib", importlib_compat)
+    from django_compat_patcher.django_legacy.django19.utils import importlib
+    utils.inject_module("django.utils.importlib", importlib)
 
 
 @django19_bc_fixer()
@@ -56,8 +56,8 @@ def fix_deletion_utils_tzinfo(utils):
     """
     Preserve the tzinfo util file
     """
-    from django_compat_patcher.django_legacy.django19.utils import tzinfo as tzinfo_compat
-    utils.inject_module("django.utils.tzinfo", tzinfo_compat)
+    from django_compat_patcher.django_legacy.django19.utils import tzinfo
+    utils.inject_module("django.utils.tzinfo", tzinfo)
 
 
 @django19_bc_fixer()
@@ -65,8 +65,8 @@ def fix_deletion_utils_unittest(utils):
     """
     Preserve the unittest util file
     """
-    from django_compat_patcher.django_legacy.django19.utils import unittest as unittest_compat
-    utils.inject_module("django.utils.unittest", unittest_compat)
+    from django_compat_patcher.django_legacy.django19.utils import unittest
+    utils.inject_module("django.utils.unittest", unittest)
 
 
 @django19_bc_fixer()
@@ -76,15 +76,15 @@ def fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST(utils):
 
     from django.core.handlers.wsgi import WSGIRequest
     from django.utils.datastructures import MergeDict  # Depends on a previous fixer
-    def _get_request_compat(self):
+    def _get_request(self):
         utils.emit_warning('`request.REQUEST` is deprecated, use `request.GET` or '
                            '`request.POST` instead.', RemovedInDjango19Warning, 2)
         if not hasattr(self, '_request'):
             self._request = MergeDict(self.POST, self.GET)
         return self._request
 
-    utils.inject_method(WSGIRequest, "_get_request", _get_request_compat)
-    utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request_compat))
+    utils.inject_callable(WSGIRequest, "_get_request", _get_request)
+    utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request))
 
 
 @django19_bc_fixer()
@@ -94,7 +94,7 @@ def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
     """
     from django.contrib.admin import ModelAdmin
 
-    def _get_formsets_compat(self, request, obj):
+    def _get_formsets(self, request, obj):
         """
         Helper function that exists to allow the deprecation warning to be
         executed while this function continues to return a generator.
@@ -102,15 +102,15 @@ def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
         for inline in self.get_inline_instances(request, obj):
             yield inline.get_formset(request, obj)
 
-    def get_formsets_compat(self, request, obj=None):
+    def get_formsets(self, request, obj=None):
         warnings.warn(  # TODO change all warnings.warn to emit_warning util
             "ModelAdmin.get_formsets() is deprecated Use ModelAdmin.get_formsets_with_inlines() instead.",
             RemovedInDjango19Warning, stacklevel=2
         )
         return self._get_formsets(request, obj)
 
-    utils.inject_method(ModelAdmin, "_get_formsets", _get_formsets_compat)
-    utils.inject_method(ModelAdmin, "get_formsets", get_formsets_compat)
+    utils.inject_callable(ModelAdmin, "_get_formsets", _get_formsets)
+    utils.inject_callable(ModelAdmin, "get_formsets", get_formsets)
 
 
 @django19_bc_fixer()
@@ -140,27 +140,26 @@ def fix_deletion_forms_fields_IPAddressField(utils):
     from django.forms.fields import CharField
     from django.core import validators
 
-    class IPAddressFieldCompat(CharField):
+    class IPAddressField(CharField):
         default_validators = [validators.validate_ipv4_address]
 
         def __init__(self, *args, **kwargs):
             utils.emit_warning("IPAddressField has been deprecated. Use GenericIPAddressField instead.",
                                 RemovedInDjango19Warning)
-            super(IPAddressFieldCompat, self).__init__(*args, **kwargs)
+            super(IPAddressField, self).__init__(*args, **kwargs)
 
         def to_python(self, value):
             if value in self.empty_values:
                 return ''
             return value.strip()
 
-    utils.inject_class(django.forms.fields, "IPAddressField", IPAddressFieldCompat)
+    utils.inject_class(django.forms.fields, "IPAddressField", IPAddressField)
 
     from django.db.models.fields import IPAddressField as OriginalIPAddressField
 
-    def formfield_compat(self, **kwargs):
+    def formfield(self, **kwargs):
         defaults = {'form_class': django.forms.fields.IPAddressField}
         defaults.update(kwargs)
         return super(OriginalIPAddressField, self).formfield(**defaults)
 
-    utils.inject_attribute(OriginalIPAddressField, "formfield", formfield_compat)
-
+    utils.inject_callable(OriginalIPAddressField, "formfield", formfield)

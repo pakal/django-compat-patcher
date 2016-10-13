@@ -1,25 +1,32 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
+import functools
 import logging
+import types
 import warnings
 from functools import wraps, partial
 
 import sys
 from django.utils import six
 
-
 # use this logger, from inside fixers!
+PATCH_NAME_SUFFIX = "__DJANGO-COMPAT-PATCHER"
 logger = logging.getLogger("django.compat.patcher")
 
 
 def emit_warning(message, category=None, stacklevel=1):
     # TODO put default category here ?
-    warnings.warn(message, category, stacklevel+1)
+    warnings.warn(message, category, stacklevel + 1)
 
 
 def get_django_version():
     import django
     return django.get_version()
+
+
+def _patch_object__name__(object_to_patch):
+    if not object_to_patch.__name__.endswith(PATCH_NAME_SUFFIX):
+        object_to_patch.__name__ = "{}{}".format(object_to_patch.__name__, PATCH_NAME_SUFFIX)
 
 
 def get_patcher_setting(name, settings=None):
@@ -29,29 +36,38 @@ def get_patcher_setting(name, settings=None):
     settings = settings if isinstance(settings, dict) else settings.__dict__
     default = getattr(default_settings, name)  # will break if unknown setting
     setting = settings.get(name, default)
-    assert (setting == "*" or (isinstance(setting, list) and 
-                              all(isinstance(f, six.string_types) for f in setting))), setting
+    assert (setting == "*" or (isinstance(setting, list) and
+                               all(isinstance(f, six.string_types) for f in setting))), setting
     return setting
 
 
-def inject_attribute(target_object, target_attrname, callable):
+def inject_attribute(target_object, target_attrname, attribute):
     # TODO logging and warnings
-    setattr(target_object, target_attrname, callable)
+    assert attribute is not None
+    assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types, types.ModuleType))
+    setattr(target_object, target_attrname, attribute)
 
 
-def inject_method(target_object, target_attrname, callable):
+def inject_callable(target_object, target_attrname, patch_callable):
     # TODO logging and warnings, as well as func.__name__ setup
-    setattr(target_object, target_attrname, callable)
+    assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial))
+    _patch_object__name__(patch_callable)
+    setattr(target_object, target_attrname, patch_callable)
 
 
 def inject_module(target_module_name, target_module):
     # TODO logging and warnings
+    assert isinstance(target_module, types.ModuleType)
     assert sys.modules.get(target_module_name) is None
     sys.modules[target_module_name] = target_module
 
+
 def inject_class(target_object, target_attrname, klass):
     # TODO logging and warnings, as well as func.__name__ setup
+    assert isinstance(klass, six.class_types)
+    _patch_object__name__(klass)
     setattr(target_object, target_attrname, klass)
+
 
 def inject_function_alias(source_object, source_attrname,
                           target_object, target_attrname):
@@ -66,7 +82,7 @@ def inject_function_alias(source_object, source_attrname,
 
     @wraps(old_function)
     def wrapper(*args, **kwds):
-        #TODO HERE WARNINGS AND LOGGINGS WITH CONTEXT INFO
+        # TODO HERE WARNINGS AND LOGGINGS WITH CONTEXT INFO
         return old_function(*args, **kwds)
 
     # TODO LOGGING HERE
