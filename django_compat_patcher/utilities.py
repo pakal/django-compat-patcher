@@ -43,6 +43,11 @@ def inject_method(target_object, target_attrname, callable):
     setattr(target_object, target_attrname, callable)
 
 
+def inject_class(target_object, target_attrname, klass):
+    # TODO logging and warnings, as well as func.__name__ setup
+    setattr(target_object, target_attrname, klass)
+
+
 def inject_function_alias(source_object, source_attrname,
                           target_object, target_attrname):
     """

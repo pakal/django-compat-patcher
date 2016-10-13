@@ -32,6 +32,29 @@ def keep_templatetags_future_ssi(utils):
 
 
 @django19_bc_fixer()
+def fix_deletion_forms_fields_IPAddressField(utils):
+    """Preserve the IPAddressField model field, now superseded by GenericIPAddressField"""
+    import django.forms.fields
+    from django.forms.fields import CharField
+    from django.core import validators
+
+    class IPAddressFieldCompat(CharField):
+        default_validators = [validators.validate_ipv4_address]
+
+        def __init__(self, *args, **kwargs):
+            utils.emit_warning("IPAddressField has been deprecated. Use GenericIPAddressField instead.",
+                                RemovedInDjango19Warning)
+            super(IPAddressFieldCompat, self).__init__(*args, **kwargs)
+
+        def to_python(self, value):
+            if value in self.empty_values:
+                return ''
+            return value.strip()
+
+    utils.inject_class(django.forms.fields, "IPAddressField", IPAddressFieldCompat)
+
+
+@django19_bc_fixer()
 def keep_request_post_get_mergedict(utils):
     "Preserve the `request.REQUEST` attribute, merging parameters from GET "
     "and POST (the latter has precedence)."
@@ -47,6 +70,7 @@ def keep_request_post_get_mergedict(utils):
 
     utils.inject_method(WSGIRequest, "_get_request", _get_request_compat)
     utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request_compat))
+
 
 @django19_bc_fixer()
 def fix_deletion_utils_datastructures_SortedDict(utils):

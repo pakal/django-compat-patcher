@@ -4,10 +4,15 @@ import os, sys
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+from django.test import TestCase
+
+
 import _test_utilities  # initializes django
+
 
 class MockRequest:
     pass
+
 
 def test_keep_templatetags_future_url():
     from compat import render_to_string
@@ -33,6 +38,38 @@ def test_keep_templatetags_future_ssi():
     assert "test_keep_templatetags_future_ssi()" in rendered
 
 
+class FormsExtraTestCase(TestCase):
+
+    def assertFormErrors(self, expected, the_callable, *args, **kwargs):
+        from django.forms import ValidationError
+        try:
+            the_callable(*args, **kwargs)
+            self.fail("Testing the 'clean' method on %s failed to raise a ValidationError.")
+        except ValidationError as e:
+            self.assertEqual(e.messages, expected)
+
+    def test_ipaddress(self):
+
+        from django.forms.fields import IPAddressField
+
+        f = IPAddressField()
+        self.assertFormErrors(['This field is required.'], f.clean, '')
+        self.assertFormErrors(['This field is required.'], f.clean, None)
+        self.assertEqual(f.clean(' 127.0.0.1'), '127.0.0.1')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, 'foo')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '127.0.0.')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
+
+        f = IPAddressField(required=False)
+        self.assertEqual(f.clean(''), '')
+        self.assertEqual(f.clean(None), '')
+        self.assertEqual(f.clean(' 127.0.0.1'), '127.0.0.1')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, 'foo')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '127.0.0.')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
+        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
+
 def test_keep_request_post_get_mergedict():
     from django.test.client import RequestFactory
     factory = RequestFactory()
@@ -48,6 +85,7 @@ def test_keep_request_post_get_mergedict():
 
     request = factory.post('/homepage/?abc=66', data=dict(abc="aju"))
     assert request.REQUEST["abc"] == "aju"  # POST takes precedence over GET
+
 
 def test_keep_modeladmin_get_formsets():
     from django.contrib.admin import ModelAdmin
