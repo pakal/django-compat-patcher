@@ -14,6 +14,16 @@ django19_bc_fixer = partial(register_compatibility_fixer,
 
 
 @django19_bc_fixer()
+def fix_deletion_utils_datastructures_MergeDict(utils):
+    """
+    Preserve the MergeDict util datastructure
+    """
+    from django.utils import datastructures as dj_datastructures
+    from ..removed.django19 import datastructures
+    utils.inject_attribute(dj_datastructures, "MergeDict", datastructures.MergeDict)
+
+
+@django19_bc_fixer()
 def fix_deletion_utils_datastructures_SortedDict(utils):
     """
     Preserve the SortedDict util datastructure
@@ -64,7 +74,7 @@ def fix_deletion_utils_unittest(utils):
 
 
 @django19_bc_fixer()
-def fix_deletion_request_post_get_mergedict(utils):  # TODO rename to fit new guidelines
+def fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST(utils):
     "Preserve the `request.REQUEST` attribute, merging parameters from GET "
     "and POST (the latter has precedence)."
 
@@ -117,7 +127,8 @@ def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guide
     future.register.tag(new_tag)
 
 
-def keep_templatetags_future_ssi(utils):
+@django19_bc_fixer()
+def fix_deletion_templatetags_future_ssi(utils):
     "Preserve the `ssi` tag in the `future` templatetags library."
     from django.template import defaulttags
     from django.templatetags import future

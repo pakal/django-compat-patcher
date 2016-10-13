@@ -14,7 +14,7 @@ class MockRequest:
     pass
 
 
-def test_keep_templatetags_future_url():
+def test_fix_deletion_templatetags_future_url():
     from compat import render_to_string
 
     rendered = render_to_string('core_tags/test_future_url.html')
@@ -24,7 +24,7 @@ def test_keep_templatetags_future_url():
     assert rendered.strip() == "/homepage/"
 
 
-def test_keep_templatetags_future_ssi():
+def test_fix_deletion_templatetags_future_ssi():
     from compat import render_to_string
 
     filepath = os.path.abspath(__file__)
@@ -38,44 +38,45 @@ def test_keep_templatetags_future_ssi():
     assert "test_keep_templatetags_future_ssi()" in rendered
 
 
-class FormsExtraTestCase(TestCase):
+def test_fix_deletion_forms_fields_IPAddressField():
 
-    def assertFormErrors(self, expected, the_callable, *args, **kwargs):
-        from django.forms import ValidationError
+    from django.forms import ValidationError
+    from django.forms.fields import IPAddressField
+
+    def assertEqual(a, b):
+        assert a == b
+        
+    def assertFormErrors(expected, the_callable, *args, **kwargs):
         try:
             the_callable(*args, **kwargs)
-            self.fail("Testing the 'clean' method on %s failed to raise a ValidationError.")
+            raise ValueError("Testing the 'clean' method on %s failed to raise a ValidationError.")
         except ValidationError as e:
-            self.assertEqual(e.messages, expected)
+            assert e.messages == expected
 
-    def test_ipaddress(self):
+    f = IPAddressField()
+    assertFormErrors(['This field is required.'], f.clean, '')
+    assertFormErrors(['This field is required.'], f.clean, None)
+    assertEqual(f.clean(' 127.0.0.1'), '127.0.0.1')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, 'foo')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '127.0.0.')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
 
-        from django.forms.fields import IPAddressField
+    f = IPAddressField(required=False)
+    assertEqual(f.clean(''), '')
+    assertEqual(f.clean(None), '')
+    assertEqual(f.clean(' 127.0.0.1'), '127.0.0.1')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, 'foo')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '127.0.0.')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
+    assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
 
-        f = IPAddressField()
-        self.assertFormErrors(['This field is required.'], f.clean, '')
-        self.assertFormErrors(['This field is required.'], f.clean, None)
-        self.assertEqual(f.clean(' 127.0.0.1'), '127.0.0.1')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, 'foo')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '127.0.0.')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
-
-        f = IPAddressField(required=False)
-        self.assertEqual(f.clean(''), '')
-        self.assertEqual(f.clean(None), '')
-        self.assertEqual(f.clean(' 127.0.0.1'), '127.0.0.1')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, 'foo')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '127.0.0.')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
-        self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
-
-        from django.db.models.fields import IPAddressField as ModelIPAddressField
-        res = ModelIPAddressField().formfield()
-        assert isinstance(res, IPAddressField)
+    from django.db.models.fields import IPAddressField as ModelIPAddressField
+    res = ModelIPAddressField().formfield()
+    assert isinstance(res, IPAddressField)
 
 
-def test_keep_request_post_get_mergedict():
+def test_fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST():
     from django.test.client import RequestFactory
     factory = RequestFactory()
 
@@ -92,7 +93,7 @@ def test_keep_request_post_get_mergedict():
     assert request.REQUEST["abc"] == "aju"  # POST takes precedence over GET
 
 
-def test_keep_modeladmin_get_formsets():
+def test_fix_deletion_contrib_admin_ModelAdmin_get_formsets():
     from django.contrib.admin import ModelAdmin
     from test_project.models import SimpleModel
     from django.contrib.admin import AdminSite
@@ -109,22 +110,22 @@ def test_fix_deletion_utils_datastructures_MergeDict():
     MergeDict()
 
 
-def test_deletion_utils_datastructures_SortedDict():
+def test_fix_deletion_utils_datastructures_SortedDict():
     from django.utils.datastructures import SortedDict
     SortedDict()
 
 
-def test_deletion_utils_importlib():
+def test_fix_deletion_utils_importlib():
     from django.utils import importlib
 
 
-def test_deletion_utils_tzinfo():
+def test_fix_deletion_utils_tzinfo():
     from django.utils import tzinfo
 
 
-def test_deletion_utils_dictconfig():
+def test_fix_deletion_utils_dictconfig():
     from django.utils import dictconfig
 
 
-def test_deletion_utils_unittest():
+def test_fix_deletion_utils_unittest():
     from django.utils import unittest
