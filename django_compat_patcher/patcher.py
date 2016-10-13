@@ -2,8 +2,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from . import fixers, utilities, deprecation, registry
 
-
-# TODO make it idempotent with registry of applied fixes, just log if double applications of same fixers !!!!!
+__APPLIED_FIXERS = set()
 
 def patch(settings=None):
     """Patches the Django package with relevant fixers.
@@ -19,5 +18,9 @@ def patch(settings=None):
     for fixer in selected_fixers:
         #print("Applying fixer", fixer)
         # TODO - create custom injected "utils" object with context information, logging, warnings, etc.
-        fixer["fixer_callable"](utilities)
+        if fixer['fixer_id'] not in __APPLIED_FIXERS:
+            fixer["fixer_callable"](utilities)
+            __APPLIED_FIXERS.add(fixer['fixer_id'])
+        else:
+            utilities.logger.warning("Fixer '{}' was already applied".format(fixer['fixer_id']))
     return selected_fixers
