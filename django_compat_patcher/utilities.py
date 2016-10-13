@@ -4,6 +4,7 @@ import logging
 import warnings
 from functools import wraps, partial
 
+import sys
 from django.utils import six
 
 
@@ -43,10 +44,14 @@ def inject_method(target_object, target_attrname, callable):
     setattr(target_object, target_attrname, callable)
 
 
+def inject_module(target_module_name, target_module):
+    # TODO logging and warnings
+    assert sys.modules.get(target_module_name) is None
+    sys.modules[target_module_name] = target_module
+
 def inject_class(target_object, target_attrname, klass):
     # TODO logging and warnings, as well as func.__name__ setup
     setattr(target_object, target_attrname, klass)
-
 
 def inject_function_alias(source_object, source_attrname,
                           target_object, target_attrname):
