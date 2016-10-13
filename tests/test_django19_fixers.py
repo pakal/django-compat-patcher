@@ -19,6 +19,20 @@ def test_keep_templatetags_future_url():
     assert rendered.strip() == "/homepage/"
 
 
+def test_keep_templatetags_future_ssi():
+    from compat import render_to_string
+
+    filepath = os.path.abspath(__file__)
+
+    rendered = render_to_string('core_tags/test_future_ssi.html', 
+                                dict(filepath=filepath))
+    assert "test_keep_templatetags_future_ssi()" in rendered
+
+    rendered = render_to_string('core_tags/test_defaulttags_ssi.html', 
+                                dict(filepath=filepath))
+    assert "test_keep_templatetags_future_ssi()" in rendered
+
+
 def test_keep_request_post_get_mergedict():
     from django.test.client import RequestFactory
     factory = RequestFactory()

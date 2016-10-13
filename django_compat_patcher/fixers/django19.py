@@ -15,7 +15,6 @@ django19_bc_fixer = partial(register_compatibility_fixer,
 @django19_bc_fixer()
 def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guidelines
     "Preserve the `url` tag in the `future` templatetags library."
-
     from django.template import defaulttags
     from django.templatetags import future
     new_tag = utils.inject_function_alias(defaulttags, "url",
@@ -23,15 +22,31 @@ def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guide
     future.register.tag(new_tag)
 
 
-@django19_bc_fixer()
-def fix_deletion_utils_datastructures_MergeDict(utils):
-    """
-    Preserve the MergeDict util datastructure
-    """
-    from django.utils import datastructures as dj_datastructures
-    from ..removed.django19 import datastructures
-    utils.inject_attribute(dj_datastructures, "MergeDict", datastructures.MergeDict)
+def keep_templatetags_future_ssi(utils):
+    "Preserve the `ssi` tag in the `future` templatetags library."
+    from django.template import defaulttags
+    from django.templatetags import future
+    new_tag = utils.inject_function_alias(defaulttags, "ssi",
+                                          future, "ssi")
+    future.register.tag(new_tag)
 
+
+@django19_bc_fixer()
+def keep_request_post_get_mergedict(utils):
+    "Preserve the `request.REQUEST` attribute, merging parameters from GET "
+    "and POST (the latter has precedence)."
+
+    from django.core.handlers.wsgi import WSGIRequest
+    from .. import datastructures
+    def _get_request_compat(self):
+        utils.emit_warning('`request.REQUEST` is deprecated, use `request.GET` or '
+                       '`request.POST` instead.', RemovedInDjango19Warning, 2)
+        if not hasattr(self, '_request'):
+            self._request = datastructures.MergeDict(self.POST, self.GET)
+        return self._request
+
+    utils.inject_method(WSGIRequest, "_get_request", _get_request_compat)
+    utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request_compat))
 
 @django19_bc_fixer()
 def fix_deletion_utils_datastructures_SortedDict(utils):
