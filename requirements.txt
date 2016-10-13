@@ -2,4 +2,6 @@
 git+https://github.com/arteria/django-compat
 
 pytest
+pytest-pythonpath
+
 tox
