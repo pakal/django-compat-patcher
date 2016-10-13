@@ -3,8 +3,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import warnings
 from functools import partial
 
-from ..registry import register_compatibility_fixer
 from ..deprecation import *
+from ..registry import register_compatibility_fixer
 
 # for backward-compatibility fixers
 django19_bc_fixer = partial(register_compatibility_fixer,
@@ -19,8 +19,8 @@ def fix_deletion_utils_datastructures_MergeDict(utils):
     Preserve the MergeDict util datastructure
     """
     from django.utils import datastructures as dj_datastructures
-    from ..removed.django19 import datastructures
-    utils.inject_attribute(dj_datastructures, "MergeDict", datastructures.MergeDict)
+    from ..removed.django19.datastructures import MergeDict as MergeDictCompat
+    utils.inject_attribute(dj_datastructures, "MergeDict", MergeDictCompat)
 
 
 @django19_bc_fixer()
@@ -29,8 +29,8 @@ def fix_deletion_utils_datastructures_SortedDict(utils):
     Preserve the SortedDict util datastructure
     """
     from django.utils import datastructures as dj_datastructures
-    from ..removed.django19 import datastructures
-    utils.inject_attribute(dj_datastructures, "SortedDict", datastructures.SortedDict)
+    from ..removed.django19.datastructures import SortedDict as SortedDictCompat
+    utils.inject_attribute(dj_datastructures, "SortedDict", SortedDictCompat)
 
 
 @django19_bc_fixer()
@@ -38,9 +38,8 @@ def fix_deletion_utils_dictconfig(utils):
     """
     Preserve the dictconfig util file
     """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_dictconfig
-    utils.inject_attribute(dj_utils, "dictconfig", utils_dictconfig)
+    from django_compat_patcher.removed.django19.utils import dictconfig as dictconfig_compat
+    utils.inject_module("django.utils.dictconfig", dictconfig_compat)
 
 
 @django19_bc_fixer()
@@ -48,9 +47,8 @@ def fix_deletion_utils_importlib(utils):
     """
     Preserve the importlib util file
     """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_importlib
-    utils.inject_attribute(dj_utils, "importlib", utils_importlib)
+    from django_compat_patcher.removed.django19.utils import importlib as importlib_compat
+    utils.inject_module("django.utils.importlib", importlib_compat)
 
 
 @django19_bc_fixer()
@@ -58,9 +56,8 @@ def fix_deletion_utils_tzinfo(utils):
     """
     Preserve the tzinfo util file
     """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_tzinfo
-    utils.inject_attribute(dj_utils, "tzinfo", utils_tzinfo)
+    from django_compat_patcher.removed.django19.utils import tzinfo as tzinfo_compat
+    utils.inject_module("django.utils.tzinfo", tzinfo_compat)
 
 
 @django19_bc_fixer()
@@ -68,9 +65,8 @@ def fix_deletion_utils_unittest(utils):
     """
     Preserve the unittest util file
     """
-    from django import utils as dj_utils
-    from ..removed.django19 import utils_unittest
-    utils.inject_attribute(dj_utils, "unittest", utils_unittest)
+    from django_compat_patcher.removed.django19.utils import unittest as unittest_compat
+    utils.inject_module("django.utils.unittest", unittest_compat)
 
 
 @django19_bc_fixer()
