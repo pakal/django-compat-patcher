@@ -2,6 +2,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from . import fixers, utilities, deprecation, registry
 
+
+# TODO make it idempotent with registry of applied fixes, just log if double applications of same fixers !!!!!
+
 def patch(settings=None):
     """Patches the Django package with relevant fixers.
     

@@ -53,6 +53,15 @@ def fix_deletion_forms_fields_IPAddressField(utils):
 
     utils.inject_class(django.forms.fields, "IPAddressField", IPAddressFieldCompat)
 
+    from django.db.models.fields import IPAddressField as OriginalIPAddressField
+
+    def formfield_compat(self, **kwargs):
+        defaults = {'form_class': django.forms.fields.IPAddressField}
+        defaults.update(kwargs)
+        return super(OriginalIPAddressField, self).formfield(**defaults)
+
+    utils.inject_attribute(OriginalIPAddressField, "formfield", formfield_compat)
+
 
 @django19_bc_fixer()
 def keep_request_post_get_mergedict(utils):

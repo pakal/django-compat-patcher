@@ -70,6 +70,11 @@ class FormsExtraTestCase(TestCase):
         self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '1.2.3.4.5')
         self.assertFormErrors(['Enter a valid IPv4 address.'], f.clean, '256.125.1.5')
 
+        from django.db.models.fields import IPAddressField as ModelIPAddressField
+        res = ModelIPAddressField().formfield()
+        assert isinstance(res, IPAddressField)
+
+
 def test_keep_request_post_get_mergedict():
     from django.test.client import RequestFactory
     factory = RequestFactory()
