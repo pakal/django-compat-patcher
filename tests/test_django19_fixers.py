@@ -7,9 +7,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from django.test import TestCase
 
 
-import _test_utilities  # initializes django
-
-
 class MockRequest:
     pass
 
@@ -29,11 +26,11 @@ def test_fix_deletion_templatetags_future_ssi():
 
     filepath = os.path.abspath(__file__)
 
-    rendered = render_to_string('core_tags/test_future_ssi.html', 
+    rendered = render_to_string('core_tags/test_future_ssi.html',
                                 dict(filepath=filepath))
     assert "test_keep_templatetags_future_ssi()" in rendered
 
-    rendered = render_to_string('core_tags/test_defaulttags_ssi.html', 
+    rendered = render_to_string('core_tags/test_defaulttags_ssi.html',
                                 dict(filepath=filepath))
     assert "test_keep_templatetags_future_ssi()" in rendered
 
@@ -45,7 +42,7 @@ def test_fix_deletion_forms_fields_IPAddressField():
 
     def assertEqual(a, b):
         assert a == b
-        
+
     def assertFormErrors(expected, the_callable, *args, **kwargs):
         try:
             the_callable(*args, **kwargs)

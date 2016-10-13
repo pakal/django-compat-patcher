@@ -6,8 +6,6 @@ import pytest
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-import _test_utilities  # initializes django
-
 from django_compat_patcher.registry import get_relevant_fixers, get_relevant_fixer_ids, get_fixer_by_id
 from django_compat_patcher.utilities import get_patcher_setting
 from django_compat_patcher import patch
