@@ -10,7 +10,7 @@ import sys
 from django.utils import six
 
 # use this logger, from inside fixers!
-PATCH_NAME_SUFFIX = "__DJANGO-COMPAT-PATCHER"
+PATCH_NAME_SUFFIX = "__DJANGO_COMPAT_PATCHER"
 logger = logging.getLogger("django.compat.patcher")
 
 
@@ -25,8 +25,11 @@ def get_django_version():
 
 
 def _patch_object__name__(object_to_patch):
+    if not six.PY3:
+        return  # changing __name__ on python2 might break pickling
     if not object_to_patch.__name__.endswith(PATCH_NAME_SUFFIX):
-        object_to_patch.__name__ = "{}{}".format(object_to_patch.__name__, PATCH_NAME_SUFFIX)
+        new_name = "{}{}".format(object_to_patch.__name__, PATCH_NAME_SUFFIX)
+        object_to_patch.__name__ = new_name
 
 
 def get_patcher_setting(name, settings=None):
