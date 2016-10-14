@@ -1,8 +1,10 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-import os, random
+import os, logging, random
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "test_project.settings"
+
+logging.basicConfig()  # so that logging works before django LOGGING kicks in
 
 import django
 
