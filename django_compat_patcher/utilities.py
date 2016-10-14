@@ -52,7 +52,7 @@ def inject_attribute(target_object, target_attrname, attribute):
     """
     # TODO logging and warnings
     assert attribute is not None
-    assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types))
+    assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types)), attribute
     setattr(target_object, target_attrname, attribute)
 
 
@@ -63,7 +63,7 @@ def inject_callable(target_object, target_callable_name, patch_callable):
     :param patch_callable: The callable to inject : must me a callable, but not a class
     """
     # TODO logging and warnings
-    assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial))
+    assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial)), patch_callable
 
     _patch_object__name__(patch_callable)
     setattr(target_object, target_callable_name, patch_callable)
@@ -76,7 +76,7 @@ def inject_module(target_module_name, target_module):
     """
     # TODO logging and warnings
     target_module_name = str(target_module_name)  # Python2 compatibility
-    assert isinstance(target_module, types.ModuleType)
+    assert isinstance(target_module, types.ModuleType), target_module
     assert sys.modules.get(target_module_name) is None
 
     sys.modules[target_module_name] = target_module
@@ -89,7 +89,7 @@ def inject_class(target_object, target_attrname, klass):
     :param klass: The class to inject : must be a class
     """
     # TODO logging and warnings
-    assert isinstance(klass, six.class_types)
+    assert isinstance(klass, six.class_types), klass
 
     _patch_object__name__(klass)
     setattr(target_object, target_attrname, klass)
