@@ -11,7 +11,7 @@ FIXERS_REGISTRY = collections.OrderedDict()
 def _normalize_version(version):
     """
     Coerces the version string (if not None), to a version tuple.
-    Ex. "1.7.0" beccomes (1, 7, 0).
+    Ex. "1.7.0" becomes (1, 7, 0).
     """
     if version is None:
         return version
@@ -147,3 +147,7 @@ def _extract_fixer_ids(fixers):
 def get_relevant_fixer_ids(*args, **kwargs):
     fixers = get_relevant_fixers(*args, **kwargs)
     return _extract_fixer_ids(fixers)
+
+
+def get_all_fixers():
+    return list(FIXERS_REGISTRY.values())
