@@ -31,12 +31,12 @@ def _extract_doc(func):
 
 
 def register_compatibility_fixer(fixer_family,
-                                   fixer_applied_from_django=None,
-                                   fixer_applied_upto_django=None,
-                                   fixer_delayed=False,
-                                   feature_supported_from_django=None,
-                                   feature_supported_upto_django=None,
-                                   ):
+                                 fixer_applied_from_django=None,
+                                 fixer_applied_upto_django=None,
+                                 fixer_delayed=False,
+                                 feature_supported_from_django=None,
+                                 feature_supported_upto_django=None,
+                                 ):
     """
     Registers a fixer, which will be executed only if current django version
     is >= `apply_from_django` and <= `apply_upto_django` (let them None to have no limit).
@@ -64,11 +64,12 @@ def register_compatibility_fixer(fixer_family,
                          fixer_applied_upto_django=_normalize_version(fixer_applied_upto_django),
                          fixer_delayed=fixer_delayed,
                          feature_supported_from_django=_normalize_version(feature_supported_from_django),
-                         feature_supported_upto_django=_normalize_version(feature_supported_upto_django),)
+                         feature_supported_upto_django=_normalize_version(feature_supported_upto_django), )
 
         assert fixer_id not in FIXERS_REGISTRY, "duplicate fixer id %s detected" % fixer_id
         FIXERS_REGISTRY[fixer_id] = new_fixer
-        #print("FIXERS_REGISTRY", FIXERS_REGISTRY)
+        # print("FIXERS_REGISTRY", FIXERS_REGISTRY)
+
     return _register_simple_fixer
 
 
@@ -86,7 +87,7 @@ def get_relevant_fixers(current_django_version,
     For inclusion/exclusion filters, a special "*" value means "all fixers", 
     else a list of strings is expected.
     """
-    
+
     current_django_version = _normalize_version(current_django_version)
 
     relevant_fixers = []
@@ -98,30 +99,30 @@ def get_relevant_fixers(current_django_version,
     include_fixer_families = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_FAMILIES", settings=settings)
     exclude_fixer_ids = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_IDS", settings=settings)
     exclude_fixer_families = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_FAMILIES", settings=settings)
-    
+
     for fixer_id, fixer in FIXERS_REGISTRY.items():
         assert fixer_id == fixer["fixer_id"], fixer
 
         if (fixer["fixer_applied_from_django"] and
-            current_django_version < fixer["fixer_applied_from_django"]):
+                    current_django_version < fixer["fixer_applied_from_django"]):
             log("Skipping fixer %s, useful only in subsequent django versions" % fixer_id)
             continue
 
         if (fixer["fixer_applied_upto_django"] and
-            current_django_version > fixer["fixer_applied_upto_django"]):
+                    current_django_version > fixer["fixer_applied_upto_django"]):
             assert False, "Please update tests to account for first 'fixer_applied_upto_django' usage"
             log("Skipping fixer %s, useful only in previous django versions" % fixer_id)
             continue
-        
+
         included = False
         if include_fixer_ids == ALL or (fixer_id in include_fixer_ids):
             included = True
         if include_fixer_families == ALL and (fixer["fixer_family"] in include_fixer_families):
             included = True
-            
+
         if not included:
             log("Skipping fixer having neither id (%s) nor family (%s) included by patcher settings" % (fixer_id, fixer["fixer_family"]))
-        
+
         if exclude_fixer_ids == ALL or (fixer_id in exclude_fixer_ids):
             log("Skipping fixer %s, excluded by patcher settings" % fixer_id)
             continue

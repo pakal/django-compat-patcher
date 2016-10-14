@@ -7,7 +7,7 @@ from django.utils import six
 from django_compat_patcher.deprecation import RemovedInDjango19Warning
 
 warnings.warn("django.utils.importlib will be removed in Django 1.9.",
-    RemovedInDjango19Warning, stacklevel=2)
+              RemovedInDjango19Warning, stacklevel=2)
 
 
 def _resolve_name(name, package, level):

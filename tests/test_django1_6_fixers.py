@@ -5,8 +5,6 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
-
-
 def test_fix_deletion_http_request_HttpRequest_raw_post_data():
     from django.core.handlers.wsgi import WSGIRequest
     from django.test.client import FakePayload

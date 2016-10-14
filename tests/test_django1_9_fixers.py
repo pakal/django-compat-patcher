@@ -36,7 +36,6 @@ def test_fix_deletion_templatetags_future_ssi():
 
 
 def test_fix_deletion_forms_fields_IPAddressField():
-
     from django.forms import ValidationError
     from django.forms.fields import IPAddressField
 
@@ -133,12 +132,12 @@ def test_fix_deletion_utils_unittest():
 
 
 def test_fix_deletion_django_core_management_base_AppCommand_handle_app():
-
     from django.core.management.base import AppCommand
 
     class DummyAppconfig(object):
         label = "my dummy app"
         models_module = "fake_models_module"
+
     appconfig = DummyAppconfig()
 
     class DummyAppCommand(AppCommand):

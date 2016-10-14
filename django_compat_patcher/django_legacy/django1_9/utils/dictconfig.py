@@ -9,7 +9,7 @@ from django.utils import six
 from django_compat_patcher.deprecation import RemovedInDjango19Warning
 
 warnings.warn("django.utils.dictconfig will be removed in Django 1.9.",
-    RemovedInDjango19Warning, stacklevel=2)
+              RemovedInDjango19Warning, stacklevel=2)
 
 # This is a copy of the Python logging.config.dictconfig module,
 # reproduced with permission. It is provided here for backwards
@@ -42,6 +42,7 @@ def valid_ident(s):
         raise ValueError('Not a valid Python identifier: %r' % s)
     return True
 
+
 #
 # This function is defined in logging only in recent versions of Python
 #
@@ -59,6 +60,7 @@ except ImportError:
             raise TypeError('Level not an integer or a '
                             'valid string: %r' % level)
         return rv
+
 
 # The ConvertingXXX classes are wrappers around standard Python containers,
 # and they serve to convert any suitable values in the container. The
@@ -110,6 +112,7 @@ class ConvertingDict(dict):
 
 class ConvertingList(list):
     """A converting list wrapper."""
+
     def __getitem__(self, key):
         value = list.__getitem__(self, key)
         result = self.configurator.convert(value)
@@ -134,6 +137,7 @@ class ConvertingList(list):
 
 class ConvertingTuple(tuple):
     """A converting tuple wrapper."""
+
     def __getitem__(self, key):
         value = tuple.__getitem__(self, key)
         result = self.configurator.convert(value)
@@ -158,8 +162,8 @@ class BaseConfigurator(object):
     DIGIT_PATTERN = re.compile(r'^\d+$')
 
     value_converters = {
-        'ext' : 'ext_convert',
-        'cfg' : 'cfg_convert',
+        'ext': 'ext_convert',
+        'cfg': 'cfg_convert',
     }
 
     # We might want to use a different one, e.g. importlib
@@ -242,8 +246,8 @@ class BaseConfigurator(object):
         elif not isinstance(value, ConvertingList) and isinstance(value, list):
             value = ConvertingList(value)
             value.configurator = self
-        elif not isinstance(value, ConvertingTuple) and\
-                 isinstance(value, tuple):
+        elif not isinstance(value, ConvertingTuple) and \
+                isinstance(value, tuple):
             value = ConvertingTuple(value)
             value.configurator = self
         elif isinstance(value, six.string_types):  # str for py3k
@@ -305,7 +309,7 @@ class DictConfigurator(BaseConfigurator):
                     for name in handlers:
                         if name not in logging._handlers:
                             raise ValueError('No handler found with '
-                                             'name %r'  % name)
+                                             'name %r' % name)
                         else:
                             try:
                                 handler = logging._handlers[name]
@@ -341,7 +345,7 @@ class DictConfigurator(BaseConfigurator):
                 for name in formatters:
                     try:
                         formatters[name] = self.configure_formatter(
-                                                            formatters[name])
+                            formatters[name])
                     except StandardError as e:
                         raise ValueError('Unable to configure '
                                          'formatter %r: %s' % (name, e))
@@ -395,8 +399,8 @@ class DictConfigurator(BaseConfigurator):
                         pflen = len(prefixed)
                         num_existing = len(existing)
                         i = i + 1  # look at the entry after name
-                        while (i < num_existing) and\
-                              (existing[i][:pflen] == prefixed):
+                        while (i < num_existing) and \
+                                (existing[i][:pflen] == prefixed):
                             child_loggers.append(existing[i])
                             i = i + 1
                         existing.remove(name)
@@ -443,7 +447,7 @@ class DictConfigurator(BaseConfigurator):
                 # Name of parameter changed from fmt to format.
                 # Retry with old name.
                 # This is so that code can be used with older Python versions
-                #(e.g. by Django)
+                # (e.g. by Django)
                 config['fmt'] = config.pop('format')
                 config['()'] = factory
                 result = self.configure_custom(config)
@@ -489,18 +493,18 @@ class DictConfigurator(BaseConfigurator):
         else:
             klass = self.resolve(config.pop('class'))
             # Special case for handler which refers to another handler
-            if issubclass(klass, logging.handlers.MemoryHandler) and\
-                'target' in config:
+            if issubclass(klass, logging.handlers.MemoryHandler) and \
+                            'target' in config:
                 try:
                     config['target'] = self.config['handlers'][config['target']]
                 except StandardError as e:
                     raise ValueError('Unable to set target handler '
                                      '%r: %s' % (config['target'], e))
-            elif issubclass(klass, logging.handlers.SMTPHandler) and\
-                'mailhost' in config:
+            elif issubclass(klass, logging.handlers.SMTPHandler) and \
+                            'mailhost' in config:
                 config['mailhost'] = self.as_tuple(config['mailhost'])
-            elif issubclass(klass, logging.handlers.SysLogHandler) and\
-                'address' in config:
+            elif issubclass(klass, logging.handlers.SysLogHandler) and \
+                            'address' in config:
                 config['address'] = self.as_tuple(config['address'])
             factory = klass
         kwargs = {k: config[k] for k in config if valid_ident(k)}
@@ -512,7 +516,7 @@ class DictConfigurator(BaseConfigurator):
             # The argument name changed from strm to stream
             # Retry with old name.
             # This is so that code can be used with older Python versions
-            #(e.g. by Django)
+            # (e.g. by Django)
             kwargs['strm'] = kwargs.pop('stream')
             result = factory(**kwargs)
         if formatter:
@@ -561,6 +565,7 @@ class DictConfigurator(BaseConfigurator):
         """Configure a root logger from a dictionary."""
         root = logging.getLogger()
         self.common_logger_config(root, config, incremental)
+
 
 dictConfigClass = DictConfigurator
 

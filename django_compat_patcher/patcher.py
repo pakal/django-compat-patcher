@@ -4,6 +4,7 @@ from . import fixers, utilities, deprecation, registry
 
 __APPLIED_FIXERS = set()
 
+
 def patch(settings=None):
     """Patches the Django package with relevant fixers.
     
@@ -11,7 +12,7 @@ def patch(settings=None):
     
     Returns a list of ids of fixers applied.
     """
-    #print("Fixers are:", registry.FIXERS_REGISTRY)
+    # print("Fixers are:", registry.FIXERS_REGISTRY)
     django_version = utilities.get_django_version()
     relevant_fixers = registry.get_relevant_fixers(current_django_version=django_version, settings=settings)
 
@@ -21,7 +22,7 @@ def patch(settings=None):
 
     def _apply_fixers(fixers):
         for fixer in fixers:
-            #print("Applying fixer", fixer)
+            # print("Applying fixer", fixer)
             # TODO - create custom injected "utils" object with context information, logging, warnings, etc.
             if fixer['fixer_id'] not in __APPLIED_FIXERS:
                 utilities.logger.info("Django compat fixer '{}' is getting applied".format(fixer['fixer_id']))

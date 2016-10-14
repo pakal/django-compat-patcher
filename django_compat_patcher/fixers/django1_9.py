@@ -12,7 +12,6 @@ django1_9_bc_fixer = partial(register_compatibility_fixer,
                              fixer_applied_from_django="1.9")
 
 
-
 @django1_9_bc_fixer()
 def fix_deletion_utils_datastructures_MergeDict(utils):
     """
@@ -153,7 +152,7 @@ def fix_deletion_forms_fields_IPAddressField(utils):
 
         def __init__(self, *args, **kwargs):
             utils.emit_warning("IPAddressField has been deprecated. Use GenericIPAddressField instead.",
-                                RemovedInDjango19Warning)
+                               RemovedInDjango19Warning)
             super(IPAddressField, self).__init__(*args, **kwargs)
 
         def to_python(self, value):
@@ -171,6 +170,7 @@ def fix_deletion_forms_fields_IPAddressField(utils):
         return super(OriginalIPAddressField, self).formfield(**defaults)
 
     utils.inject_callable(OriginalIPAddressField, "formfield", formfield)
+
 
 @django1_9_bc_fixer()
 def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
@@ -218,6 +218,7 @@ def fix_deletion_contrib_sites_models_RequestSite(utils):
                 "Please import RequestSite from django.contrib.sites.requests.",
                 RemovedInDjango19Warning, stacklevel=2)
             super(RequestSite, self).__init__(*args, **kwargs)
+
     utils.inject_class(django.contrib.sites.models, "RequestSite", RequestSite)
 
 
@@ -231,4 +232,5 @@ def fix_deletion_contrib_sites_models_get_current_site(utils):
             "Please import get_current_site from django.contrib.sites.shortcuts.",
             RemovedInDjango19Warning, stacklevel=2)
         return real_get_current_site(request)
+
     utils.inject_callable(django.contrib.sites.models, "get_current_site", get_current_site)

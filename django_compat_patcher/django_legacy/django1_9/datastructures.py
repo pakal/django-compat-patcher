@@ -8,6 +8,7 @@ from django.utils import six
 
 from django_compat_patcher.deprecation import *
 
+
 class MergeDict(object):
     """
     A simple class for creating new "virtual" dictionaries that actually look
@@ -16,6 +17,7 @@ class MergeDict(object):
     If a key appears in more than one of the given dictionaries, only the
     first occurrence will be used.
     """
+
     def __init__(self, *dicts):
         warnings.warn('`MergeDict` is deprecated, use `dict.update()` '
                       'instead.', RemovedInDjango19Warning, 2)
@@ -127,6 +129,7 @@ class SortedDict(dict):
     """
     A dictionary that keeps its keys in the order in which they're inserted.
     """
+
     def __new__(cls, *args, **kwargs):
         instance = super(SortedDict, cls).__new__(cls, *args, **kwargs)
         instance.keyOrder = []
