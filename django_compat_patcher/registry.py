@@ -9,6 +9,10 @@ FIXERS_REGISTRY = collections.OrderedDict()
 
 
 def _normalize_version(version):
+    """
+    Coerces the version string (if not None), to a version tuple.
+    Ex. "1.7.0" beccomes (1, 7, 0).
+    """
     if version is None:
         return version
     if isinstance(version, six.string_types):
@@ -20,6 +24,7 @@ def _normalize_version(version):
 
 
 def _extract_doc(func):
+    """Extract and check the docstring of a callable"""
     doc = func.__doc__
     assert doc, "Fixer %r must provide a help string" % func
     return doc
