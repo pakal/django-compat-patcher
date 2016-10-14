@@ -34,7 +34,7 @@ def test_get_relevant_fixer_ids():
             ['fix_deletion_templatetags_future_url', 'fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST']]
     assert len(fixer_ids) > 5
 
-    fixer_ids = get_relevant_fixer_ids(current_django_version="1.8")
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.3")
     assert fixer_ids == []
 
     # TODO update this test when new fixers arrive, and test inclusion/exclusion filters
@@ -49,7 +49,7 @@ def test_get_relevant_fixer_ids():
     settings = dict(DCP_INCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
                     DCP_INCLUDE_FIXER_FAMILIES=["django19"],
                     DCP_EXCLUDE_FIXER_IDS=[],
-                    DCP_EXCLUDE_FIXER_FAMILIES=["django19"])  
+                    DCP_EXCLUDE_FIXER_FAMILIES=["django16", "django19"])
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert fixer_ids == []
 

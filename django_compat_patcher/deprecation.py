@@ -18,4 +18,7 @@ class RemovedInDjango18Warning(DeprecationWarning):
 class RemovedInDjango17Warning(DeprecationWarning):
     pass
 
+class RemovedInDjango16Warning(DeprecationWarning):
+    pass
+
 RemovedInNextVersionWarning = RemovedInDjango21Warning
