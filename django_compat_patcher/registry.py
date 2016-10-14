@@ -28,8 +28,10 @@ def _extract_doc(func):
 def register_compatibility_fixer(fixer_family,
                                    fixer_applied_from_django=None,
                                    fixer_applied_upto_django=None,
+                                   fixer_delayed=False,
                                    feature_supported_from_django=None,
-                                   feature_supported_upto_django=None):
+                                   feature_supported_upto_django=None,
+                                   ):
     """
     Registers a fixer, which will be executed only if current django version
     is >= `apply_from_django` and <= `apply_upto_django` (let them None to have no limit).
@@ -39,9 +41,13 @@ def register_compatibility_fixer(fixer_family,
     for which the feature is available, either as a monkey-paching or as standard django code).
 
     Version identifiers must be strings, eg. "1.9.1".
+
+    If `fixer_delayed`is True, the fixer is only applied after django.setup() has been called
+    (eg. so that ORM models are available for introspection and patching).
     """
 
     assert fixer_family and fixer_family.startswith("django"), fixer_family
+    assert fixer_delayed in (True, False), fixer_delayed
 
     def _register_simple_fixer(func):
         fixer_id = func.__name__  # untouched ATM, not fully qualified
@@ -51,6 +57,7 @@ def register_compatibility_fixer(fixer_family,
                          fixer_family=fixer_family,
                          fixer_applied_from_django=_normalize_version(fixer_applied_from_django),
                          fixer_applied_upto_django=_normalize_version(fixer_applied_upto_django),
+                         fixer_delayed=fixer_delayed,
                          feature_supported_from_django=_normalize_version(feature_supported_from_django),
                          feature_supported_upto_django=_normalize_version(feature_supported_upto_django),)
 
