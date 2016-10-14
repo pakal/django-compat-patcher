@@ -13,3 +13,56 @@ This code must be placed BEFORE any use of django (eg. in your :code:`manage.py`
 
 However, the :code:`DJANGO_SETTINGS_MODULE` environment variable must already be set.
 
+Settings
+========
+
+Settings to put in your project's `settings.py`. The value in these settings are the default values.
+
+DCP_INCLUDE_FIXER_IDS
+*********************
+List of fixer names to include. If "``*``" is used, then all fixers are included.
+
+| **Default:** "``*``"
+| **Type:** List of strings, or "``*``"
+| **Example:** :code:`DCP_INCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
+
+DCP_INCLUDE_FIXER_FAMILIES
+**************************
+List of fixer families to include.
+
+.. warning:: If you want to include a specific category, remember to remove the "``*``" from DCP_INCLUDE_FIXER_IDS.
+
+| **Default:** []
+| **Type:** List of strings
+| **Choices:** `("djangoX.Y")` where `X` and `Y` are respectively the major and minor versions
+| **Example:** :code:`DCP_INCLUDE_FIXER_FAMILIES=["django1.9"]`
+
+DCP_EXCLUDE_FIXER_IDS
+*********************
+List of fixer names to exclude.
+
+.. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
+
+| **Default:** []
+| **Type:** List of strings
+| **Example:** :code:`DCP_EXCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url']`
+
+DCP_EXCLUDE_FIXER_FAMILIES
+**************************
+List of fixer families to exclude.
+
+.. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
+
+| **Default:** []
+| **Type:** List of strings
+| **Choices:** `("djangoX.Y")` where `X` and `Y` are respectively the major and minor versions
+| **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.9"]`
+
+DCP_MONKEY_PATCH_NAME
+*********************
+
+If set to `False`, the patcher will not alter the __name__ properties of the objects it monkey-patches.
+
+| **Default:** True
+| **Type:** Boolean
+| **Example:** :code:`DCP_MONKEY_PATCH_NAME=False`
