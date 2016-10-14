@@ -9,7 +9,7 @@ class RemovedInDjango20Warning(DeprecationWarning):
     pass
 
 
-class RemovedInDjango19Warning(DeprecationWarning):
+class RemovedInDjango110Warning(DeprecationWarning):
     pass
 
 
