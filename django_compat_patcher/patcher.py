@@ -16,7 +16,8 @@ def patch(settings=None):
     django_version = utilities.get_django_version()
     relevant_fixers = registry.get_relevant_fixers(current_django_version=django_version, settings=settings)
 
-    relevant_fixers.reverse()  # better for backwards compatibility, for now...
+    # REVERSED is better for backwards compatibility, for now...
+    relevant_fixers.sort(key=lambda x:x["fixer_reference_version"], reverse=True)
 
     pre_fixers = [f for f in relevant_fixers if not f["fixer_delayed"]]
     post_fixers = [f for f in relevant_fixers if f["fixer_delayed"]]

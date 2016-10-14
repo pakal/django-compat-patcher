@@ -30,7 +30,7 @@ def _extract_doc(func):
     return doc
 
 
-def register_compatibility_fixer(fixer_family,
+def register_compatibility_fixer(fixer_reference_version,
                                  fixer_applied_from_django=None,
                                  fixer_applied_upto_django=None,
                                  fixer_delayed=False,
@@ -51,14 +51,17 @@ def register_compatibility_fixer(fixer_family,
     (eg. so that ORM models are available for introspection and patching).
     """
 
-    assert fixer_family and fixer_family.startswith("django"), fixer_family
+    assert isinstance(fixer_reference_version, six.string_types)  # eg. "1.9"
     assert fixer_delayed in (True, False), fixer_delayed
+
+    fixer_family= "django" + fixer_reference_version  # eg. django1.9
 
     def _register_simple_fixer(func):
         fixer_id = func.__name__  # untouched ATM, not fully qualified
         new_fixer = dict(fixer_callable=func,
                          fixer_explanation=_extract_doc(func),
                          fixer_id=fixer_id,
+                         fixer_reference_version=_normalize_version(fixer_reference_version),
                          fixer_family=fixer_family,
                          fixer_applied_from_django=_normalize_version(fixer_applied_from_django),
                          fixer_applied_upto_django=_normalize_version(fixer_applied_upto_django),

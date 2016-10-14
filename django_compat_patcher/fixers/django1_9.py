@@ -8,7 +8,7 @@ from ..registry import register_compatibility_fixer
 
 # for backward-compatibility fixers
 django1_9_bc_fixer = partial(register_compatibility_fixer,
-                             fixer_family="django1.9",
+                             fixer_reference_version="1.9",
                              fixer_applied_from_django="1.9")
 
 
