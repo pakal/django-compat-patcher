@@ -7,11 +7,11 @@ from ..deprecation import *
 from ..registry import register_compatibility_fixer
 
 # for backward-compatibility fixers
-django16_bc_fixer = partial(register_compatibility_fixer,
-                            fixer_family="django16",
+django1_6_bc_fixer = partial(register_compatibility_fixer,
+                            fixer_family="django1.6",
                             fixer_applied_from_django="1.6")
 
-@django16_bc_fixer()
+@django1_6_bc_fixer()
 def fix_deletion_http_request_HttpRequest_raw_post_data(utils):
     """
     Preserve the request.raw_post_data alias for request.body.

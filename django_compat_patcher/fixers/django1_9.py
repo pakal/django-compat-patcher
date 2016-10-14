@@ -7,77 +7,77 @@ from ..deprecation import *
 from ..registry import register_compatibility_fixer
 
 # for backward-compatibility fixers
-django19_bc_fixer = partial(register_compatibility_fixer,
-                            fixer_family="django19",
-                            fixer_applied_from_django="1.9")
+django1_9_bc_fixer = partial(register_compatibility_fixer,
+                             fixer_family="django1.9",
+                             fixer_applied_from_django="1.9")
 
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_utils_datastructures_MergeDict(utils):
     """
     Preserve the MergeDict util datastructure
     """
     from django.utils import datastructures as dj_datastructures
-    from ..django_legacy.django19.datastructures import MergeDict as MergeDictCompat
+    from ..django_legacy.django1_9.datastructures import MergeDict as MergeDictCompat
     utils.inject_class(dj_datastructures, "MergeDict", MergeDictCompat)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_utils_datastructures_SortedDict(utils):
     """
     Preserve the SortedDict util datastructure
     """
     from django.utils import datastructures as dj_datastructures
-    from ..django_legacy.django19.datastructures import SortedDict as SortedDictCompat
+    from ..django_legacy.django1_9.datastructures import SortedDict as SortedDictCompat
     utils.inject_class(dj_datastructures, "SortedDict", SortedDictCompat)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_utils_dictconfig(utils):
     """
     Preserve the dictconfig util file
     """
     import django.utils
-    from django_compat_patcher.django_legacy.django19.utils import dictconfig
+    from django_compat_patcher.django_legacy.django1_9.utils import dictconfig
     utils.inject_module("django.utils.dictconfig", dictconfig)
     utils.inject_attribute(django.utils, "dictconfig", dictconfig)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_utils_importlib(utils):
     """
     Preserve the importlib util file
     """
     import django.utils
-    from django_compat_patcher.django_legacy.django19.utils import importlib
+    from django_compat_patcher.django_legacy.django1_9.utils import importlib
     utils.inject_module("django.utils.importlib", importlib)
     utils.inject_attribute(django.utils, "importlib", importlib)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_utils_tzinfo(utils):
     """
     Preserve the tzinfo util file
     """
     import django.utils
-    from django_compat_patcher.django_legacy.django19.utils import tzinfo
+    from django_compat_patcher.django_legacy.django1_9.utils import tzinfo
     utils.inject_module("django.utils.tzinfo", tzinfo)
     utils.inject_attribute(django.utils, "tzinfo", tzinfo)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_utils_unittest(utils):
     """
     Preserve the unittest util file
     """
     import django.utils
-    from django_compat_patcher.django_legacy.django19.utils import unittest
+    from django_compat_patcher.django_legacy.django1_9.utils import unittest
     utils.inject_module("django.utils.unittest", unittest)
     utils.inject_attribute(django.utils, "unittest", unittest)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST(utils):
     "Preserve the `request.REQUEST` attribute, merging parameters from GET "
     "and POST (the latter has precedence)."
@@ -95,7 +95,7 @@ def fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST(utils):
     utils.inject_attribute(WSGIRequest, "REQUEST", property(_get_request))
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
     """
     Preserve the get_formsets method of ModelAdmin
@@ -121,7 +121,7 @@ def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
     utils.inject_callable(ModelAdmin, "get_formsets", get_formsets)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guidelines
     "Preserve the `url` tag in the `future` templatetags library."
     from django.template import defaulttags
@@ -131,7 +131,7 @@ def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guide
     future.register.tag(new_tag)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_templatetags_future_ssi(utils):
     "Preserve the `ssi` tag in the `future` templatetags library."
     from django.template import defaulttags
@@ -141,7 +141,7 @@ def fix_deletion_templatetags_future_ssi(utils):
     future.register.tag(new_tag)
 
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_forms_fields_IPAddressField(utils):
     """Preserve the IPAddressField model field, now superseded by GenericIPAddressField"""
     import django.forms.fields
@@ -172,7 +172,7 @@ def fix_deletion_forms_fields_IPAddressField(utils):
 
     utils.inject_callable(OriginalIPAddressField, "formfield", formfield)
 
-@django19_bc_fixer()
+@django1_9_bc_fixer()
 def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
     """Preserve the fallback to AppCommand.handle_app() method in django management commands."""
 
@@ -207,7 +207,7 @@ def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
     utils.inject_callable(AppCommand, "handle_app_config", handle_app_config)
 
 
-@django19_bc_fixer(fixer_delayed=True)
+@django1_9_bc_fixer(fixer_delayed=True)
 def fix_deletion_contrib_sites_models_RequestSite(utils):
     """Preserve contrib.sites.models.RequestSite alias."""
     import django.contrib.sites.models
@@ -221,7 +221,7 @@ def fix_deletion_contrib_sites_models_RequestSite(utils):
     utils.inject_class(django.contrib.sites.models, "RequestSite", RequestSite)
 
 
-@django19_bc_fixer(fixer_delayed=True)
+@django1_9_bc_fixer(fixer_delayed=True)
 def fix_deletion_contrib_sites_models_get_current_site(utils):
     """Preserve contrib.sites.models.get_current_site alias."""
     import django.contrib.sites.models

@@ -47,21 +47,21 @@ def test_get_relevant_fixer_ids():
     assert len(fixer_ids) >= 2
 
     settings = dict(DCP_INCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
-                    DCP_INCLUDE_FIXER_FAMILIES=["django19"],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django1.9"],
                     DCP_EXCLUDE_FIXER_IDS=[],
-                    DCP_EXCLUDE_FIXER_FAMILIES=["django16", "django19"])
+                    DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.9"])
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert fixer_ids == []
 
     settings = dict(DCP_INCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
-                    DCP_INCLUDE_FIXER_FAMILIES=["django19"],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django1.9"],
                     DCP_EXCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
                     DCP_EXCLUDE_FIXER_FAMILIES=[])  
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert 'fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST' in fixer_ids
 
     settings = dict(DCP_INCLUDE_FIXER_IDS=[],
-                    DCP_INCLUDE_FIXER_FAMILIES=["django19"],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django1.9"],
                     DCP_EXCLUDE_FIXER_IDS=[],
                     DCP_EXCLUDE_FIXER_FAMILIES="*")  
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
