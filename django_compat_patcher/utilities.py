@@ -24,7 +24,10 @@ def get_django_version():
     return django.get_version()
 
 
-def _patch_object__name__(object_to_patch):
+def _patch_object__name__(object_to_patch, target_name):
+    if not get_patcher_setting('DCP_MONKEY_PATCH_NAME'):
+        assert object_to_patch.__name__ == target_name
+        return
     if not six.PY3:
         return  # changing __name__ on python2 might break pickling
     if not object_to_patch.__name__.endswith(PATCH_NAME_SUFFIX):
@@ -36,11 +39,14 @@ def get_patcher_setting(name, settings=None):
     from django.conf import settings as django_settings
     from . import default_settings
     settings = settings if settings is not None else django_settings
-    settings = settings if isinstance(settings, dict) else settings.__dict__
+    settings = settings if isinstance(settings, dict) else settings.__dict__  # TODO attrdict
     default = getattr(default_settings, name)  # will break if unknown setting
     setting = settings.get(name, default)
-    assert (setting == "*" or (isinstance(setting, list) and
-                               all(isinstance(f, six.string_types) for f in setting))), setting
+    if name == "DCP_MONKEY_PATCH_NAME":
+        assert isinstance(setting, bool)
+    else:
+        assert (setting == "*" or (isinstance(setting, list) and
+                                   all(isinstance(f, six.string_types) for f in setting))), setting
     return setting
 
 
@@ -65,7 +71,7 @@ def inject_callable(target_object, target_callable_name, patch_callable):
     # TODO logging and warnings
     assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial)), patch_callable
 
-    _patch_object__name__(patch_callable)
+    _patch_object__name__(patch_callable, target_callable_name)
     setattr(target_object, target_callable_name, patch_callable)
 
 
@@ -82,17 +88,17 @@ def inject_module(target_module_name, target_module):
     sys.modules[target_module_name] = target_module
 
 
-def inject_class(target_object, target_attrname, klass):
+def inject_class(target_object, target_klassname, klass):
     """
     :param target_object: The object to patch
-    :param target_attrname: The name given to the new class in the object to patch
+    :param target_klassname: The name given to the new class in the object to patch
     :param klass: The class to inject : must be a class
     """
     # TODO logging and warnings
     assert isinstance(klass, six.class_types), klass
 
-    _patch_object__name__(klass)
-    setattr(target_object, target_attrname, klass)
+    _patch_object__name__(klass, target_klassname)
+    setattr(target_object, target_klassname, klass)
 
 
 def inject_function_alias(source_object, source_attrname,
