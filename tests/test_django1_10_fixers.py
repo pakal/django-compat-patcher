@@ -6,10 +6,10 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 
-def test_fix_deletion_templatetags_future(utils):
+def test_fix_deletion_templatetags_future():
     #add tests for firstof and cycle
     assert False
 
 
-def test_fix_deletion_template_defaulttags_ssi(utils):
+def test_fix_deletion_template_defaulttags_ssi():
     assert False
