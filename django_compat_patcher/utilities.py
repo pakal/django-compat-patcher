@@ -25,8 +25,9 @@ def get_django_version():
 
 
 def _patch_object__name__(object_to_patch, target_name):
+    # Prevent external libraries that use __name__ from failing
+    assert object_to_patch.__name__ == target_name
     if not get_patcher_setting('DCP_MONKEY_PATCH_NAME'):
-        assert object_to_patch.__name__ == target_name
         return
     if not six.PY3:
         return  # changing __name__ on python2 might break pickling
@@ -35,13 +36,34 @@ def _patch_object__name__(object_to_patch, target_name):
         object_to_patch.__name__ = new_name
 
 
-def get_patcher_setting(name, settings=None):
+def get_patcher_setting(name, settings_override=None):
+    """
+    Fetches the value of the setting with its name, either from the settings argument,
+    falling back to the project's settings
+    :param name: The name of the setting
+    :param settings_override: An override for the project's settings
+    :return: The value of the setting "name"
+    """
     from django.conf import settings as django_settings
     from . import default_settings
-    settings = settings if settings is not None else django_settings
-    settings = settings if isinstance(settings, dict) else settings.__dict__  # TODO attrdict
-    default = getattr(default_settings, name)  # will break if unknown setting
-    setting = settings.get(name, default)
+    from django.conf import LazySettings
+
+    if settings_override is None or settings_override == {}:
+        settings = django_settings
+    else:
+        settings = settings_override
+
+    assert name.startswith("DCP")
+
+    try:
+        if isinstance(settings, LazySettings):
+            setting = getattr(settings, name)  # will break if unknown setting
+        else:
+            setting = settings.get(name)
+    except AttributeError:
+        setting = getattr(default_settings, name)
+
+    # Micromanaging, because a validation Schema is overkill now
     if name == "DCP_MONKEY_PATCH_NAME":
         assert isinstance(setting, bool)
     else:

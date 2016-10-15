@@ -11,10 +11,10 @@ from django_compat_patcher import patch
 
 
 def test_get_patcher_setting():
-    with pytest.raises(AttributeError):
+    with pytest.raises(AssertionError):
         get_patcher_setting("DEBUG")  # only DCP settings allowed
     assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS") == "*"
-    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS", settings=dict(DCP_INCLUDE_FIXER_IDS=["a"])) == ["a"]
+    assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS", settings_override=dict(DCP_INCLUDE_FIXER_IDS=["a"])) == ["a"]
 
     # TODO patch django settings to check that they are used IFF no parameter "settings"
 
