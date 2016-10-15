@@ -57,13 +57,13 @@ def get_patcher_setting(name, settings_override=None):
 
     try:
         if isinstance(settings, LazySettings):
-            setting = getattr(settings, name)  # will break if unknown setting
+            setting = getattr(settings, name)  # Will break if unknown setting
         else:
             setting = settings.get(name)
     except AttributeError:
         setting = getattr(default_settings, name)
 
-    # Micromanaging, because a validation Schema is overkill now
+    # Micromanaging, because a validation Schema is overkill for now
     if name == "DCP_MONKEY_PATCH_NAME":
         assert isinstance(setting, bool)
     else:
