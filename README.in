@@ -53,7 +53,7 @@ List of fixer families to exclude.
 
 .. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
 
-| **Default:** :code:`[]``
+| **Default:** :code:`[]`
 | **Type:** List of strings
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
