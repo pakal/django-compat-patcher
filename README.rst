@@ -18,26 +18,26 @@ However, the :code:`DJANGO_SETTINGS_MODULE` environment variable must already be
 Settings
 ========
 
-Settings to put in your project's `settings.py`. The value in these settings are the default values.
+Settings to put in your project's :code:`settings.py`. The value in these settings are the default values.
 
 DCP_INCLUDE_FIXER_IDS
 *********************
-List of fixer names to include. If "``*``" is used, then all fixers are included.
+List of fixer names to include. If :code:`"*"` is used, then all fixers are included.
 
-| **Default:** "``*``"
-| **Type:** List of strings, or "``*``"
+| **Default:** :code:`"*"`
+| **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_INCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
 DCP_INCLUDE_FIXER_FAMILIES
 **************************
 List of fixer families to include.
 
-.. warning:: If you want to include a specific category, remember to remove the "``*``" from DCP_INCLUDE_FIXER_IDS.
+.. warning:: If you want to include a specific category, remember to remove the :code:`"*"` from :code:`DCP_INCLUDE_FIXER_IDS`.
 
-| **Default:** []
+| **Default:** :code:`[]`
 | **Type:** List of strings
-| **Choices:** `("djangoX.Y")` where `X` and `Y` are respectively the major and minor versions
-| **Example:** :code:`DCP_INCLUDE_FIXER_FAMILIES=["django1.9"]`
+| **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
+| **Example:** :code:`DCP_INCLUDE_FIXER_FAMILIES = ["django1.9"]`
 
 DCP_EXCLUDE_FIXER_IDS
 *********************
@@ -45,9 +45,9 @@ List of fixer names to exclude.
 
 .. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
 
-| **Default:** []
+| **Default:** :code:`[]`
 | **Type:** List of strings
-| **Example:** :code:`DCP_EXCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url']`
+| **Example:** :code:`DCP_EXCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
 DCP_EXCLUDE_FIXER_FAMILIES
 **************************
@@ -55,19 +55,19 @@ List of fixer families to exclude.
 
 .. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
 
-| **Default:** []
+| **Default:** :code:`[]``
 | **Type:** List of strings
-| **Choices:** `("djangoX.Y")` where `X` and `Y` are respectively the major and minor versions
-| **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.9"]`
+| **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
+| **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
 
 DCP_PATCH_INJECTED_OBJECT
 *************************
 
-If set to `False`, the patcher will not add a __dcp_injected = True attribute to the injected callables, modules and classes.
+If set to :code:`False`, the patcher will not add a :code:`__dcp_injected__ = True` attribute to the injected callables, modules and classes.
 
-| **Default:** True
+| **Default:** :code:`True`
 | **Type:** Boolean
-| **Example:** :code:`DCP_PATCH_INJECTED_OBJECT=False`
+| **Example:** :code:`DCP_PATCH_INJECTED_OBJECT = False`
 
 
 Table of fixers
