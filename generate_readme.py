@@ -76,6 +76,7 @@ def generate_readme():
         readme_final.write('.. sectnum::\n\n')
         readme_final.write(readme_manual_content)
         readme_final.write('\n\nTable of fixers\n===============\n\n')
+        readme_final.write('There are currently {} working fixers.\n\n'.format(len(all_fixers)))
         readme_final.write(make_table(grid))
 
 

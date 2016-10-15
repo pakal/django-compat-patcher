@@ -60,18 +60,20 @@ List of fixer families to exclude.
 | **Choices:** `("djangoX.Y")` where `X` and `Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.9"]`
 
-DCP_MONKEY_PATCH_NAME
-*********************
+DCP_PATCH_INJECTED_OBJECT
+*************************
 
-If set to `False`, the patcher will not alter the __name__ properties of the objects it monkey-patches.
+If set to `False`, the patcher will not add a __dcp_injected = True attribute to the injected callables, modules and classes.
 
 | **Default:** True
 | **Type:** Boolean
-| **Example:** :code:`DCP_MONKEY_PATCH_NAME=False`
+| **Example:** :code:`DCP_PATCH_INJECTED_OBJECT=False`
 
 
 Table of fixers
 ===============
+
+There are currently 17 working fixers.
 
 +----------------------------------------------------------------+----------------------------------------------------------------+----------------------------------------------------------------+
 | Fixer name                                                     | Min version                                                    | Max version                                                    |

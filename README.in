@@ -59,7 +59,7 @@ List of fixer families to exclude.
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.9"]`
 
 DCP_PATCH_INJECTED_OBJECT
-*********************
+*************************
 
 If set to `False`, the patcher will not add a __dcp_injected = True attribute to the injected callables, modules and classes.
 
