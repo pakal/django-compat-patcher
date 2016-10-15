@@ -121,7 +121,7 @@ def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
 
 
 @django1_9_bc_fixer()
-def fix_deletion_templatetags_future_url(utils):  # TODO rename to fit new guidelines
+def fix_deletion_templatetags_future_url(utils):
     "Preserve the `url` tag in the `future` templatetags library."
     from django.template import defaulttags
     from django.templatetags import future

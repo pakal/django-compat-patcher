@@ -14,7 +14,6 @@ django1_10_bc_fixer = partial(register_compatibility_fixer,
                               fixer_applied_from_django="1.10")
 
 
-
 @django1_10_bc_fixer()
 def fix_deletion_templatetags_future(utils):
     """
@@ -27,11 +26,13 @@ def fix_deletion_templatetags_future(utils):
 
     from django.template.backends import django as django_templates
     _old_get_installed_libraries = django_templates.get_installed_libraries
+
     def get_installed_libraries():
         libraries = _old_get_installed_libraries()  # tries real __import__() calls on submodules
         libraries["future"] = "django.templatetags.future"
-        #print(">>>>> FINAL libraries", libraries)
+        # print(">>>>> FINAL libraries", libraries)
         return libraries
+
     utils.inject_callable(django_templates, "get_installed_libraries", get_installed_libraries)
 
 
@@ -50,7 +51,8 @@ def fix_deletion_template_defaulttags_ssi(utils):
 
     from django.template.engine import Engine
     _old_init = Engine.__init__
-    def __engine_init__(self, dirs=None, app_dirs=False, allowed_include_roots=None, **kwargs):
+
+    def __init__(self, dirs=None, app_dirs=False, allowed_include_roots=None, **kwargs):
         if allowed_include_roots is None:
             allowed_include_roots = []
         if isinstance(allowed_include_roots, six.string_types):
@@ -58,4 +60,5 @@ def fix_deletion_template_defaulttags_ssi(utils):
                 "allowed_include_roots must be a tuple, not a string.")
         self.allowed_include_roots = allowed_include_roots
         _old_init(self, dirs=dirs, app_dirs=app_dirs, **kwargs)
-    utils.inject_callable(Engine, "__init__", __engine_init__)
+
+    utils.inject_callable(Engine, "__init__", __init__)

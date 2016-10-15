@@ -10,7 +10,6 @@ import sys
 from django.utils import six
 
 # use this logger, from inside fixers!
-PATCH_NAME_SUFFIX = "__DJANGO_COMPAT_PATCHER"
 logger = logging.getLogger("django.compat.patcher")
 
 
@@ -24,16 +23,9 @@ def get_django_version():
     return django.get_version()
 
 
-def _patch_object__name__(object_to_patch, target_name):
-    # Prevent external libraries that use __name__ from failing
-    assert object_to_patch.__name__ == target_name
-    if not get_patcher_setting('DCP_MONKEY_PATCH_NAME'):
-        return
-    if not six.PY3:
-        return  # changing __name__ on python2 might break pickling
-    if not object_to_patch.__name__.endswith(PATCH_NAME_SUFFIX):
-        new_name = "{}{}".format(object_to_patch.__name__, PATCH_NAME_SUFFIX)
-        object_to_patch.__name__ = new_name
+def _patch_injected_object(object_to_patch):
+    if get_patcher_setting('DCP_PATCH_INJECTED_OBJECT'):
+        setattr(object_to_patch, "__dcp_injected__", True)
 
 
 def get_patcher_setting(name, settings_override=None):
@@ -64,7 +56,7 @@ def get_patcher_setting(name, settings_override=None):
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now
-    if name == "DCP_MONKEY_PATCH_NAME":
+    if name == "DCP_PATCH_INJECTED_OBJECT":
         assert isinstance(setting, bool)
     else:
         assert (setting == "*" or (isinstance(setting, list) and
@@ -93,7 +85,7 @@ def inject_callable(target_object, target_callable_name, patch_callable):
     # TODO logging and warnings
     assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial)), patch_callable
 
-    _patch_object__name__(patch_callable, target_callable_name)
+    _patch_injected_object(patch_callable)
     setattr(target_object, target_callable_name, patch_callable)
 
 
@@ -107,6 +99,8 @@ def inject_module(target_module_name, target_module):
     assert isinstance(target_module, types.ModuleType), target_module
     assert sys.modules.get(target_module_name) is None
 
+    _patch_injected_object(target_module)
+
     sys.modules[target_module_name] = target_module
 
 
@@ -119,7 +113,7 @@ def inject_class(target_object, target_klassname, klass):
     # TODO logging and warnings
     assert isinstance(klass, six.class_types), klass
 
-    _patch_object__name__(klass, target_klassname)
+    _patch_injected_object(klass)
     setattr(target_object, target_klassname, klass)
 
 
