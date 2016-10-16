@@ -50,8 +50,10 @@ def _create_fixer_list(all_fixers, grid):
     Ex: ["fix_deletion_http_request_HttpRequest_raw_post_data", "1.6", ""]
     """
     for fixer in all_fixers:
+        format_tuple = (fixer['fixer_explanation'].replace('\n', '').strip(),
+                        fixer["fixer_callable"].__name__)
         grid.append([
-            ":code:`{}` *({})*".format(fixer["fixer_callable"].__name__, fixer['fixer_explanation'].replace('\n', '').strip()),
+            "**{}** (:code:`{}`)".format(*format_tuple),
             fixer['fixer_family'],
             detuplify(fixer["fixer_applied_from_django"]),
             detuplify(fixer['fixer_applied_upto_django'])
@@ -59,7 +61,7 @@ def _create_fixer_list(all_fixers, grid):
 
 
 def _create_headers(grid):
-    table_headers = ['Fixer name', 'Fixer family', "Min version", "Max version"]
+    table_headers = ['Fixer', 'Fixer family', "Min version", "Max version"]
     grid.append(table_headers)
 
 
