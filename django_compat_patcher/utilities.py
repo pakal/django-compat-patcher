@@ -28,22 +28,22 @@ def _patch_injected_object(object_to_patch):
         setattr(object_to_patch, "__dcp_injected__", True)
 
 
-def get_patcher_setting(name, settings_override=None):
+def get_patcher_setting(name, settings_overrides=None):
     """
     Fetches the value of the setting with its name, either from the settings argument,
     falling back to the project's settings
     :param name: The name of the setting
-    :param settings_override: An override for the project's settings
+    :param settings_overrides: Overrides for the project's settings
     :return: The value of the setting "name"
     """
     from django.conf import settings as django_settings
     from . import default_settings
     from django.conf import LazySettings
 
-    if settings_override is None or settings_override == {}:
+    if settings_overrides is None or settings_overrides == {}:
         settings = django_settings
     else:
-        settings = settings_override
+        settings = settings_overrides
 
     assert name.startswith("DCP"), name
 
@@ -51,8 +51,8 @@ def get_patcher_setting(name, settings_override=None):
         if isinstance(settings, LazySettings):
             setting = getattr(settings, name)  # Will break if unknown setting
         else:
-            setting = settings.get(name)
-    except AttributeError:  # FIXME fallback to default value
+            setting = settings[name]
+    except (AttributeError, KeyError):
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now

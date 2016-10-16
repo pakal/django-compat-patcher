@@ -85,10 +85,10 @@ def get_relevant_fixers(current_django_version,
     log = log or (lambda x: x)
 
     ALL = "*"  # special value for patcher settings
-    include_fixer_ids = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_IDS", settings_override=settings)
-    include_fixer_families = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_FAMILIES", settings_override=settings)
-    exclude_fixer_ids = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_IDS", settings_override=settings)
-    exclude_fixer_families = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_FAMILIES", settings_override=settings)
+    include_fixer_ids = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_IDS", settings_overrides=settings)
+    include_fixer_families = utilities.get_patcher_setting("DCP_INCLUDE_FIXER_FAMILIES", settings_overrides=settings)
+    exclude_fixer_ids = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_IDS", settings_overrides=settings)
+    exclude_fixer_families = utilities.get_patcher_setting("DCP_EXCLUDE_FIXER_FAMILIES", settings_overrides=settings)
 
     for fixer_id, fixer in FIXERS_REGISTRY.items():
         assert fixer_id == fixer["fixer_id"], fixer
