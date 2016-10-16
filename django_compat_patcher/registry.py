@@ -1,26 +1,13 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import collections
+
 from django.utils import six
 
+from django_compat_patcher.utilities import _tuplify
 from . import utilities
 
 FIXERS_REGISTRY = collections.OrderedDict()
-
-
-def _normalize_version(version):
-    """
-    Coerces the version string (if not None), to a version tuple.
-    Ex. "1.7.0" becomes (1, 7, 0).
-    """
-    if version is None:
-        return version
-    if isinstance(version, six.string_types):
-        version = tuple(int(x) for x in version.split("."))
-    assert len(version) <= 4, version
-    assert (1, 3) <= version, version
-    assert all(isinstance(x, six.integer_types) for x in version), version
-    return version
 
 
 def _extract_doc(func):
@@ -54,20 +41,20 @@ def register_compatibility_fixer(fixer_reference_version,
     assert isinstance(fixer_reference_version, six.string_types)  # eg. "1.9"
     assert fixer_delayed in (True, False), fixer_delayed
 
-    fixer_family= "django" + fixer_reference_version  # eg. django1.9
+    fixer_family = "django" + fixer_reference_version  # eg. django1.9
 
     def _register_simple_fixer(func):
         fixer_id = func.__name__  # untouched ATM, not fully qualified
         new_fixer = dict(fixer_callable=func,
                          fixer_explanation=_extract_doc(func),
                          fixer_id=fixer_id,
-                         fixer_reference_version=_normalize_version(fixer_reference_version),
+                         fixer_reference_version=_tuplify(fixer_reference_version),
                          fixer_family=fixer_family,
-                         fixer_applied_from_django=_normalize_version(fixer_applied_from_django),
-                         fixer_applied_upto_django=_normalize_version(fixer_applied_upto_django),
+                         fixer_applied_from_django=_tuplify(fixer_applied_from_django),
+                         fixer_applied_upto_django=_tuplify(fixer_applied_upto_django),
                          fixer_delayed=fixer_delayed,
-                         feature_supported_from_django=_normalize_version(feature_supported_from_django),
-                         feature_supported_upto_django=_normalize_version(feature_supported_upto_django), )
+                         feature_supported_from_django=_tuplify(feature_supported_from_django),
+                         feature_supported_upto_django=_tuplify(feature_supported_upto_django), )
 
         assert fixer_id not in FIXERS_REGISTRY, "duplicate fixer id %s detected" % fixer_id
         FIXERS_REGISTRY[fixer_id] = new_fixer
@@ -91,7 +78,7 @@ def get_relevant_fixers(current_django_version,
     else a list of strings is expected.
     """
 
-    current_django_version = _normalize_version(current_django_version)
+    current_django_version = _tuplify(current_django_version)
 
     relevant_fixers = []
 

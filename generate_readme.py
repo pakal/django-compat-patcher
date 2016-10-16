@@ -2,6 +2,7 @@ from functools import reduce
 from io import open  # Python2 compatibility
 
 from django_compat_patcher.registry import get_all_fixers
+from django_compat_patcher.utilities import _detuplify
 
 
 def make_table(grid):
@@ -31,18 +32,6 @@ def make_table(grid):
     return rst
 
 
-def detuplify(input_tuple):  # TODO refactor to utilities
-    """
-    Coerces the version tuple (if not None), to a version string.
-    Ex. (1, 7, 0) becomes "1.7.0".
-    """
-    if input_tuple is None:
-        return ""
-    assert isinstance(input_tuple, tuple)
-    string = ".".join(str(number) for number in input_tuple)
-    return string
-
-
 def _create_fixer_list(all_fixers, grid):
     """
     Creates a list for the fixers table.
@@ -55,8 +44,8 @@ def _create_fixer_list(all_fixers, grid):
         grid.append([
             "**{}** (:code:`{}`)".format(*format_tuple),
             fixer['fixer_family'],
-            detuplify(fixer["fixer_applied_from_django"]),
-            detuplify(fixer['fixer_applied_upto_django'])
+            _detuplify(fixer["fixer_applied_from_django"]),
+            _detuplify(fixer['fixer_applied_upto_django'])
         ])
 
 

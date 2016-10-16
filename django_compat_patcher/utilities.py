@@ -140,6 +140,33 @@ def inject_function_alias(source_object, source_attrname,
     return wrapper
 
 
+def _tuplify(version):
+    """
+    Coerces the version string (if not None), to a version tuple.
+    Ex. "1.7.0" becomes (1, 7, 0).
+    """
+    if version is None:
+        return version
+    if isinstance(version, six.string_types):
+        version = tuple(int(x) for x in version.split("."))
+    assert len(version) <= 4, version
+    assert (1, 3) <= version, version
+    assert all(isinstance(x, six.integer_types) for x in version), version
+    return version
+
+
+def _detuplify(input_tuple):
+    """
+    Coerces the version tuple (if not None), to a version string.
+    Ex. (1, 7, 0) becomes "1.7.0".
+    """
+    if input_tuple is None:
+        return ""
+    assert isinstance(input_tuple, tuple)
+    string = ".".join(str(number) for number in input_tuple)
+    return string
+
+
 '''
 BORROWED FROM DJANGO DEPRECATION MODULE
 
