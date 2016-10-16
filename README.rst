@@ -32,7 +32,7 @@ DCP_INCLUDE_FIXER_FAMILIES
 **************************
 List of fixer families to include.
 
-.. warning:: If you want to include a specific category, remember to remove the :code:`"*"` from :code:`DCP_INCLUDE_FIXER_IDS`.
+Note: If you want to include a specific category, remember to remove the :code:`"*"` from :code:`DCP_INCLUDE_FIXER_IDS`.
 
 | **Default:** :code:`[]`
 | **Type:** List of strings
@@ -43,7 +43,7 @@ DCP_EXCLUDE_FIXER_IDS
 *********************
 List of fixer names to exclude.
 
-.. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
+Note: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
 
 | **Default:** :code:`[]`
 | **Type:** List of strings
@@ -53,9 +53,9 @@ DCP_EXCLUDE_FIXER_FAMILIES
 **************************
 List of fixer families to exclude.
 
-.. warning:: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
+Note: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
 
-| **Default:** :code:`[]``
+| **Default:** :code:`[]`
 | **Type:** List of strings
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
@@ -63,7 +63,7 @@ List of fixer families to exclude.
 DCP_PATCH_INJECTED_OBJECT
 *************************
 
-If set to :code:`False`, the patcher will not add a :code:`__dcp_injected__ = True` attribute to the injected callables, modules and classes.
+The patcher adds a :code:`__dcp_injected__ = True` attribute to the injected callables, modules and classes.
 
 | **Default:** :code:`True`
 | **Type:** Boolean
@@ -73,7 +73,7 @@ If set to :code:`False`, the patcher will not add a :code:`__dcp_injected__ = Tr
 Table of fixers
 ===============
 
-There are currently 17 working fixers.
+There are currently 17 available fixers.
 
 +----------------------------------------------------------------+----------------------------------------------------------------+----------------------------------------------------------------+
 | Fixer name                                                     | Min version                                                    | Max version                                                    |
