@@ -31,7 +31,7 @@ def make_table(grid):
     return rst
 
 
-def detuplify(input_tuple):
+def detuplify(input_tuple):  # TODO refactor to utilities
     """
     Coerces the version tuple (if not None), to a version string.
     Ex. (1, 7, 0) becomes "1.7.0".
@@ -51,14 +51,15 @@ def _create_fixer_list(all_fixers, grid):
     """
     for fixer in all_fixers:
         grid.append([
-            fixer["fixer_callable"].__name__,
+            "**{}** ({})".format(fixer["fixer_callable"].__name__, fixer['fixer_explanation'].replace('\n', '').strip()),
+            fixer['fixer_family'],
             detuplify(fixer["fixer_applied_from_django"]),
             detuplify(fixer['fixer_applied_upto_django'])
         ])
 
 
 def _create_headers(grid):
-    table_headers = ['Fixer name', "Min version", "Max version"]
+    table_headers = ['Fixer name', 'Fixer family', "Min version", "Max version"]
     grid.append(table_headers)
 
 

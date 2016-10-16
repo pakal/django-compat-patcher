@@ -19,7 +19,7 @@ def test__patch_injected_object():
         pass
 
     inject_callable(actions, 'delete_selected', delete_selected)
-    assert getattr(actions.delete_selected, "__dcp_injected__") == True
+    assert getattr(actions.delete_selected, "__dcp_injected__") == True  # TODO Module check
 
 
 @override_settings(DCP_PATCH_INJECTED_OBJECT=False)
@@ -38,4 +38,4 @@ def test_DCP_PATCH_INJECTED_OBJECT_setting():
     import mock_module
 
     inject_callable(mock_module, 'method', MockModule.method)
-    assert not hasattr(mock_module.method, "__dcp_injected__")
+    assert not hasattr(mock_module.method, "__dcp_injected__") # FIXME USE GLOBAL VARIABLE

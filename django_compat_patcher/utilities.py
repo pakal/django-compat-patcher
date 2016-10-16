@@ -45,19 +45,19 @@ def get_patcher_setting(name, settings_override=None):
     else:
         settings = settings_override
 
-    assert name.startswith("DCP")
+    assert name.startswith("DCP"), name
 
     try:
         if isinstance(settings, LazySettings):
             setting = getattr(settings, name)  # Will break if unknown setting
         else:
             setting = settings.get(name)
-    except AttributeError:
+    except AttributeError:  # FIXME fallback to default value
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now
     if name == "DCP_PATCH_INJECTED_OBJECT":
-        assert isinstance(setting, bool)
+        assert isinstance(setting, bool), setting
     else:
         assert (setting == "*" or (isinstance(setting, list) and
                                    all(isinstance(f, six.string_types) for f in setting))), setting
