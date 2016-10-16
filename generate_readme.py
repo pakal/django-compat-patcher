@@ -51,7 +51,7 @@ def _create_fixer_list(all_fixers, grid):
     """
     for fixer in all_fixers:
         grid.append([
-            "**{}** ({})".format(fixer["fixer_callable"].__name__, fixer['fixer_explanation'].replace('\n', '').strip()),
+            ":code:`{}` *({})*".format(fixer["fixer_callable"].__name__, fixer['fixer_explanation'].replace('\n', '').strip()),
             fixer['fixer_family'],
             detuplify(fixer["fixer_applied_from_django"]),
             detuplify(fixer['fixer_applied_upto_django'])
