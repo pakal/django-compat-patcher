@@ -33,7 +33,7 @@ Name
 ----
 
 - Fixers have to be decorated using :code:`register_compatibility_fixer` and the like (found in :code:`registry.py`). Hint: you can be DRY using :code:`functools.partial`
-- Fixers are named using the following syntax: :code:`fix_<kind>_<path>_<element>(<params>)`
+- Fixers are named using the following syntax: :code:`fix_<kind>_<path>_<element>(<utils>, \*args, \*\*kwargs)`
 
     - :code:`<kind>` is one of the following :
         - deletion
@@ -44,7 +44,7 @@ Name
 
     - :code:`<path>` is the path of the module starting from django, but not including.
     - :code:`<element>` is the element to be patched: you have to use the same casing as the original element.
-    - :code:`<params>` the parameters, usually utils from our project.
+    - :code:`<utils>` are this project's utility functions.
 
 Example
 -------
