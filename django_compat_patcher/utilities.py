@@ -140,7 +140,7 @@ def inject_function_alias(source_object, source_attrname,
     return wrapper
 
 
-def _tuplify(version):
+def _tuplify_version(version):
     """
     Coerces the version string (if not None), to a version tuple.
     Ex. "1.7.0" becomes (1, 7, 0).
@@ -155,7 +155,7 @@ def _tuplify(version):
     return version
 
 
-def _detuplify(input_tuple):
+def _detuplify_version(input_tuple):
     """
     Coerces the version tuple (if not None), to a version string.
     Ex. (1, 7, 0) becomes "1.7.0".

@@ -4,7 +4,7 @@ import collections
 
 from django.utils import six
 
-from django_compat_patcher.utilities import _tuplify
+from django_compat_patcher.utilities import _tuplify_version
 from . import utilities
 
 FIXERS_REGISTRY = collections.OrderedDict()
@@ -48,13 +48,13 @@ def register_compatibility_fixer(fixer_reference_version,
         new_fixer = dict(fixer_callable=func,
                          fixer_explanation=_extract_doc(func),
                          fixer_id=fixer_id,
-                         fixer_reference_version=_tuplify(fixer_reference_version),
+                         fixer_reference_version=_tuplify_version(fixer_reference_version),
                          fixer_family=fixer_family,
-                         fixer_applied_from_django=_tuplify(fixer_applied_from_django),
-                         fixer_applied_upto_django=_tuplify(fixer_applied_upto_django),
+                         fixer_applied_from_django=_tuplify_version(fixer_applied_from_django),
+                         fixer_applied_upto_django=_tuplify_version(fixer_applied_upto_django),
                          fixer_delayed=fixer_delayed,
-                         feature_supported_from_django=_tuplify(feature_supported_from_django),
-                         feature_supported_upto_django=_tuplify(feature_supported_upto_django), )
+                         feature_supported_from_django=_tuplify_version(feature_supported_from_django),
+                         feature_supported_upto_django=_tuplify_version(feature_supported_upto_django), )
 
         assert fixer_id not in FIXERS_REGISTRY, "duplicate fixer id %s detected" % fixer_id
         FIXERS_REGISTRY[fixer_id] = new_fixer
@@ -78,7 +78,7 @@ def get_relevant_fixers(current_django_version,
     else a list of strings is expected.
     """
 
-    current_django_version = _tuplify(current_django_version)
+    current_django_version = _tuplify_version(current_django_version)
 
     relevant_fixers = []
 

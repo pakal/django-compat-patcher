@@ -2,7 +2,7 @@ from functools import reduce
 from io import open  # Python2 compatibility
 
 from django_compat_patcher.registry import get_all_fixers
-from django_compat_patcher.utilities import _detuplify
+from django_compat_patcher.utilities import _detuplify_version
 
 
 def make_table(grid):
@@ -44,8 +44,8 @@ def _create_fixer_list(all_fixers, grid):
         grid.append([
             "**{}** (:code:`{}`)".format(*format_tuple),
             fixer['fixer_family'],
-            _detuplify(fixer["fixer_applied_from_django"]),
-            _detuplify(fixer['fixer_applied_upto_django'])
+            _detuplify_version(fixer["fixer_applied_from_django"]),
+            _detuplify_version(fixer['fixer_applied_upto_django'])
         ])
 
 
