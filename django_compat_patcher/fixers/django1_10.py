@@ -62,3 +62,39 @@ def fix_deletion_template_defaulttags_ssi(utils):
         _old_init(self, dirs=dirs, app_dirs=app_dirs, **kwargs)
 
     utils.inject_callable(Engine, "__init__", __init__)
+
+
+@django1_10_bc_fixer()
+def fix_deletion_conf_urls_patterns(utils):
+    """
+    Preserve the patterns() builder for django urls.
+    """
+    from django.core.urlresolvers import RegexURLPattern
+    from django.conf.urls import url
+    from django.conf import urls
+
+    def add_prefix(self, prefix):
+        """
+        Adds the prefix string to a string-based callback.
+        """
+        if not prefix or not hasattr(self, '_callback_str'):
+            return
+        self._callback_str = prefix + '.' + self._callback_str
+    utils.inject_callable(RegexURLPattern, "add_prefix", add_prefix)
+
+    def patterns(prefix, *args):
+        utils.emit_warning(
+            'django.conf.urls.patterns() is deprecated and will be removed in '
+            'Django 1.10. Update your urlpatterns to be a list of '
+            'django.conf.urls.url() instances instead.',
+            RemovedInDjango110Warning, stacklevel=2
+        )
+        pattern_list = []
+        for t in args:
+            if isinstance(t, (list, tuple)):
+                t = url(prefix=prefix, *t)
+            elif isinstance(t, RegexURLPattern):
+                t.add_prefix(prefix)
+            pattern_list.append(t)
+        return pattern_list
+    utils.inject_callable(urls, "patterns", patterns)

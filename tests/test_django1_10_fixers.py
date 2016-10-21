@@ -15,3 +15,12 @@ def test_fix_deletion_templatetags_future():
 def test_fix_deletion_template_defaulttags_ssi():
     # already tested in "test_fix_deletion_templatetags_future_ssi()"
     from django.template.defaulttags import ssi
+    assert callable(ssi)
+
+
+def test_fix_deletion_conf_urls_patterns():
+    from django.conf.urls import patterns, url
+    patterns("admin",
+        (r'^admin/', "site.urls"),
+        url(r'^admin/', "site.urls", name="test_admin"),
+    )
