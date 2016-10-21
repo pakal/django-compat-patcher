@@ -114,26 +114,39 @@ def test_fix_deletion_utils_datastructures_SortedDict():
 def test_fix_deletion_utils_importlib():
     import django.utils.importlib
     from django.utils import importlib
+    csv_module = importlib.import_module("csv")
+    import csv
+    assert csv_module is csv
 
 
 def test_fix_deletion_utils_tzinfo():
     import django.utils.tzinfo
     from django.utils import tzinfo
+    assert tzinfo.FixedOffset(35)
 
 
 def test_fix_deletion_utils_dictconfig():
     import django.utils.dictconfig
     from django.utils import dictconfig
+    assert dictconfig.valid_ident("myident")
 
 
 def test_fix_deletion_utils_functional_memoize():
     import django.utils.functional
     from django.utils.functional import memoize
+    cache = {}
+    def myfun(myarg):
+        return myarg
+    myfun = memoize(myfun, cache, num_args=1)
+    myfun(3)
+    myfun(4)
+    assert cache == {(3,): 3, (4,): 4}
 
 
 def test_fix_deletion_utils_unittest():
     import django.utils.unittest
     from django.utils import unittest
+    assert callable(unittest.TestCase)
 
 
 def test_fix_deletion_django_core_management_base_AppCommand_handle_app():
@@ -155,7 +168,13 @@ def test_fix_deletion_django_core_management_base_AppCommand_handle_app():
 
 def test_fix_deletion_contrib_sites_models_RequestSite():
     from django.contrib.sites.models import RequestSite
+    from django.contrib.sites.requests import RequestSite as RealRequestSite
+    assert callable(RequestSite)
+    assert issubclass(RequestSite, RealRequestSite)
 
 
 def test_fix_deletion_contrib_sites_models_get_current_site():
+    class request:
+        SITE_ID = 1
     from django.contrib.sites.models import get_current_site
+    assert get_current_site(request)

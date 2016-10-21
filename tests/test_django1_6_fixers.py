@@ -16,4 +16,4 @@ def test_fix_deletion_http_request_HttpRequest_raw_post_data():
         'wsgi.input': payload,
     })
 
-    assert request.body == request.raw_post_data
+    assert request.body == request.raw_post_data == 'Hello There!'
