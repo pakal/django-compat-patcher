@@ -4,7 +4,7 @@ import sys, os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))  # security
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -36,7 +36,7 @@ setup(
     long_description=read("README.rst"),
 
     #package_dir={'': 'src'},
-    packages=["django_compat_patcher", "django_compat_patcher.fixers"],
+    packages=find_packages(),
 
     # test_suite='your.module.tests',
 
