@@ -65,6 +65,35 @@ def fix_deletion_template_defaulttags_ssi(utils):
 
 
 @django1_10_bc_fixer()
+def fix_behaviour_conf_urls_url(utils):
+    """
+    Support passing views to url() as dotted strings instead of view objects.
+    """
+    from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
+    from django.conf import urls
+    def url(regex, view, kwargs=None, name=None, prefix=''):
+        if isinstance(view, (list, tuple)):
+            # For include(...) processing.
+            urlconf_module, app_name, namespace = view
+            return RegexURLResolver(regex, urlconf_module, kwargs, app_name=app_name, namespace=namespace)
+        else:
+            if isinstance(view, six.string_types):
+                utils.emit_warning(
+                    'Support for string view arguments to url() is deprecated and '
+                    'will be removed in Django 1.10 (got %s). Pass the callable '
+                    'instead.' % view,
+                    RemovedInDjango110Warning, stacklevel=2
+                )
+                if not view:
+                    raise ImproperlyConfigured('Empty URL pattern view name not permitted (for pattern %r)' % regex)
+                if prefix:
+                    view = prefix + '.' + view
+            return RegexURLPattern(regex, view, kwargs, name)
+    assert callable(urls.url)
+    utils.inject_callable(urls, "url", url)
+
+
+@django1_10_bc_fixer()
 def fix_deletion_conf_urls_patterns(utils):
     """
     Preserve the patterns() builder for django urls.
