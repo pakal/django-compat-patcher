@@ -127,3 +127,5 @@ def fix_deletion_conf_urls_patterns(utils):
             pattern_list.append(t)
         return pattern_list
     utils.inject_callable(urls, "patterns", patterns)
+
+    urls.__all__.append(str("patterns"))  # so that star imports work fine

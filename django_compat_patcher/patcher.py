@@ -28,7 +28,9 @@ def patch(settings=None):
             # print("Applying fixer", fixer)
             # TODO - create custom injected "utils" object with context information, logging, warnings, etc.
             if fixer['fixer_id'] not in __APPLIED_FIXERS:
-                utilities.logger.info("Django compat fixer '{}' is getting applied".format(fixer['fixer_id']))
+                utilities.logger.info("Django compat fixer '{}-{}' is getting applied".format(
+                    fixer["fixer_family"], fixer['fixer_id'])
+                )
                 fixer["fixer_callable"](utilities)
                 __APPLIED_FIXERS.add(fixer['fixer_id'])
             else:

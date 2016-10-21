@@ -24,8 +24,10 @@ def test_fix_behaviour_conf_urls_url():
 
 
 def test_fix_deletion_conf_urls_patterns():
+    import django.conf.urls
     from django.conf.urls import patterns, url
     patterns("admin",
         (r'^admin1/', "site.urls"),
         url(r'^admin2/', "site.urls", name="test_admin_other"),
     )
+    assert "patterns" in django.conf.urls.__all__
