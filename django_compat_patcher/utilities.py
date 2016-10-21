@@ -47,7 +47,8 @@ def get_patcher_setting(name, settings=None):
     if settings is None:
         settings = django_settings
 
-    assert name.startswith("DCP"), name
+    if not name.startswith("DCP"):
+        raise ValueError("Only 'DCP_XXX' setting names are allowed in get_patcher_setting()")
 
     try:
         if isinstance(settings, LazySettings):

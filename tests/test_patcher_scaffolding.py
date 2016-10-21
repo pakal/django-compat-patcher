@@ -11,7 +11,7 @@ from django_compat_patcher import patch
 
 
 def test_get_patcher_setting():
-    with pytest.raises(AssertionError):  # Fixme ValueError?
+    with pytest.raises(ValueError):
         get_patcher_setting("DEBUG")  # only DCP settings allowed
     assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS") == "*"
     assert get_patcher_setting("DCP_INCLUDE_FIXER_IDS",
