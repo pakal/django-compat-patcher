@@ -28,22 +28,24 @@ def _patch_injected_object(object_to_patch):
         setattr(object_to_patch, "__dcp_injected__", True)
 
 
-def get_patcher_setting(name, settings_overrides=None):
+def get_patcher_setting(name, settings=None):
     """
-    Fetches the value of the setting with its name, either from the settings argument,
-    falling back to the project's settings
+    Fetches the value of the setting with its name,
+    either from the settings argument (if not None),
+    or from django settings.
+
+    If it's not found, a default value is returned for the setting.
+
     :param name: The name of the setting
-    :param settings_overrides: Overrides for the project's settings
+    :param settings: Replacement for the project's settings
     :return: The value of the setting "name"
     """
     from django.conf import settings as django_settings
     from . import default_settings
     from django.conf import LazySettings
 
-    if settings_overrides is None or settings_overrides == {}:
+    if settings is None:
         settings = django_settings
-    else:
-        settings = settings_overrides
 
     assert name.startswith("DCP"), name
 
