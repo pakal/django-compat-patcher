@@ -44,6 +44,16 @@ def fix_deletion_utils_dictconfig(utils):
 
 
 @django1_9_bc_fixer()
+def fix_deletion_utils_functional_memoize(utils):
+    """
+    Preserve utils.functional.memoize() utility
+    """
+    import django.utils.functional
+    from django_compat_patcher.django_legacy.django1_9.utils.functional import memoize
+    utils.inject_callable(django.utils.functional, "memoize", memoize)
+
+
+@django1_9_bc_fixer()
 def fix_deletion_utils_importlib(utils):
     """
     Preserve the importlib util file

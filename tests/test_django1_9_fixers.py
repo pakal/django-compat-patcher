@@ -126,6 +126,11 @@ def test_fix_deletion_utils_dictconfig():
     from django.utils import dictconfig
 
 
+def test_fix_deletion_utils_functional_memoize():
+    import django.utils.functional
+    from django.utils.functional import memoize
+
+
 def test_fix_deletion_utils_unittest():
     import django.utils.unittest
     from django.utils import unittest
