@@ -58,6 +58,16 @@ def test_fix_behaviour_urls_resolvers_RegexURLPattern():
         assert pattern.lookup_str == "test_project.views.my_view"
 
 
+def test_fix_behaviour_core_urlresolvers_reverse_with_prefix():
+    from django.urls import reverse
+
+    view = reverse("homepage")  # by view name
+    assert view == '/homepage/'
+
+    view = reverse("test_project.views.my_view")  # by dotted path
+    assert view == "/my_view/"
+
+
 def test_fix_behaviour_conf_urls_url():
     from django.conf.urls import url
     url(r'^admin2/', "test_project.views.my_view", name="test_admin_abc"),

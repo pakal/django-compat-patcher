@@ -14,6 +14,14 @@ django1_10_bc_fixer = partial(register_compatibility_fixer,
                               fixer_applied_from_django="1.10")
 
 
+def _get_url_utils():
+    try:
+        from django.urls.utils import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+    except ImportError:
+        from django.core.urlresolvers import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch   # old location
+    return get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+
+
 @django1_10_bc_fixer()
 def fix_deletion_templatetags_future(utils):
     """
@@ -71,11 +79,7 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
     instead of view object.
     """
 
-    from django.core.urlresolvers import RegexURLPattern
-    try:
-        from django.urls.utils import get_callable
-    except ImportError:
-        from django.core.urlresolvers import get_callable  # old location
+    get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
 
     @property
     def callback(self):
@@ -106,11 +110,38 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
 
 
 @django1_10_bc_fixer()
+def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
+    """
+    Preserve the ability to call urlresolver on dotted string view,
+    instead of explicit view name.
+    """
+
+    get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
+
+    original_reverse_with_prefix = RegexURLResolver._reverse_with_prefix
+
+    def _reverse_with_prefix(self, lookup_view, _prefix, *args, **kwargs):
+        original_lookup = lookup_view
+        try:
+            if self._is_callback(lookup_view):
+                utils.emit_warning(
+                    'Reversing by dotted path is deprecated (%s).' % original_lookup,
+                    RemovedInDjango110Warning, stacklevel=3
+                )
+                lookup_view = get_callable(lookup_view)
+        except (ImportError, AttributeError) as e:
+            raise NoReverseMatch("Error importing '%s': %s." % (lookup_view, e))
+        return original_reverse_with_prefix(self, lookup_view, _prefix, *args, **kwargs)
+    utils.inject_callable(RegexURLResolver, "_reverse_with_prefix", _reverse_with_prefix)
+
+
+@django1_10_bc_fixer()
 def fix_behaviour_conf_urls_url(utils):
     """
     Support passing views to url() as dotted strings instead of view objects.
     """
-    from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
+    get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
+
     from django.conf import urls
 
     def url(regex, view, kwargs=None, name=None, prefix=''):
