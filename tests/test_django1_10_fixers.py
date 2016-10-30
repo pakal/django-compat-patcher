@@ -43,15 +43,14 @@ def test_fix_behaviour_urls_resolvers_RegexURLPattern():
     with pytest.raises(ImportError):
         pattern.callback  # bad prefix now
     if has_lookup_str:
-        # CACHED property so still working!
-        assert pattern.lookup_str == "test_project.views.my_view"
+        # our own "lookup_str" property bypasses the original, CACHED, one
+        assert pattern.lookup_str == "myprefix.test_project.views.my_view"
 
     pattern = RegexURLPattern("homepage/", "my_view")
     with pytest.raises(ImportError):
         pattern.callback  # missing prefix
     if has_lookup_str:
-        with pytest.raises(ImportError):
-            pattern.lookup_str  # missing prefix
+        assert pattern.lookup_str == "my_view"  # missing prefix but works
     pattern.add_prefix("test_project.views")
     assert pattern.callback.__name__ == "my_view"
     if has_lookup_str:

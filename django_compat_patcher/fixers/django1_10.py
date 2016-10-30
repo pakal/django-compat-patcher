@@ -108,6 +108,16 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
         self.callback = prefix + '.' + callback
     utils.inject_callable(RegexURLPattern, "add_prefix", add_prefix)
 
+    original_lookup_str = RegexURLPattern.lookup_str
+    @property  # not cached...
+    def lookup_str(self):
+        callback = self.__dict__["callback"]
+        if isinstance(callback, six.string_types):
+            # no need for warning, already emitted above
+            return callback  # already a dotted path to view
+        return original_lookup_str.__get__(self, self.__class__)
+    utils.inject_attribute(RegexURLPattern, "lookup_str", lookup_str)
+
 
 @django1_10_bc_fixer()
 def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
@@ -115,7 +125,7 @@ def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
     Preserve the ability to call urlresolver on dotted string view,
     instead of explicit view name.
     """
-
+    from django.utils.functional import cached_property
     get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
 
     original_reverse_with_prefix = RegexURLResolver._reverse_with_prefix
@@ -133,6 +143,7 @@ def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
             raise NoReverseMatch("Error importing '%s': %s." % (lookup_view, e))
         return original_reverse_with_prefix(self, lookup_view, _prefix, *args, **kwargs)
     utils.inject_callable(RegexURLResolver, "_reverse_with_prefix", _reverse_with_prefix)
+
 
 
 @django1_10_bc_fixer()
