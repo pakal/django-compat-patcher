@@ -22,6 +22,9 @@ def test_fix_deletion_template_defaulttags_ssi():
 def test_fix_behaviour_urls_resolvers_RegexURLPattern():
 
     from django.core.urlresolvers import RegexURLPattern
+
+    has_lookup_str = hasattr(RegexURLPattern, "lookup_str")
+
     def dummy_view(request):
         return 72627
 
@@ -29,18 +32,30 @@ def test_fix_behaviour_urls_resolvers_RegexURLPattern():
     assert pattern.callback is dummy_view
     pattern.add_prefix("muyprefix")
     assert pattern.callback is dummy_view
+    if has_lookup_str:
+        assert pattern.lookup_str == "test_django1_10_fixers.dummy_view"
 
     pattern = RegexURLPattern("homepage/", "test_project.views.my_view")
     assert pattern.callback.__name__ == "my_view"
+    if has_lookup_str:
+        assert pattern.lookup_str == "test_project.views.my_view"
     pattern.add_prefix("myprefix")
     with pytest.raises(ImportError):
         pattern.callback  # bad prefix now
+    if has_lookup_str:
+        # CACHED property so still working!
+        assert pattern.lookup_str == "test_project.views.my_view"
 
     pattern = RegexURLPattern("homepage/", "my_view")
     with pytest.raises(ImportError):
         pattern.callback  # missing prefix
+    if has_lookup_str:
+        with pytest.raises(ImportError):
+            pattern.lookup_str  # missing prefix
     pattern.add_prefix("test_project.views")
     assert pattern.callback.__name__ == "my_view"
+    if has_lookup_str:
+        assert pattern.lookup_str == "test_project.views.my_view"
 
 
 def test_fix_behaviour_conf_urls_url():
