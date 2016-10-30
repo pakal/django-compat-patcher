@@ -65,12 +65,54 @@ def fix_deletion_template_defaulttags_ssi(utils):
 
 
 @django1_10_bc_fixer()
+def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
+    """
+    Restore support for dotted string view in RegexURLPattern,
+    instead of view object.
+    """
+
+    from django.core.urlresolvers import RegexURLPattern
+    try:
+        from django.urls.utils import get_callable
+    except ImportError:
+        from django.core.urlresolvers import get_callable  # old location
+
+    @property
+    def callback(self):
+        callback = self.__dict__["callback"]  # bypass descriptor
+        if isinstance(callback, six.string_types):
+            callback_obj = get_callable(callback)
+        else:
+            callback_obj = callback
+        return callback_obj
+
+    @callback.setter
+    def callback(self, value):
+        self.__dict__["callback"] = value  # bypass descriptor
+
+    # we inject a DATA-DESCRIPTOR, so it'll be accessed in prority
+    # over "self.callback" instance attribute
+    utils.inject_attribute(RegexURLPattern, "callback", callback)
+
+    def add_prefix(self, prefix):
+        """
+        Adds the prefix string to a string-based callback.
+        """
+        callback = self.__dict__["callback"]
+        if not prefix or not isinstance(callback, six.string_types):
+            return
+        self.callback = prefix + '.' + callback
+    utils.inject_callable(RegexURLPattern, "add_prefix", add_prefix)
+
+
+@django1_10_bc_fixer()
 def fix_behaviour_conf_urls_url(utils):
     """
     Support passing views to url() as dotted strings instead of view objects.
     """
     from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
     from django.conf import urls
+
     def url(regex, view, kwargs=None, name=None, prefix=''):
         if isinstance(view, (list, tuple)):
             # For include(...) processing.
@@ -101,15 +143,6 @@ def fix_deletion_conf_urls_patterns(utils):
     from django.core.urlresolvers import RegexURLPattern
     from django.conf.urls import url
     from django.conf import urls
-
-    def add_prefix(self, prefix):
-        """
-        Adds the prefix string to a string-based callback.
-        """
-        if not prefix or not hasattr(self, '_callback_str'):
-            return
-        self._callback_str = prefix + '.' + self._callback_str
-    utils.inject_callable(RegexURLPattern, "add_prefix", add_prefix)
 
     def patterns(prefix, *args):
         utils.emit_warning(
