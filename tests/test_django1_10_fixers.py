@@ -33,15 +33,17 @@ def test_fix_behaviour_urls_resolvers_RegexURLPattern():
     pattern.add_prefix("muyprefix")
     assert pattern.callback is dummy_view
     if has_lookup_str:
-        assert pattern.lookup_str == "test_django1_10_fixers.dummy_view"
+        assert pattern.lookup_str.endswith(".dummy_view")  # complex on py3k
 
     pattern = RegexURLPattern("homepage/", "test_project.views.my_view")
     assert pattern.callback.__name__ == "my_view"
     if has_lookup_str:
         assert pattern.lookup_str == "test_project.views.my_view"
     pattern.add_prefix("myprefix")
-    with pytest.raises(ImportError):
+    try:
         pattern.callback  # bad prefix now
+    except ImportError:
+        pass  # might or not raise, depending on django version (caching or not)
     if has_lookup_str:
         # our own "lookup_str" property bypasses the original, CACHED, one
         assert pattern.lookup_str == "myprefix.test_project.views.my_view"
@@ -58,7 +60,10 @@ def test_fix_behaviour_urls_resolvers_RegexURLPattern():
 
 
 def test_fix_behaviour_core_urlresolvers_reverse_with_prefix():
-    from django.urls import reverse
+    try:
+        from django.core.urlresolvers import reverse
+    except ImportError:
+        from django.urls import reverse
 
     view = reverse("homepage")  # by view name
     assert view == '/homepage/'
