@@ -206,6 +206,16 @@ def fix_deletion_conf_urls_patterns(utils):
     urls.__all__.append(str("patterns"))  # so that star imports work fine
 
 
+@django1_10_bc_fixer()
+def fix_behaviour_template_smartif_OPERATORS_equals(utils):
+    """
+    Preserve support for a single '=' sign in {% if %} tag.
+    """
+    from django.template import smartif
+    smartif.OPERATORS['='] = smartif.OPERATORS['==']  # operator alias
+
+ 
+
 ''' REQUIRES PYTHON >= 3.3
 @django1_10_bc_fixer()
 def fix_deletion_core_context_processors(utils):

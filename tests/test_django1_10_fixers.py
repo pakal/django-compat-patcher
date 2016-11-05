@@ -85,3 +85,11 @@ def test_fix_deletion_conf_urls_patterns():
         url(r'^admin2/', "test_project.views.my_view", name="test_admin_other"),
     )
     assert "patterns" in django.conf.urls.__all__
+
+
+def test_fix_behaviour_template_smartif_OPERATORS_equals():
+    from compat import render_to_string
+    rendered = render_to_string('core_tags/test_smartif_operators.html', dict(a=3))
+    assert rendered.strip() == 'hello\nbye'
+
+
