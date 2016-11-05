@@ -19,12 +19,13 @@ import os, sys
 import importlib.machinery, importlib.abc
 
 
-MODULES_ALIASES_REGISTRY = [
-                            ]
+# maps ALIASES to REAL MODULES
+MODULES_ALIASES_REGISTRY = []
 
 def register_module_alias(module_alias, real_module):
     assert not module_alias.startswith("."), module_alias
     assert not real_module.startswith("."), real_module
+    assert module_alias != real_module, module_alias  # lots of other import cycles are possible though
     entry = (module_alias, real_module)
     if entry not in MODULES_ALIASES_REGISTRY:
         MODULES_ALIASES_REGISTRY.append(entry)
@@ -76,6 +77,8 @@ class ModuleAliasFinder(importlib.abc.MetaPathFinder):
         if alias_name is None:
             return None  # no alias module is known
 
+        # TODO emit warnings/logging
+
         alias_loader = AliasingLoader(alias_name=alias_name)
 
         spec = importlib.machinery.ModuleSpec(name=fullname,
@@ -92,10 +95,12 @@ def install_module_alias_finder():
     """
     Add a meta path hook before all others, so that new module loadings
     may be redirected to aliased module.
-    """
-    assert ModuleAliasFinder not in sys.meta_path, sys.meta_path
-    sys.meta_path.insert(0, ModuleAliasFinder)
 
+    Idempotent function.
+    """
+    if ModuleAliasFinder not in sys.meta_path:
+        sys.meta_path.insert(0, ModuleAliasFinder)
+    assert ModuleAliasFinder in sys.meta_path, sys.meta_path
 
 
 if __name__ == "__main__":
@@ -103,10 +108,12 @@ if __name__ == "__main__":
     import logging.handlers
 
     install_module_alias_finder()
+    install_module_alias_finder()  # idempotent
 
     register_module_alias("json.comments", "json.tool")
     register_module_alias("mylogging", "logging")
-    register_module_alias("infinite_recursion", "infinite_recursion")
+    register_module_alias("infinite_recursion", "infinite_recursion2")
+    register_module_alias("infinite_recursion2", "infinite_recursion")
 
     fullname = "logging.handlers"
     print ("ALREADY THERE:", fullname, fullname in sys.modules)

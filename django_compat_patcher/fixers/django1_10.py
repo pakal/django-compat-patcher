@@ -204,3 +204,17 @@ def fix_deletion_conf_urls_patterns(utils):
     utils.inject_callable(urls, "patterns", patterns)
 
     urls.__all__.append(str("patterns"))  # so that star imports work fine
+
+
+''' REQUIRES PYTHON >= 3.3
+@django1_10_bc_fixer()
+def fix_deletion_core_context_processors(utils):
+    """
+    Keep django.core.context_processors middlewares as aliases for
+    those of django.template.context_processors.
+    """
+    from .. import import_proxifier
+    import_proxifier.install_module_alias_finder()  # idempotent
+    import_proxifier.register_module_alias(module_alias="django.core.context_processors middlewares",
+                                           real_module="django.template.context_processors")
+'''
