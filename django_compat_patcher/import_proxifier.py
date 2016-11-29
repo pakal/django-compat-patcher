@@ -26,11 +26,11 @@ import importlib
 MODULES_ALIASES_REGISTRY = []
 
 
-def register_module_alias(alias_name, real_module):
+def register_module_alias(alias_name, real_name):
     assert not alias_name.startswith("."), alias_name
-    assert not real_module.startswith("."), real_module
-    assert alias_name != real_module, alias_name  # lots of other import cycles are possible though
-    entry = (alias_name, real_module)
+    assert not real_name.startswith("."), real_name
+    assert alias_name != real_name, alias_name  # lots of other import cycles are possible though
+    entry = (alias_name, real_name)
     if entry not in MODULES_ALIASES_REGISTRY:
         MODULES_ALIASES_REGISTRY.append(entry)
         return True
