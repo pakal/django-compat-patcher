@@ -48,7 +48,7 @@ def test_get_relevant_fixer_ids():
     settings = dict(DCP_INCLUDE_FIXER_IDS=['fix_deletion_templatetags_future_url'],
                     DCP_INCLUDE_FIXER_FAMILIES=["django1.9"],
                     DCP_EXCLUDE_FIXER_IDS=[],
-                    DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.9"])
+                    DCP_EXCLUDE_FIXER_FAMILIES=["django1.6", "django1.7", "django1.8", "django1.9"])
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
     assert fixer_ids == []
 

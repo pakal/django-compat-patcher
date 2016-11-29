@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'test_project',
+
+    # old contrib packages, restored by proxifier in their original django.contrib.* namespace
+    'django_comments'
 ]
 
 MIDDLEWARE_CLASSES = [

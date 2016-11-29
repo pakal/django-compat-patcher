@@ -5,3 +5,7 @@ pytest
 pytest-pythonpath
 
 tox
+
+
+# external ports of contrib packages removed from django
+django-contrib-comments

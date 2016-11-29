@@ -7,13 +7,9 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "test_project.settings"
 logging.basicConfig()  # so that logging works before django LOGGING kicks in
 
 import django
-
-early_django_setup = random.choice((True, False))
-if early_django_setup:
-    django.setup()
-
 import django_compat_patcher
 
+# this MUST happen BEFORE django is setup(), else import proxies can't be installed
 django_compat_patcher.patch()
 
 django.setup()  # idempotent
