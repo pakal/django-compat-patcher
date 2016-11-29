@@ -2,39 +2,44 @@
 This module allows to create aliases between packages, so that one
 can import a module under a different name (mainly for retrocompatibility purpose).
 
+Note that it is NOT about aliasing local references to modules after import, eg. with "from package import module_name as other_module_name".
+Here we really deal with aliasing the "full name" of the module, as it will appear in sys.modules.
+
 There are different ways of implementing "import aliases":
 
-- replacing __import__ (ugly but efficient)
+- overridding __import__ (difficult, since this API loads parent modules too)
 - using a custom module loader which creates a wrapper class (with setattr,
   getattr etc...), and injects it as a proxy in sys.modules[alias]
 - using a custom module loader, which simply copies a reference to the real module
-  into sys.modules (and updates its __spec__ to gives hints about this operation).
-  => THIS IS THE WAY WE DO IT.
+  into sys.modules (and on recent python version, updates its __spec__ to gives hints about this operation).
+  *THIS* is the way it is currently implemented, so that imported modules keep being SINGLETONS whatever their
+  possible aliases.
 
 Beware about not creating loops with your aliases, as this could trigger infinite recursions.
-
 """
 
 import os, sys
-
+import importlib
 
 
 # maps ALIASES to REAL MODULES
 MODULES_ALIASES_REGISTRY = []
 
-def register_module_alias(module_alias, real_module):
-    assert not module_alias.startswith("."), module_alias
+
+def register_module_alias(alias_name, real_module):
+    assert not alias_name.startswith("."), alias_name
     assert not real_module.startswith("."), real_module
-    assert module_alias != real_module, module_alias  # lots of other import cycles are possible though
-    entry = (module_alias, real_module)
+    assert alias_name != real_module, alias_name  # lots of other import cycles are possible though
+    entry = (alias_name, real_module)
     if entry not in MODULES_ALIASES_REGISTRY:
         MODULES_ALIASES_REGISTRY.append(entry)
         return True
     return False
 
+
 def _get_module_alias(fullname):
     for k, v in MODULES_ALIASES_REGISTRY:
-        if (k == fullname) or fullname.startswith( k +"."):
+        if (k == fullname) or fullname.startswith(k +"."):
             return fullname.replace(k, v)
     return None
 
@@ -45,47 +50,40 @@ try:
 
 except ImportError:
 
-    # OLD STYLE : we have to override __import__ to do our trickeries
+    # OLD STYLE : we use PEP 302 find_module/load_module API, available for python2.7+
 
     is_new_style_proxifier = False
 
-    from six.moves import builtins
 
-    original_import_function = builtins.__import__
-
-    def __proxy_import__(name, *args, **kwargs):
-        """
-        Override for the builtin __import__ function, allowing
-        to create aliases for some modules.
-        """
-        alias_name = _get_module_alias(name)
-        if alias_name is not None:
-            # TODO logging here
-            res = original_import_function(alias_name, *args, **kwargs)
-            print ("IMPORTING WITH OLD STYLE PROXIFIER", alias_name, "as", name, ":", res)
-            sys.modules[name] = res
-            return res
-        return original_import_function(name, *args, **kwargs)
+    class AliasingLoader(object):
+        def __init__(self, alias_name):
+            self.alias_name = alias_name
+        def load_module(self, name):
+            if name in sys.modules:
+                return sys.modules[name]  # shortcut
+            # we let the standard machinery handle sys.modules, module attrs etc.
+            module = importlib.import_module(self.alias_name, package=None)
+            sys.modules[name] = module  # cached
+            return module
 
 
-    def install_module_alias_finder():
-        """
-        Add a meta path hook before all others, so that new module loadings
-        may be redirected to aliased module.
+    class ModuleAliasFinder(object):
+        @classmethod
+        def find_module(self, fullname, *args, **kwargs):
 
-        Idempotent function.
-        """
-        if builtins.__import__ is not __proxy_import__:
-            builtins.__import__ = __proxy_import__
-        assert builtins.__import__ is __proxy_import__
+            #print("OldMetaPathFinder FINDMODULE", fullname, args, kwargs)
+
+            alias_name = _get_module_alias(fullname)
+            if alias_name is None:
+                return None  # no alias module is known
+            return AliasingLoader(alias_name)
 
 else:
 
-    # we can use modern import hooks (pep-302)
-
-    # NOPE USE http://dangerontheranger.blogspot.fr/2012/07/how-to-use-sysmetapath-with-python.html INSTEAD
+    # NEW STYLE : we use modern import hooks (PEP 451 etc.)
 
     is_new_style_proxifier = True
+
 
     class AliasingLoader(importlib.abc.Loader):
 
@@ -121,7 +119,7 @@ else:
         @classmethod
         def find_spec(cls, fullname, *args, **kwargs):
 
-            print("PathAliasFinder FINDSPEC", fullname, args, kwargs)
+            #print("MetaPathFinder FINDSPEC", fullname, args, kwargs)
 
             alias_name = _get_module_alias(fullname)
             if alias_name is None:
@@ -141,16 +139,17 @@ else:
             return spec
 
 
-    def install_module_alias_finder():
-        """
-        Add a meta path hook before all others, so that new module loadings
-        may be redirected to aliased module.
 
-        Idempotent function.
-        """
-        if ModuleAliasFinder not in sys.meta_path:
-            sys.meta_path.insert(0, ModuleAliasFinder)
-        assert ModuleAliasFinder in sys.meta_path, sys.meta_path
+def install_import_proxifier():
+    """
+    Add a meta path hook before all others, so that new module loadings
+    may be redirected to aliased module.
+
+    Idempotent function.
+    """
+    if ModuleAliasFinder not in sys.meta_path:
+        sys.meta_path.insert(0, ModuleAliasFinder)
+    assert ModuleAliasFinder in sys.meta_path, sys.meta_path
 
 
 
@@ -158,8 +157,8 @@ if __name__ == "__main__":
 
     import logging.handlers
 
-    install_module_alias_finder()
-    install_module_alias_finder()  # idempotent
+    install_import_proxifier()
+    install_import_proxifier()  # idempotent
 
     register_module_alias("json.comments", "json.tool")
     register_module_alias("mylogging", "logging")
