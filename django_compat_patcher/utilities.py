@@ -143,6 +143,13 @@ def inject_function_alias(source_object, source_attrname,
     return wrapper
 
 
+def register_import_alias(alias_name, real_name):
+    from . import import_proxifier
+    import_proxifier.install_import_proxifier()  # idempotent activation
+    import_proxifier.register_module_alias(alias_name=alias_name,
+                                           real_name=real_name)
+
+
 def _tuplify_version(version):
     """
     Coerces the version string (if not None), to a version tuple.
