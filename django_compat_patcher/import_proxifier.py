@@ -162,6 +162,7 @@ if __name__ == "__main__":
 
     register_module_alias("json.comments", "json.tool")
     register_module_alias("mylogging", "logging")
+    register_module_alias("mylogging", "logging")
     register_module_alias("infinite_recursion", "infinite_recursion2")
     register_module_alias("infinite_recursion2", "infinite_recursion")
 

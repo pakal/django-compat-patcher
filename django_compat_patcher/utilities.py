@@ -24,8 +24,18 @@ def get_django_version():
 
 
 def _patch_injected_object(object_to_patch):
-    if get_patcher_setting('DCP_PATCH_INJECTED_OBJECT'):
-        setattr(object_to_patch, "__dcp_injected__", True)
+    # we expect a "custom" object here...
+    assert object_to_patch not in (True, False, None)
+    if get_patcher_setting('DCP_PATCH_INJECTED_OBJECTS'):
+        #print("PATCHING injected object", object_to_patch)
+        try:
+            setattr(object_to_patch, "__dcp_injected__", True)
+        except AttributeError:
+            pass # properties and such special objects can't be modified
+
+
+def _is_simple_callable(obj):
+    return isinstance(obj, (types.FunctionType, types.BuiltinFunctionType, functools.partial))
 
 
 def get_patcher_setting(name, settings=None):
@@ -42,7 +52,6 @@ def get_patcher_setting(name, settings=None):
     """
     from django.conf import settings as django_settings
     from . import default_settings
-    from django.conf import LazySettings
 
     if settings is None:
         settings = django_settings
@@ -51,15 +60,16 @@ def get_patcher_setting(name, settings=None):
         raise ValueError("Only 'DCP_XXX' setting names are allowed in get_patcher_setting()")
 
     try:
-        if isinstance(settings, LazySettings):
-            setting = getattr(settings, name)  # Will break if unknown setting
-        else:
+        if isinstance(settings, dict):
             setting = settings[name]
-    except (AttributeError, KeyError):
+        else:
+            setting = getattr(settings, name)  # Will break if unknown setting
+    except (AttributeError, KeyError) as e:
+        #print("EXCEPTION IN get_patcher_setting", name, e)
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now
-    if name == "DCP_PATCH_INJECTED_OBJECT":
+    if name == "DCP_PATCH_INJECTED_OBJECTS":
         assert isinstance(setting, bool), setting
     else:
         assert (setting == "*" or (isinstance(setting, list) and
@@ -71,11 +81,14 @@ def inject_attribute(target_object, target_attrname, attribute):
     """
     :param target_object: The object to patch
     :param target_attrname: The name given to the new attribute in the object to patch
-    :param attribute: The attribute to inject : must not be a class, or a callable (that is not a class)
+    :param attribute: The attribute to inject: must not be a callable
     """
     # TODO logging and warnings
     assert attribute is not None
-    assert not isinstance(attribute, (types.FunctionType, types.BuiltinFunctionType, functools.partial, six.class_types)), attribute
+    assert not _is_simple_callable(attribute), attribute
+    assert not isinstance(attribute, six.class_types), attribute
+
+    _patch_injected_object(attribute)
     setattr(target_object, target_attrname, attribute)
 
 
@@ -83,10 +96,13 @@ def inject_callable(target_object, target_callable_name, patch_callable):
     """
     :param target_object: The object to patch
     :param target_callable_name: The name given to the new callable in the object to patch
-    :param patch_callable: The callable to inject : must me a callable, but not a class
+    :param patch_callable: The callable to inject: must be a callable, but not a class
     """
     # TODO logging and warnings
-    assert isinstance(patch_callable, (types.FunctionType, types.BuiltinFunctionType, functools.partial)), patch_callable
+    assert _is_simple_callable(patch_callable), patch_callable
+
+    from django.conf import settings as django_settings3
+    #assert not django_settings3.DCP_PATCH_INJECTED_OBJECT
 
     _patch_injected_object(patch_callable)
     setattr(target_object, target_callable_name, patch_callable)
@@ -94,7 +110,7 @@ def inject_callable(target_object, target_callable_name, patch_callable):
 
 def inject_module(target_module_name, target_module):
     """
-    :param target_module_name:  The name of the new module
+    :param target_module_name: The name of the new module in sys.modules
     :param target_module: The new module
     """
     # TODO logging and warnings
@@ -120,22 +136,24 @@ def inject_class(target_object, target_klassname, klass):
     setattr(target_object, target_klassname, klass)
 
 
-def inject_function_alias(source_object, source_attrname,
+def inject_callable_alias(source_object, source_attrname,
                           target_object, target_attrname):
     """
-    Create and inject an alias for the source function,
+    Create and inject an alias for the source callable (not a class),
     by handling logging/warnings
 
     Returns the created alias.
     """
 
     old_function = getattr(source_object, source_attrname)
+    assert _is_simple_callable(old_function), old_function
 
     @wraps(old_function)
     def wrapper(*args, **kwds):
         # TODO HERE WARNINGS AND LOGGINGS WITH CONTEXT INFO
         return old_function(*args, **kwds)
 
+    _patch_injected_object(wrapper)
     # TODO LOGGING HERE
 
     setattr(target_object, target_attrname, wrapper)

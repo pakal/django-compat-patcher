@@ -58,11 +58,11 @@ Note: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
 
-DCP_PATCH_INJECTED_OBJECT
-*************************
+DCP_PATCH_INJECTED_OBJECTS
+***************************
 
-The patcher adds a :code:`__dcp_injected__ = True` attribute to the injected callables, modules and classes.
+The patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones.
 
 | **Default:** :code:`True`
 | **Type:** Boolean
-| **Example:** :code:`DCP_PATCH_INJECTED_OBJECT = False`
+| **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = False`

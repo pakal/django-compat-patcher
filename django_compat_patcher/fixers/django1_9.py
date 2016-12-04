@@ -135,7 +135,7 @@ def fix_deletion_templatetags_future_url(utils):
     "Preserve the `url` tag in the `future` templatetags library."
     from django.template import defaulttags
     from django.templatetags import future
-    new_tag = utils.inject_function_alias(defaulttags, "url",
+    new_tag = utils.inject_callable_alias(defaulttags, "url",
                                           future, "url")
     future.register.tag(new_tag)
 
@@ -145,7 +145,7 @@ def fix_deletion_templatetags_future_ssi(utils):
     "Preserve the `ssi` tag in the `future` templatetags library."
     from django.template import defaulttags
     from django.templatetags import future
-    new_tag = utils.inject_function_alias(defaulttags, "ssi",
+    new_tag = utils.inject_callable_alias(defaulttags, "ssi",
                                           future, "ssi")
     future.register.tag(new_tag)
 
