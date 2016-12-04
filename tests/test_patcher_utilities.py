@@ -1,6 +1,7 @@
-import sys
+import sys, pytest
 
-import pytest
+import _test_utilities
+
 from django.test import override_settings
 
 from django_compat_patcher.utilities import inject_class, inject_callable
