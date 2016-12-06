@@ -9,33 +9,6 @@ from functools import wraps, partial
 import sys
 from django.utils import six
 
-# use this logger, from inside fixers!
-logger = logging.getLogger("django.compat.patcher")
-
-
-def emit_warning(message, category=None, stacklevel=1):
-    # TODO put default category here ?
-    warnings.warn(message, category, stacklevel + 1)
-
-
-def get_django_version():
-    import django
-    return django.get_version()
-
-
-def _patch_injected_object(object_to_patch):
-    # we expect a "custom" object here...
-    assert object_to_patch not in (True, False, None)
-    if get_patcher_setting('DCP_PATCH_INJECTED_OBJECTS'):
-        #print("PATCHING injected object", object_to_patch)
-        try:
-            setattr(object_to_patch, "__dcp_injected__", True)
-        except AttributeError:
-            pass # properties and such special objects can't be modified
-
-
-def _is_simple_callable(obj):
-    return isinstance(obj, (types.FunctionType, types.BuiltinFunctionType, functools.partial))
 
 
 def get_patcher_setting(name, settings=None):
@@ -69,12 +42,54 @@ def get_patcher_setting(name, settings=None):
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now
-    if name == "DCP_PATCH_INJECTED_OBJECTS":
+    if name in ("DCP_PATCH_INJECTED_OBJECTS", "DCP_ENABLE_LOGGING", "DCP_ENABLE_DEPRECATION_WARNINGS"):
         assert isinstance(setting, bool), setting
     else:
         assert (setting == "*" or (isinstance(setting, list) and
                                    all(isinstance(f, six.string_types) for f in setting))), setting
     return setting
+
+
+# use this logger, from inside fixers!
+logger = logging.getLogger("django.compat.patcher")
+
+
+# global on/off switch, lazily initialized, and to be modified by patch() if wanted
+DO_EMIT_DEPRECATION_WARNINGS = None  #
+
+def emit_warning(message, category=None, stacklevel=1):
+    category = category or DeprecationWarning
+    assert issubclass(category, DeprecationWarning), category  # only those are used atm
+
+    global DO_EMIT_DEPRECATION_WARNINGS
+    if DO_EMIT_DEPRECATION_WARNINGS is None:
+        DO_EMIT_DEPRECATION_WARNINGS = get_patcher_setting("DCP_ENABLE_DEPRECATION_WARNINGS")
+    assert DO_EMIT_DEPRECATION_WARNINGS is not None
+
+    print ("DO_EMIT_DEPRECATION_WARNINGS is ", DO_EMIT_DEPRECATION_WARNINGS)
+
+    if DO_EMIT_DEPRECATION_WARNINGS:
+        warnings.warn(message, category, stacklevel + 1)
+
+
+def get_django_version():
+    import django
+    return django.get_version()
+
+
+def _patch_injected_object(object_to_patch):
+    # we expect a "custom" object here...
+    assert object_to_patch not in (True, False, None)
+    if get_patcher_setting('DCP_PATCH_INJECTED_OBJECTS'):
+        #print("PATCHING injected object", object_to_patch)
+        try:
+            setattr(object_to_patch, "__dcp_injected__", True)
+        except AttributeError:
+            pass # properties and such special objects can't be modified
+
+
+def _is_simple_callable(obj):
+    return isinstance(obj, (types.FunctionType, types.BuiltinFunctionType, functools.partial))
 
 
 def inject_attribute(target_object, target_attrname, attribute):

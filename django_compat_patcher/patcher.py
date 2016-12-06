@@ -12,6 +12,13 @@ def patch(settings=None):
     
     Returns a list of ids of fixers applied.
     """
+
+    do_emit_deprecation_warnings = settings.get("DCP_ENABLE_DEPRECATION_WARNINGS") if settings else None
+    if do_emit_deprecation_warnings is not None:
+        assert do_emit_deprecation_warnings in (True, False)
+        assert utilities.DO_EMIT_DEPRECATION_WARNINGS is not None
+        utilities.DO_EMIT_DEPRECATION_WARNINGS = do_emit_deprecation_warnings  # runtime switch on/off
+
     # print("Fixers are:", registry.FIXERS_REGISTRY)
     django_version = utilities.get_django_version()
     relevant_fixers = registry.get_relevant_fixers(current_django_version=django_version, settings=settings)
