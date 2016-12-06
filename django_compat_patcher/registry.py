@@ -107,11 +107,12 @@ def get_relevant_fixers(current_django_version,
         included = False
         if include_fixer_ids == ALL or (fixer_id in include_fixer_ids):
             included = True
-        if include_fixer_families == ALL and (fixer["fixer_family"] in include_fixer_families):
+        if include_fixer_families == ALL or (fixer["fixer_family"] in include_fixer_families):
             included = True
 
         if not included:
             log("Skipping fixer having neither id (%s) nor family (%s) included by patcher settings" % (fixer_id, fixer["fixer_family"]))
+            continue
 
         if exclude_fixer_ids == ALL or (fixer_id in exclude_fixer_ids):
             log("Skipping fixer %s, excluded by patcher settings" % fixer_id)

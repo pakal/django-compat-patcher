@@ -38,8 +38,29 @@ def test_get_relevant_fixer_ids():
 
     # TODO update this test when new fixers arrive, and test inclusion/exclusion filters
 
+    settings = dict(DCP_INCLUDE_FIXER_IDS=[],
+                    DCP_INCLUDE_FIXER_FAMILIES=[],
+                    DCP_EXCLUDE_FIXER_IDS=[],
+                    DCP_EXCLUDE_FIXER_FAMILIES=[])
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert len(fixer_ids) == 0
+
+    settings = dict(DCP_INCLUDE_FIXER_IDS=[],
+                    DCP_INCLUDE_FIXER_FAMILIES=["django1.9"],
+                    DCP_EXCLUDE_FIXER_IDS=[],
+                    DCP_EXCLUDE_FIXER_FAMILIES=[])
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert len(fixer_ids) >= 2
+
     settings = dict(DCP_INCLUDE_FIXER_IDS="*",
                     DCP_INCLUDE_FIXER_FAMILIES=[],
+                    DCP_EXCLUDE_FIXER_IDS=[],
+                    DCP_EXCLUDE_FIXER_FAMILIES=[])
+    fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
+    assert len(fixer_ids) >= 2
+
+    settings = dict(DCP_INCLUDE_FIXER_IDS=[],
+                    DCP_INCLUDE_FIXER_FAMILIES="*",
                     DCP_EXCLUDE_FIXER_IDS=[],
                     DCP_EXCLUDE_FIXER_FAMILIES=[])
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.9", settings=settings)
