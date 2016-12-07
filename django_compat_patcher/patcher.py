@@ -13,8 +13,7 @@ def patch(settings=None):
     Returns a list of ids of fixers applied.
     """
 
-    if settings:
-        utilities.apply_runtime_settings(settings)
+    utilities.apply_runtime_settings(settings)  # called even if settings are empty
 
     # print("Fixers are:", registry.FIXERS_REGISTRY)
     django_version = utilities.get_django_version()
