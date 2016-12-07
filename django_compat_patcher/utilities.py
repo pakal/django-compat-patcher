@@ -13,14 +13,15 @@ from django.utils import six
 
 def get_patcher_setting(name, settings=None):
     """
-    Fetches the value of the setting with its name,
-    either from the settings argument (if not None),
-    or from django settings.
+    Fetches the value of the DCP setting.
 
     If it's not found, a default value is returned for the setting.
 
+    If provided, the 'settings' arguments is a dict which *completely*
+    replaces django settings (no fallback occurs).
+
     :param name: The name of the setting
-    :param settings: Replacement for the project's settings
+    :param settings: Possible replacement for the project's settings
     :return: The value of the setting "name"
     """
     from django.conf import settings as django_settings
@@ -50,16 +51,15 @@ def get_patcher_setting(name, settings=None):
     return setting
 
 
-def apply_runtime_settings(settings):
+def apply_runtime_settings(settings=None):
+    """
+    If provided, 'settings' ENTIRELY replaces django settings
+    during this setup.
+    """
     global DO_EMIT_WARNINGS
-
-    settings = settings or {}
-
-    do_emit_warnings = settings.get("DCP_ENABLE_WARNINGS")
-    if do_emit_warnings is not None:
-        assert do_emit_warnings in (True, False)
-        assert DO_EMIT_WARNINGS is not None
-        DO_EMIT_WARNINGS = do_emit_warnings  # runtime switch on/off
+    do_emit_warnings = get_patcher_setting("DCP_ENABLE_WARNINGS", settings=settings)
+    assert do_emit_warnings in (True, False)
+    DO_EMIT_WARNINGS = do_emit_warnings  # runtime switch on/off
 
 
 
