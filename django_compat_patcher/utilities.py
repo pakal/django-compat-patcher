@@ -50,12 +50,22 @@ def get_patcher_setting(name, settings=None):
     return setting
 
 
+def apply_runtime_settings(settings):
+    global DO_EMIT_DEPRECATION_WARNINGS
+
+    do_emit_deprecation_warnings = settings.get("DCP_ENABLE_WARNINGS")
+    if do_emit_deprecation_warnings is not None:
+        assert do_emit_deprecation_warnings in (True, False)
+        assert DO_EMIT_DEPRECATION_WARNINGS is not None
+        DO_EMIT_DEPRECATION_WARNINGS = do_emit_deprecation_warnings  # runtime switch on/off
+
+
 # use this logger, from inside fixers!
 logger = logging.getLogger("django.compat.patcher")
 
 
 # global on/off switch, lazily initialized, and to be modified by patch() if wanted
-DO_EMIT_DEPRECATION_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
+DO_EMIT_DEPRECATION_WARNINGS = None
 
 def emit_warning(message, category=None, stacklevel=1):
     category = category or DeprecationWarning
