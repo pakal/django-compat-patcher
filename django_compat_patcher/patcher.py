@@ -41,7 +41,7 @@ def patch(settings=None):
 
     _apply_fixers(pre_fixers)
     import django
-    django.setup()  # idempotent
+    django.setup()  # theoretically idempotent (except regarding logging?)
     _apply_fixers(post_fixers)
 
     return relevant_fixers

@@ -43,45 +43,58 @@ def get_patcher_setting(name, settings=None):
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now
-    if name in ("DCP_PATCH_INJECTED_OBJECTS", "DCP_ENABLE_LOGGING", "DCP_ENABLE_WARNINGS"):
+    if name == "DCP_LOGGING_LEVEL":
+        assert name is None or hasattr(logging, setting), setting
+    elif name in ("DCP_PATCH_INJECTED_OBJECTS", "DCP_ENABLE_WARNINGS"):
         assert isinstance(setting, bool), setting
     else:
-        assert (setting == "*" or (isinstance(setting, list) and
-                                   all(isinstance(f, six.string_types) for f in setting))), setting
+        assert (setting == "*" or
+                (isinstance(setting, list) and all(isinstance(f, six.string_types) for f in setting))), setting
     return setting
 
 
-def apply_runtime_settings(settings=None):
+def apply_runtime_settings(settings):
     """
-    If provided, 'settings' ENTIRELY replaces django settings
-    during this setup.
+    Change at runtime the logging/warnings settings.
     """
-    global DO_EMIT_WARNINGS
-    do_emit_warnings = get_patcher_setting("DCP_ENABLE_WARNINGS", settings=settings)
-    assert do_emit_warnings in (True, False)
-    DO_EMIT_WARNINGS = do_emit_warnings  # runtime switch on/off
+    global DCP_EMIT_WARNINGS
+
+    settings = settings or {}
+
+    if "DCP_ENABLE_WARNINGS" in settings:
+        dcp_emit_warnings = settings["DCP_ENABLE_WARNINGS"]
+        assert dcp_emit_warnings in (True, False), dcp_emit_warnings
+        DCP_EMIT_WARNINGS = dcp_emit_warnings  # runtime switch on/off
+
+    if "DCP_LOGGING_LEVEL" in settings:
+        dcp_logging_level = settings["DCP_LOGGING_LEVEL"]
+        assert dcp_logging_level is None or hasattr(logging, dcp_logging_level)
+        if dcp_logging_level is None:
+            logger.disabled = True
+        else:
+            logger.setLevel(getattr(logging, _initial_logger_level))
+            logger.disabled = False
 
 
+# logger for patching operations only
+DCP_LOGGER_NAME = "django.compat.patcher"
+_initial_logger_level = get_patcher_setting("DCP_LOGGING_LEVEL")
 
-# use this logger, from inside fixers!
-logger = logging.getLogger("django.compat.patcher")
+if _initial_logger_level:
+    logger = logging.getLogger(DCP_LOGGER_NAME)
+    logger.propagate = False
+    logger.setLevel(getattr(logging, _initial_logger_level))
+    logger.addHandler(logging.StreamHandler(stream=sys.stderr))
 
 
-# global on/off switch, lazily initialized, and to be modified by patch() if wanted
-DO_EMIT_WARNINGS = None
+# global on/off switch for (deprecation) warnings, to be modified by patch() if wanted
+DCP_EMIT_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
+
 
 def emit_warning(message, category=None, stacklevel=1):
     category = category or DeprecationWarning
     assert issubclass(category, DeprecationWarning), category  # only those are used atm
-
-    global DO_EMIT_WARNINGS
-    if DO_EMIT_WARNINGS is None:
-        DO_EMIT_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
-    assert DO_EMIT_WARNINGS is not None
-
-    print ("DO_EMIT_WARNINGS is ", DO_EMIT_WARNINGS)
-
-    if DO_EMIT_WARNINGS:
+    if DCP_EMIT_WARNINGS:
         warnings.warn(message, category, stacklevel + 1)
 
 
