@@ -13,7 +13,7 @@ def patch(settings=None):
     Returns a list of ids of fixers applied.
     """
 
-    do_emit_deprecation_warnings = settings.get("DCP_ENABLE_DEPRECATION_WARNINGS") if settings else None
+    do_emit_deprecation_warnings = settings.get("DCP_ENABLE_WARNINGS") if settings else None
     if do_emit_deprecation_warnings is not None:
         assert do_emit_deprecation_warnings in (True, False)
         assert utilities.DO_EMIT_DEPRECATION_WARNINGS is not None

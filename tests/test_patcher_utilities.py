@@ -74,7 +74,7 @@ def test_DCP_PATCH_INJECTED_OBJECTS_setting():
     assert not hasattr(mock_module.method, "__dcp_injected__") # FIXME USE GLOBAL VARIABLE
 
 
-def test_DCP_ENABLE_DEPRECATION_WARNINGS(capsys):
+def test_DCP_ENABLE_WARNINGS(capsys):
 
     warnings.simplefilter("always", Warning)
 
@@ -85,7 +85,7 @@ def test_DCP_ENABLE_DEPRECATION_WARNINGS(capsys):
 
     from django_compat_patcher.patcher import patch
     patch(settings=dict(DCP_INCLUDE_FIXER_IDS=[],
-                        DCP_ENABLE_DEPRECATION_WARNINGS=False))
+                        DCP_ENABLE_WARNINGS=False))
 
     with warnings.catch_warnings(record=True) as w:
         emit_warning("this feature is dead!", DeprecationWarning)
@@ -98,5 +98,4 @@ def ___test_DCP_ENABLE_DEPRECATION_WARNINGS(capsys):
     emit_warning("this feature is obsolete!", DeprecationWarning)
     out, err = capsys.readouterr()
     assert "this feature is obsolete!" in err
-
 '''

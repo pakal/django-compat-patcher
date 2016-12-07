@@ -42,7 +42,7 @@ def get_patcher_setting(name, settings=None):
         setting = getattr(default_settings, name)
 
     # Micromanaging, because a validation Schema is overkill for now
-    if name in ("DCP_PATCH_INJECTED_OBJECTS", "DCP_ENABLE_LOGGING", "DCP_ENABLE_DEPRECATION_WARNINGS"):
+    if name in ("DCP_PATCH_INJECTED_OBJECTS", "DCP_ENABLE_LOGGING", "DCP_ENABLE_WARNINGS"):
         assert isinstance(setting, bool), setting
     else:
         assert (setting == "*" or (isinstance(setting, list) and
@@ -55,7 +55,7 @@ logger = logging.getLogger("django.compat.patcher")
 
 
 # global on/off switch, lazily initialized, and to be modified by patch() if wanted
-DO_EMIT_DEPRECATION_WARNINGS = None  #
+DO_EMIT_DEPRECATION_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
 
 def emit_warning(message, category=None, stacklevel=1):
     category = category or DeprecationWarning
@@ -63,7 +63,7 @@ def emit_warning(message, category=None, stacklevel=1):
 
     global DO_EMIT_DEPRECATION_WARNINGS
     if DO_EMIT_DEPRECATION_WARNINGS is None:
-        DO_EMIT_DEPRECATION_WARNINGS = get_patcher_setting("DCP_ENABLE_DEPRECATION_WARNINGS")
+        DO_EMIT_DEPRECATION_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
     assert DO_EMIT_DEPRECATION_WARNINGS is not None
 
     print ("DO_EMIT_DEPRECATION_WARNINGS is ", DO_EMIT_DEPRECATION_WARNINGS)
