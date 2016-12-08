@@ -1,13 +1,14 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-import sys, pytest, warnings
+import sys, pytest, warnings, logging
 
 import _test_utilities
 
 from django.test import override_settings
 
+import django_compat_patcher.utilities
 from django_compat_patcher.utilities import (inject_class, inject_callable, inject_attribute,
-                                             inject_callable_alias, inject_module, emit_warning)
+                                             inject_callable_alias, inject_module, emit_warning, emit_log)
 
 
 def test_patch_injected_object():
@@ -74,7 +75,9 @@ def test_DCP_PATCH_INJECTED_OBJECTS_setting():
     assert not hasattr(mock_module.method, "__dcp_injected__") # FIXME USE GLOBAL VARIABLE
 
 
-def test_DCP_ENABLE_WARNINGS(capsys):
+def test_DCP_ENABLE_WARNINGS():
+
+    assert django_compat_patcher.utilities.DCP_ENABLE_WARNINGS == True  # default
 
     warnings.simplefilter("always", Warning)
 
@@ -92,10 +95,32 @@ def test_DCP_ENABLE_WARNINGS(capsys):
     assert len(w) == 0  # well disabled
 
 
-'''
-def ___test_DCP_ENABLE_DEPRECATION_WARNINGS(capsys):
-    capsys.readouterr()  # discarded
-    emit_warning("this feature is obsolete!", DeprecationWarning)
+def test_DCP_LOGGING_LEVEL(capsys):
+
+    assert django_compat_patcher.utilities.DCP_LOGGING_LEVEL == "INFO"  # default
+
+    emit_log("<DEBUGGING>", "DEBUG")
+    emit_log("<INFORMATION>")  # default value
+
     out, err = capsys.readouterr()
-    assert "this feature is obsolete!" in err
-'''
+
+    assert "<DEBUGGING>" not in err
+    assert "<INFORMATION>" in err
+
+    from django_compat_patcher.patcher import patch
+    patch(settings=dict(DCP_LOGGING_LEVEL=None))
+
+    emit_log("<DEBUGGING2>", "DEBUG")
+    emit_log("<INFORMATION2>", "INFO")
+    out, err = capsys.readouterr()
+    assert "<DEBUGGING2>" not in err
+    assert "<INFORMATION2>" not in err
+
+    from django_compat_patcher.patcher import patch
+    patch(settings=dict(DCP_LOGGING_LEVEL="DEBUG"))
+
+    emit_log("<DEBUGGING3>", "DEBUG")
+    emit_log("<INFORMATION3>", "INFO")
+    out, err = capsys.readouterr()
+    assert "<DEBUGGING3>" in err
+    assert "<INFORMATION3>" in err

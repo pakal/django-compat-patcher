@@ -57,7 +57,7 @@ def apply_runtime_settings(settings):
     """
     Change at runtime the logging/warnings settings.
     """
-    global DCP_ENABLE_WARNINGS
+    global DCP_ENABLE_WARNINGS, DCP_LOGGING_LEVEL
 
     settings = settings or {}
 
@@ -68,21 +68,26 @@ def apply_runtime_settings(settings):
 
     if "DCP_LOGGING_LEVEL" in settings:
         dcp_logging_level = settings["DCP_LOGGING_LEVEL"]
-        assert dcp_logging_level is None or hasattr(logging, dcp_logging_level)
-        if dcp_logging_level is None:
-            logger.disabled = True
-        else:
-            logger.setLevel(getattr(logging, dcp_logging_level))
-            logger.disabled = False
+        assert dcp_logging_level is None or hasattr(logging, dcp_logging_level), dcp_logging_level
+        DCP_LOGGING_LEVEL = dcp_logging_level
 
-
-# logger for patching operations only
-#DCP_LOGGER_LEVEL = get_patcher_setting("DCP_LOGGER_LEVEL")
 
 # global on/off switch for (deprecation) warnings, to be modified by patch() if wanted
 DCP_ENABLE_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
 
-logger = logging.getLogger("")
+
+# global logging level string, or None if no logging
+DCP_LOGGING_LEVEL = get_patcher_setting("DCP_LOGGING_LEVEL")
+
+
+def emit_log(message, level="INFO"):
+    if DCP_LOGGING_LEVEL is None:
+        return
+    if getattr(logging, level) < getattr(logging, DCP_LOGGING_LEVEL):
+        return
+    full_message = "[DCP_%s] %s" % (level, message)
+    print(full_message, file=sys.stderr)
+
 
 def emit_warning(message, category=None, stacklevel=1):
     category = category or DeprecationWarning
