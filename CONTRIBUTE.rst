@@ -1,5 +1,5 @@
 ===============================================================
-Django-compat-patcher warmly welcomes new fixers, and bugfixes.
+Django-compat-patcher warmly welcomes new fixers, and bugfixes
 ===============================================================
 
 .. sectnum::
@@ -24,7 +24,7 @@ Recommendations
 Code style
 ==========
 
-PEP8 is mostly respected, although for some rules, we deviate heavily for this project's purposes:
+PEP8 is mostly respected, although for commodity, we have to enforce specific rules here and there.
 
 Fixers
 ######
@@ -42,9 +42,9 @@ Name
         - outsourcing
         - moving
 
-    - :code:`<path>` is the path of the module starting from django, but not including.
-    - :code:`<element>` is the element to be patched: you have to use the same casing as the original element.
-    - :code:`<utils>` are this project's utility functions.
+    - :code:`<path>` is the path of the module starting from 'django', but not including it
+    - :code:`<element>` is the element to be patched ; you have to use the same CASE as the original element
+    - :code:`<utils>` is an injected parameter, with utility functions
 
 Example
 -------
@@ -54,4 +54,4 @@ Patching the removal of the :code:`get_formsets()` method from django's :code:`M
     :code:`fix_deletion_contrib_admin_ModelAdmin_get_formsets`
 
 - Tests for fixers use :code:`fix_<fixer_name>`
-- Every fixer must have a docstring
+- Every fixer must have a docstring explaining what it does (what breaking changes it deals with)
