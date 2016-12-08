@@ -1,7 +1,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import copy
-import warnings
 from collections import OrderedDict
 
 from django.utils import six

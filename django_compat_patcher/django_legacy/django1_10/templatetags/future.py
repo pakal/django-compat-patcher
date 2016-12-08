@@ -1,7 +1,7 @@
-import warnings
+
 
 from django.template import Library, defaulttags
-from django_compat_patcher.deprecation import RemovedInDjango110Warning
+from django_compat_patcher.deprecation import *
 
 register = Library()
 

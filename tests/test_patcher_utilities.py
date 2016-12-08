@@ -127,19 +127,19 @@ def test_DCP_LOGGING_LEVEL(capsys):
 
 
 def test_no_stdlib_warnings():
-    forbidden_phrases = ["import warnings", "from warnings", "warnings.warn"]
-    pkg_root = os.path.dirname(django_compat_patcher.__file__)
-    directories = [os.path.join(pkg_root, "fixers"),
-                   os.path.join(pkg_root, "django_legacy")]
 
-    for directory in directories:
-        for root, subdirs, files in os.walk(directory):
-            for f in [x for x in files if x.endswith(".py")]:
-                full_path = os.path.join(root, f)
-                print(">> ANALYSING PYTHON FILE", full_path)
-                with open(full_path, "r") as s:
-                    data = s.read()
-                for forbidden_phrase in forbidden_phrases:
-                    if forbidden_phrase in data:
-                        print(">>> ALERT, wrong phrase '%s' detected in %s" % (forbidden_phrase, full_path))
+    pkg_root = os.path.dirname(django_compat_patcher.__file__)
+
+    # we authorize "warnings.warn", as long as it uses our custom WarningsProxy
+    forbidden_phrases = ["import warnings", "from warnings"]
+
+    for root, subdirs, files in os.walk(pkg_root):
+        for f in [x for x in files if x.endswith(".py")]:
+            full_path = os.path.join(root, f)
+            print(">> ANALYSING PYTHON FILE", full_path)
+            with open(full_path, "r") as s:
+                data = s.read()
+            for forbidden_phrase in forbidden_phrases:
+                if forbidden_phrase in data:
+                    print(">>> ALERT, wrong phrase '%s' detected in %s" % (forbidden_phrase, full_path))
 

@@ -1,10 +1,9 @@
-import warnings
 
 from functools import wraps
 
 from django.utils import six
 
-from django_compat_patcher.deprecation import RemovedInDjango19Warning
+from django_compat_patcher.deprecation import *
 
 def memoize(func, cache, num_args):
     """

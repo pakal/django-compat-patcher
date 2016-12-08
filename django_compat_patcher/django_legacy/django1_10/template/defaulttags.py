@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-import warnings
 from datetime import datetime
 
 from django.conf import settings

@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 
-import warnings
-
-from django_compat_patcher.deprecation import RemovedInDjango19Warning
+from django_compat_patcher.deprecation import *
 
 warnings.warn("django.utils.unittest will be removed in Django 1.9.",
               RemovedInDjango19Warning, stacklevel=2)

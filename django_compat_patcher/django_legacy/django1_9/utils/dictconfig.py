@@ -2,11 +2,10 @@ import logging.handlers
 import re
 import sys
 import types
-import warnings
 
 from django.utils import six
 
-from django_compat_patcher.deprecation import RemovedInDjango19Warning
+from django_compat_patcher.deprecation import *
 
 warnings.warn("django.utils.dictconfig will be removed in Django 1.9.",
               RemovedInDjango19Warning, stacklevel=2)

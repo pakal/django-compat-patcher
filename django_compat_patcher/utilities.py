@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import functools
 import logging
 import types
-import warnings
+import warnings as stdlib_warnings  # do NOT use elseware than in emit_warning()
 from functools import wraps, partial
 
 import sys
@@ -93,7 +93,7 @@ def emit_warning(message, category=None, stacklevel=1):
     category = category or DeprecationWarning
     assert issubclass(category, DeprecationWarning), category  # only those are used atm
     if DCP_ENABLE_WARNINGS:
-        warnings.warn(message, category, stacklevel + 1)
+        stdlib_warnings.warn(message, category, stacklevel + 1)
 
 
 def get_django_version():
