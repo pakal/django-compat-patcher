@@ -27,6 +27,8 @@ Feel free to contribute new fixers, for backwards or forwards compatibility, dep
 How to install
 ==================
 
+Django-compat-patcher is currently tested on python2.7/3.4/3.5, with Django versions 1.8/1.9/1.10.
+
 Add :code:`django-compat-patcher` to your pip requirements, install it, and then activate it with::
     
     import django_compat_patcher
