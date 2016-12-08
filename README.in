@@ -2,67 +2,138 @@
 django-compat-patcher
 =====================
 
-A "magic" package which adds retro/forward compatibility patches to Django, so that your app ecosystem doesn't get broken by trivial changes in the core of the framework.
+::
+
+    *Because compatibility matters...*
+
+DCP is a "magic" package which adds backwards/forwards compatibility patches to Django, so that your app ecosystem doesn't get broken by trivial changes made to the core of the framework.
+
+It injects compatibility shims like function/attribute aliases, restores data structures which were replaced by stdlib ones, extends the behaviour of callables (eg. referring to a view by object, by name, or by dotted path), and can even preserve deprecated module imports (ex. keep importing from "django.contrib.comments" instead of the now outsourced "django_comments").
+
+This allows to you upgrade your dependencies one at a time, to fork/patch them when you have a proper opportunity, and most importantly to not get stuck, when deadlines are tight and your dependencies suddenly have conflicting requirements. DCP somehow relaxes the deprecation policy of Django, so that it comes closer to semantic versioning.
+
+Technically, DCP manages a set of "fixers", small utilities which advertise the change that they make, the versions of Django that they support, and which on monkey-patch the Django framework on demand. By applying these fixers in a proper order (sometimes before, sometimes after django.setup()), DCP can workaround multiple breaking changes which targeted the same part of the code (eg. a tag library being added and then removed).
+
+Beware, DCP is aimed at project maintainers. If you are developing a reusable Django application, you can't expect all your users to integrate DCP as well. In this case, to support a wide range of Django versions, you should rather use a toolkit like `Django-compat <https://github.com/arteria/django-compat>`_.
+You may think of DCP as a "runtime 2to3 for Django', wherease Django-Compat is rather a "six module for Django".
+
+Feel free to contribute new fixers, for backwards or forwards compatibility, depending on the compatibility troubles you encounter on your projects (see `CONTRIBUTE.rst`)
+
+
+
+
+How to install
+==================
 
 Add :code:`django-compat-patcher` to your pip requirements, install it, and then activate it with::
     
     import django_compat_patcher
     django_compat_patcher.patch()
     
-This code must be placed BEFORE any use of django (eg. in your :code:`manage.py` or your :code:`wsgi.py` script).
+This code should be placed BEFORE any use of Django (eg. in your :code:`manage.py` or your :code:`wsgi.py` script), but after the :code:`DJANGO_SETTINGS_MODULE` environment variable has been set.
 
-However, the :code:`DJANGO_SETTINGS_MODULE` environment variable must already be set.
+In particular, some fixers only work if they are applied before the loading of INSTALLED_APPS (due to django.setup()).
 
-Settings
-========
 
-Settings to put in your project's :code:`settings.py`. The value in these settings are the default values.
+
+Django settings
+====================
+
+By default, DCP emits logs and warnings when patching the code, and applies all "relevant" fixers,
+i.e all that support your currently installed django version.
+
+This behaviour can be customized via the Django settings below.
+
+Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.10, apply fixers from Django1.8 up to Django1.10, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
+
+You may provide a "settings" dictionary directly to the patch() method, in which case your DCP_\* django settings will be completely ignored (only library defaults will be used as fallbacks)::
+
+    django_compat_patcher.patch(settings=dict(DCP_INCLUDE_FIXER_IDS=["my_fixer_id"]))
+
+
+
 
 DCP_INCLUDE_FIXER_IDS
 *********************
-List of fixer names to include. If :code:`"*"` is used, then all fixers are included.
+
+List of fixer identifiers to include. If :code:`"*"` is used, then all fixers are included.
 
 | **Default:** :code:`"*"`
 | **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_INCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
+
 DCP_INCLUDE_FIXER_FAMILIES
 **************************
-List of fixer families to include.
 
-Note: If you want to include a specific category, remember to remove the :code:`"*"` from :code:`DCP_INCLUDE_FIXER_IDS`.
+List of fixer families to include. If :code:`"*"` is used, then all families are included.
+
+Note: If you want to include only specific families, remember to replace the value :code:`"*" from :code:`DCP_INCLUDE_FIXER_IDS` by, for example, an empty list.
 
 | **Default:** :code:`[]`
 | **Type:** List of strings
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_INCLUDE_FIXER_FAMILIES = ["django1.9"]`
 
+
 DCP_EXCLUDE_FIXER_IDS
 *********************
-List of fixer names to exclude.
 
-Note: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
+List of fixer identifiers to exclude.
+
+Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
 | **Default:** :code:`[]`
 | **Type:** List of strings
 | **Example:** :code:`DCP_EXCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
+
 DCP_EXCLUDE_FIXER_FAMILIES
 **************************
+
 List of fixer families to exclude.
 
-Note: The "INCLUDE" filters are applied before the "EXCLUDE" ones.
+Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
 | **Default:** :code:`[]`
 | **Type:** List of strings
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
 
+
 DCP_PATCH_INJECTED_OBJECTS
 ***************************
 
-The patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones.
+If True, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones.
 
 | **Default:** :code:`True`
 | **Type:** Boolean
 | **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = False`
+
+
+DCP_ENABLE_WARNINGS
+***************************
+
+If True, compatibility shims emit python warnings (:code:`warnings.warn(...)`) when they are imported/used,
+to help detect deprecated code. These warnings are mostly subclasses of :code:`DeprecationWarning` (ex. :code:`RemovedInDjango19Warning`).
+
+Once emitted, the handling of warnings depends on your setup (python command line flags, logging config...), see the `official doc on warnings<https://docs.python.org/3/library/warnings.html>`_ for more information.
+
+| **Default:** :code:`True`
+| **Type:** Boolean
+| **Example:** :code:`DCP_ENABLE_WARNINGS = False`
+
+
+DCP_LOGGING_LEVEL
+***************************
+
+The patch() system of DCP can display *on STDERR* which fixers are getting applied, and provide debug information (ex. for which reason a specific fixer was discarded).
+
+This setting sets the logging level of that information stream, which is typically only viewed at django startup. A value :code:`None` disables DCP logging entirely.
+
+Note that DCP does NOT actually use stdlib loggers, because it mostly performs operations before Django logging has been setup (ex. using the LOGGING setting), so log entries would most probably get discarded.
+
+| **Default:** :code:`"INFO"`
+| **Type:** Logging level string, or None
+| **Example:** :code:`DCP_LOGGING_LEVEL = "DEBUG"`
+
