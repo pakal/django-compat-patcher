@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import warnings
 from functools import partial
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
 
 from ..deprecation import *
