@@ -57,9 +57,14 @@ def apply_runtime_settings(settings):
     """
     Change at runtime the logging/warnings settings.
     """
-    global DCP_ENABLE_WARNINGS, DCP_LOGGING_LEVEL
+    global DCP_ENABLE_WARNINGS, DCP_LOGGING_LEVEL, _initial_setup_done
 
     settings = settings or {}
+
+    if not _initial_setup_done:
+        DCP_ENABLE_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
+        DCP_LOGGING_LEVEL = get_patcher_setting("DCP_LOGGING_LEVEL")
+        _initial_setup_done = True
 
     if "DCP_ENABLE_WARNINGS" in settings:
         dcp_enable_warnings = settings["DCP_ENABLE_WARNINGS"]
@@ -72,12 +77,14 @@ def apply_runtime_settings(settings):
         DCP_LOGGING_LEVEL = dcp_logging_level
 
 
-# global on/off switch for (deprecation) warnings, to be modified by patch() if wanted
-DCP_ENABLE_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
+# lazy setup of the following settings
+_initial_setup_done = False
 
+# global on/off switch for (deprecation) warnings, to be modified by patch() if wanted
+DCP_ENABLE_WARNINGS = False
 
 # global logging level string, or None if no logging
-DCP_LOGGING_LEVEL = get_patcher_setting("DCP_LOGGING_LEVEL")
+DCP_LOGGING_LEVEL = None
 
 
 def emit_log(message, level="INFO"):

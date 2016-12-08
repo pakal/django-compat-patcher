@@ -89,6 +89,7 @@ def test_DCP_ENABLE_WARNINGS():
     from django_compat_patcher.patcher import patch
     patch(settings=dict(DCP_INCLUDE_FIXER_IDS=[],
                         DCP_ENABLE_WARNINGS=False))
+    patch()  # changes nothing
 
     with warnings.catch_warnings(record=True) as w:
         emit_warning("this feature is dead!", DeprecationWarning)
@@ -109,6 +110,7 @@ def test_DCP_LOGGING_LEVEL(capsys):
 
     from django_compat_patcher.patcher import patch
     patch(settings=dict(DCP_LOGGING_LEVEL=None))
+    patch()  # changes nothing
 
     emit_log("<DEBUGGING2>", "DEBUG")
     emit_log("<INFORMATION2>", "INFO")
@@ -118,6 +120,7 @@ def test_DCP_LOGGING_LEVEL(capsys):
 
     from django_compat_patcher.patcher import patch
     patch(settings=dict(DCP_LOGGING_LEVEL="DEBUG"))
+    patch()  # changes nothing
 
     emit_log("<DEBUGGING3>", "DEBUG")
     emit_log("<INFORMATION3>", "INFO")
