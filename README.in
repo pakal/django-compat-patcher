@@ -1,16 +1,16 @@
-=====================
-django-compat-patcher
-=====================
 
 .. NOTE: only edit README.in, and use generate_readme.py to enrich it with the table of fixers
 
-::
+
+=====================
+django-compat-patcher
+=====================
 
     *Compatibility Matters*
 
 DCP is a "magic" package which adds backwards/forwards compatibility patches to Django, so that your app ecosystem doesn't get broken by trivial changes made to the core of the framework.
 
-It injects compatibility shims like function/attribute aliases, restores data structures which were replaced by stdlib ones, extends the behaviour of callables (eg. referring to a view by object, by name, or by dotted path), and can even preserve deprecated module imports (ex. keep importing from "django.contrib.comments" instead of the now outsourced "django_comments").
+It injects compatibility shims like function/attribute aliases, restores data structures which were replaced by stdlib ones, extends the behaviour of callables (eg. referring to a view by object, by name, or by dotted path), and can even preserve deprecated module as "import aliases" (ex. keep importing from "django.contrib.comments" instead of the now external "django_comments").
 
 This allows to you upgrade your dependencies one at a time, to fork/patch them when you have a proper opportunity, and most importantly to not get stuck, when deadlines are tight and your dependencies suddenly have conflicting requirements. DCP somehow relaxes the deprecation policy of Django, so that it comes closer to semantic versioning.
 
@@ -38,6 +38,7 @@ This code should be placed before any use of Django (eg. in your :code:`manage.p
 
 In particular, some fixers only work if they are applied before the loading of INSTALLED_APPS (so before django.setup() gets called).
 
+The Django settings of your project are not altered by compatibility shims, so they should be kept up-to-date with your installed Django version (eg. now use `TEMPLATES`, `MIDDLEWARE`, and not deprecated settings...). In particular, always put real package names in INSTALLED_APPS, not their potential "import aliases".
 
 
 Django settings
