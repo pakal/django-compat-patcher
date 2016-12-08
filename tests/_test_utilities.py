@@ -6,8 +6,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "test_project.settings"
 
-logging.basicConfig()  # so that logging works before django LOGGING kicks in
-
 import django
 import django_compat_patcher
 

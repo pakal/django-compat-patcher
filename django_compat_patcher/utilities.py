@@ -57,14 +57,14 @@ def apply_runtime_settings(settings):
     """
     Change at runtime the logging/warnings settings.
     """
-    global DCP_EMIT_WARNINGS
+    global DCP_ENABLE_WARNINGS
 
     settings = settings or {}
 
     if "DCP_ENABLE_WARNINGS" in settings:
-        dcp_emit_warnings = settings["DCP_ENABLE_WARNINGS"]
-        assert dcp_emit_warnings in (True, False), dcp_emit_warnings
-        DCP_EMIT_WARNINGS = dcp_emit_warnings  # runtime switch on/off
+        dcp_enable_warnings = settings["DCP_ENABLE_WARNINGS"]
+        assert dcp_enable_warnings in (True, False), dcp_enable_warnings
+        DCP_ENABLE_WARNINGS = dcp_enable_warnings  # runtime switch on/off
 
     if "DCP_LOGGING_LEVEL" in settings:
         dcp_logging_level = settings["DCP_LOGGING_LEVEL"]
@@ -72,29 +72,22 @@ def apply_runtime_settings(settings):
         if dcp_logging_level is None:
             logger.disabled = True
         else:
-            logger.setLevel(getattr(logging, _initial_logger_level))
+            logger.setLevel(getattr(logging, dcp_logging_level))
             logger.disabled = False
 
 
 # logger for patching operations only
-DCP_LOGGER_NAME = "django.compat.patcher"
-_initial_logger_level = get_patcher_setting("DCP_LOGGING_LEVEL")
-
-if _initial_logger_level:
-    logger = logging.getLogger(DCP_LOGGER_NAME)
-    logger.propagate = False
-    logger.setLevel(getattr(logging, _initial_logger_level))
-    logger.addHandler(logging.StreamHandler(stream=sys.stderr))
-
+#DCP_LOGGER_LEVEL = get_patcher_setting("DCP_LOGGER_LEVEL")
 
 # global on/off switch for (deprecation) warnings, to be modified by patch() if wanted
-DCP_EMIT_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
+DCP_ENABLE_WARNINGS = get_patcher_setting("DCP_ENABLE_WARNINGS")
 
+logger = logging.getLogger("")
 
 def emit_warning(message, category=None, stacklevel=1):
     category = category or DeprecationWarning
     assert issubclass(category, DeprecationWarning), category  # only those are used atm
-    if DCP_EMIT_WARNINGS:
+    if DCP_ENABLE_WARNINGS:
         warnings.warn(message, category, stacklevel + 1)
 
 
