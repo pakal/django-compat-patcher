@@ -84,7 +84,9 @@ def test_DCP_ENABLE_WARNINGS():
     with warnings.catch_warnings(record=True) as w:
         emit_warning("this feature is obsolete!", DeprecationWarning)
     assert len(w) == 1
-    assert "this feature is obsolete!" in w[0].message
+    warning = w[0]
+    message = str(warning.message)
+    assert "this feature is obsolete!" in message
 
     from django_compat_patcher.patcher import patch
     patch(settings=dict(DCP_INCLUDE_FIXER_IDS=[],

@@ -127,8 +127,8 @@ else:
             return module
 
         def exec_module(self, module):
-            # __name__ was overridden by init_module_attrs(_force_name=True)
-            assert module.__name__ != self.real_name, module.__name__
+            # __name__ is, on some python versions, overridden by init_module_attrs(_force_name=True)
+            assert module.__name__ in (self.alias_name, self.real_name), module.__name__
             module.__name__ = self.real_name
             assert module.__spec__.origin == "alias", module.__spec__  # well overridden
             assert module.__spec__.loader_state["aliased_spec"] is None

@@ -50,7 +50,7 @@ def test_fix_behaviour_urls_resolvers_RegexURLPattern():
 
     pattern = RegexURLPattern("homepage/", "my_view")
     with pytest.raises(ImportError):
-        pattern.callback  # missing prefix
+        myvar = pattern.callback  # missing prefix
     if has_lookup_str:
         assert pattern.lookup_str == "my_view"  # missing prefix but works
     pattern.add_prefix("test_project.views")
