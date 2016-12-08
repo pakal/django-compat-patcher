@@ -1,3 +1,5 @@
+from __future__ import absolute_import, print_function, unicode_literals
+
 from functools import reduce
 from io import open  # Python2 compatibility
 
@@ -50,7 +52,7 @@ def _create_fixer_list(all_fixers, grid):
 
 
 def _create_headers(grid):
-    table_headers = ['Fixer', 'Fixer family', "Min version", "Max version"]
+    table_headers = ['Fixer and its ID', 'Fixer family', "Min version", "Max version"]
     grid.append(table_headers)
 
 
