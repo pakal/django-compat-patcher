@@ -7,10 +7,10 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))  # security
 from setuptools import setup, find_packages
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    return open(os.path.join(os.path.dirname(__file__), fname)).read().strip()
 
 classifiers = """\
-Development Status :: 1 - Planning
+Development Status :: 4 - Beta
 Intended Audience :: Developers
 Intended Audience :: Information Technology
 Intended Audience :: System Administrators
@@ -24,7 +24,7 @@ Operating System :: MacOS :: MacOS X
 
 
 setup(
-    name='DjangoCompatPatcher',
+    name='django-compat-patcher',
     version=read("VERSION"),
     author='Pascal Chambon',
     author_email='pythoniks@gmail.com',

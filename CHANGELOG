@@ -1,5 +1,18 @@
 
+Version 0.2
+=================
+
+* tox integration, with a django test project
+* unify logging and warnings emitted by the patcher and misc fixers
+* new "import proxifier" system, supporting both py2k and py3k
+* lots of new backwards compatibility fixers, for django 1.6 to 1.10
+
+
 Version 0.1
 =================
 
+* generator for a README with the list of available fixers
+* algorithms to apply only relevant fixers, in a proper order
+* draft of py.test suite
+* first fixers, to test monkey-patching utilities
 * draft of dependency-injection architecture, to simplify the creation of fixers
