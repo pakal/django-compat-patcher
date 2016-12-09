@@ -151,7 +151,7 @@ def fix_deletion_templatetags_future_ssi(utils):
 
 @django1_9_bc_fixer()
 def fix_deletion_forms_fields_IPAddressField(utils):
-    """Preserve the IPAddressField model field, now superseded by GenericIPAddressField"""
+    """Preserve the IPAddressField form field, now superseded by GenericIPAddressField"""
     import django.forms.fields
     from django.forms.fields import CharField
     from django.core import validators

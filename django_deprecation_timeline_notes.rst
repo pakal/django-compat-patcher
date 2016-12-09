@@ -3,26 +3,17 @@ Annotated Django Deprecation Timeline
 =========================================
 
 This list is meant to help DCP keep track of what fixers have been implemented, which ones 
-would be welcome, and which ones will most probably never be added.
+would be welcome, and which ones will most probably never be added (eg. because they introduce security issues, or deal with too complex details...).
 
-
-KINDS
-=====
+See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 
 .. role:: kind
 
-These kinds will help to triage all the deprecation items below.
+.. raw:: html
 
-    - DELETION
-    - SIGNATURE (CHANGE)
-    - BEHAVIOR
-    - OUTSOURCING
-    - MOVING
-
-
-VERSIONS
-========
-
+    <style> .kind {color: blue} </style>
+    
+    
 2.1
 -----
 
@@ -108,12 +99,12 @@ VERSIONS
 -----
 
 - Support for calling a SQLCompiler directly as an alias for calling its quote_name_unless_alias method will be removed.
-- cycle and firstof template tags will be removed from the future template tag library (used during the 1.6/1.7 deprecation period).
-- django.conf.urls.patterns() will be removed.
+- cycle and firstof template tags will be removed from the future template tag library (used during the 1.6/1.7 deprecation period). :kind:`DELETION` [FIXED]
+- django.conf.urls.patterns() will be removed. :kind:`DELETION` [FIXED]
 - Support for the prefix argument to django.conf.urls.i18n.i18n_patterns() will be removed.
 - SimpleTestCase.urls will be removed.
 - Using an incorrect count of unpacked values in the for template tag will raise an exception rather than fail silently.
-- The ability to reverse URLs using a dotted Python path will be removed.
+- The ability to reverse URLs using a dotted Python path will be removed. :kind:`BEHAVIOUR` [FIXED]
 - The ability to use a dotted Python path for the LOGIN_URL and LOGIN_REDIRECT_URL settings will be removed.
 - Support for optparse will be dropped for custom management commands (replaced by argparse).
 - The class django.core.management.NoArgsCommand will be removed. Use BaseCommand instead, which takes no arguments by default.
@@ -140,7 +131,7 @@ VERSIONS
 
 - The error_message argument of django.forms.RegexField will be removed.
 - The unordered_list filter will no longer support old style lists.
-- Support for string view arguments to url() will be removed.
+- Support for string view arguments to url() will be removed. :kind:`BEHAVIOUR` [FIXED]
 - The backward compatible shim to rename django.forms.Form._has_changed() to has_changed() will be removed.
 - The removetags template filter will be removed.
 - The remove_tags() and strip_entities() functions in django.utils.html will be removed.
@@ -184,8 +175,8 @@ VERSIONS
 - Session verification will be enabled regardless of whether or not 'django.contrib.auth.middleware.SessionAuthenticationMiddleware' is in MIDDLEWARE_CLASSES.
 - Private attribute django.db.models.Field.related will be removed.
 - The --list option of the migrate management command will be removed.
-- The ssi template tag will be removed.
-- Support for the = comparison operator in the if template tag will be removed.
+- The ssi template tag will be removed. :kind:`DELETION` [FIXED]
+- Support for the = comparison operator in the if template tag will be removed. :kind:`BEHAVIOUR` [FIXED]
 - The backwards compatibility shims to allow Storage.get_available_name() and Storage.save() to be defined without a max_length argument will be removed.
 - Support for the legacy %(<foo>)s syntax in ModelFormMixin.success_url will be removed.
 - GeoQuerySet aggregate methods collect(), extent(), extent3d(), make_line(), and unionagg() will be removed.
@@ -208,11 +199,11 @@ VERSIONS
 - The SQL management commands for apps without migrations, sql, sqlall, sqlclear, sqldropindexes, and sqlindexes, will be removed. :kind:`DELETION` [WONTFIX]
 - Support for automatic loading of initial_data fixtures and initial SQL data will be removed. :kind:`BEHAVIOUR` [WONTFIX]
 - All models will need to be defined inside an installed application or declare an explicit app_label. Furthermore, it won't be possible to import them before their application is loaded. In particular, it won't be possible to import models inside the root package of their application. :kind:`BEHAVIOUR` [WONTFIX]
-- The model and form IPAddressField will be removed. A stub field will remain for compatibility with historical migrations. :kind:`DELETION` [WONTFIX]
-- AppCommand.handle_app() will no longer be supported.  :kind:`DELETION` [FIXED]
-- RequestSite and get_current_site() will no longer be importable from django.contrib.sites.models.
+- The model and form IPAddressField will be removed. A stub field will remain for compatibility with historical migrations. :kind:`DELETION` [FIXED, but for forms only]
+- AppCommand.handle_app() will no longer be supported. :kind:`DELETION` [FIXED]
+- RequestSite and get_current_site() will no longer be importable from django.contrib.sites.models. :kind:`DELETION` [FIXED]
 - FastCGI support via the runfcgi management command will be removed. Please deploy your project using WSGI.
-- django.utils.datastructures.SortedDict will be removed. Use collections.OrderedDict from the Python standard library instead. [FIXED]
+- django.utils.datastructures.SortedDict will be removed. Use collections.OrderedDict from the Python standard library instead. :kind:`DELETION` [FIXED]
 - ModelAdmin.declared_fieldsets will be removed.
 - Instances of util.py in the Django codebase have been renamed to utils.py in an effort to unify all util and utils references. The modules that provided backwards compatibility will be removed:
 
@@ -221,7 +212,7 @@ VERSIONS
   - django.db.backends.util
   - django.forms.util
 
-- ModelAdmin.get_formsets will be removed.
+- ModelAdmin.get_formsets will be removed. :kind:`DELETION` [FIXED]
 - The backward compatibility shim introduced to rename the BaseMemcachedCache._get_memcache_timeout() method to get_backend_timeout() will be removed.
 - The --natural and -n options for dumpdata will be removed.
 - The use_natural_keys argument for serializers.serialize() will be removed.
@@ -230,7 +221,7 @@ VERSIONS
 - The WSGIRequest.REQUEST property will be removed. :kind:`DELETION` [FIXED]
 - The class django.utils.datastructures.MergeDict will be removed. :kind:`DELETION` [FIXED]
 - The zh-cn and zh-tw language codes will be removed and have been replaced by the zh-hans and zh-hant language code respectively.
-- The internal django.utils.functional.memoize will be removed.
+- The internal django.utils.functional.memoize will be removed. :kind:`DELETION` [FIXED]
 - django.core.cache.get_cache will be removed. Add suitable entries to CACHES and use django.core.cache.caches instead.
 - django.db.models.loading will be removed.
 - Passing callable arguments to querysets will no longer be possible.
@@ -253,7 +244,7 @@ VERSIONS
 1.8
 -----
 
-- django.contrib.comments will be removed.
+- django.contrib.comments will be removed. :kind:`OUTSOURCING` [FIXED]
 - The following transaction management APIs will be removed:
 
   - TransactionMiddleware,
@@ -281,7 +272,7 @@ VERSIONS
 - The module django.test.simple and the class django.test.simple.DjangoTestSuiteRunner will be removed. Instead use django.test.runner.DiscoverRunner.
 - The module django.test._doctest will be removed. Instead use the doctest module from the Python standard library.
 - The CACHE_MIDDLEWARE_ANONYMOUS_ONLY setting will be removed.
-- Usage of the hard-coded Hold down 'Control', or 'Command' on a Mac, to select more than one. string to override or append to user-provided help_text in forms for ManyToMany model fields will not be performed by Django anymore either at the model or forms layer.
+- Usage of the hard-coded Hold down 'Control', or 'Command' on a Mac, to select more than one string to override or append to user-provided help_text in forms for ManyToMany model fields will not be performed by Django anymore either at the model or forms layer.
 - The Model._meta.get_(add|change|delete)_permission methods will be removed.
 - The session key django_language will no longer be read for backwards compatibility.
 - Geographic Sitemaps will be removed (django.contrib.gis.sitemaps.views.index and django.contrib.gis.sitemaps.views.sitemap).
