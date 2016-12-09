@@ -4,7 +4,7 @@ import os, sys
 
 import _test_utilities
 
-def test_fix_deletion_contrib_comments():
+def test_fix_outsourcing_contrib_comments():
 
     from django.contrib import comments
     import django.contrib.comments

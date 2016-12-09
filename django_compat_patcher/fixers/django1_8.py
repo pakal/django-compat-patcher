@@ -14,7 +14,7 @@ django1_8_bc_fixer = partial(register_compatibility_fixer,
 
 
 @django1_8_bc_fixer()
-def fix_deletion_contrib_comments(utils):
+def fix_outsourcing_contrib_comments(utils):
     """
     Keep 'django.contrib.comments' as an import alias for the now external package
     'django_comments' (django-contrib-comments on pypi) ; the latter must be installed separately.
