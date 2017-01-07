@@ -26,7 +26,7 @@ Operating System :: MacOS :: MacOS X
 setup(
     name='django-compat-patcher',
     version=read("VERSION"),
-    author='Pascal Chambon',
+    author='Pascal Chambon & others',
     author_email='pythoniks@gmail.com',
     url='https://github.com/pakal/django-compat-patcher',
     license="http://www.opensource.org/licenses/mit-license.php",
