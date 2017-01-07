@@ -44,9 +44,9 @@ def get_patcher_setting(name, settings=None):
 
     # Micromanaging, because a validation Schema is overkill for now
     if name == "DCP_LOGGING_LEVEL":
-        assert name is None or hasattr(logging, setting), setting
+        assert setting is None or hasattr(logging, setting), repr(setting)
     elif name in ("DCP_PATCH_INJECTED_OBJECTS", "DCP_ENABLE_WARNINGS"):
-        assert isinstance(setting, bool), setting
+        assert isinstance(setting, bool), repr(setting)
     else:
         assert (setting == "*" or
                 (isinstance(setting, list) and all(isinstance(f, six.string_types) for f in setting))), setting

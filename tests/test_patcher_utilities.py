@@ -8,7 +8,7 @@ from django.test import override_settings
 
 import django_compat_patcher.utilities
 from django_compat_patcher.utilities import (inject_class, inject_callable, inject_attribute,
-                                             inject_callable_alias, inject_module, emit_warning, emit_log)
+                                             inject_callable_alias, inject_module, emit_warning, emit_log, get_patcher_setting)
 
 
 def test_patch_injected_object():
@@ -101,6 +101,12 @@ def test_DCP_ENABLE_WARNINGS():
 def test_DCP_LOGGING_LEVEL(capsys):
 
     assert django_compat_patcher.utilities.DCP_LOGGING_LEVEL == "INFO"  # default
+
+    # ensure specific assertions are OK
+    get_patcher_setting("DCP_LOGGING_LEVEL", {"DCP_LOGGING_LEVEL": None})
+    get_patcher_setting("DCP_LOGGING_LEVEL", {"DCP_LOGGING_LEVEL": "INFO"})
+    with pytest.raises(AssertionError):
+        get_patcher_setting("DCP_LOGGING_LEVEL", {"DCP_LOGGING_LEVEL": "badvalue"})
 
     emit_log("<DEBUGGING>", "DEBUG")
     emit_log("<INFORMATION>")  # default value
