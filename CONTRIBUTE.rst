@@ -12,7 +12,7 @@ Also, they should not reintroduce features which expose servers to serious secur
 
 
 Recommendations
-===============
+=================
 
 The code must be very DRY, to minimize bugs, and so that future evolutions of this library are as painless as possible.
 
@@ -30,7 +30,7 @@ Technically speaking:
 
 
 Code style
-==========
+============
 
 PEP8 is mostly respected, although for commodity, we have to enforce specific rules here and there.
 
@@ -38,7 +38,7 @@ Fixers
 ######
 
 Name
-----
+------
 
 - Fixers have to be decorated using :code:`register_compatibility_fixer` and the like (found in :code:`registry.py`). Hint: you can be DRY using :code:`functools.partial`
 - Fixers are named using the following syntax: :code:`fix_<kind>_<path>_<element>(<utils>, \*args, \*\*kwargs)`
@@ -53,7 +53,7 @@ Name
     - :code:`<utils>` is an injected parameter, with utility functions
 
 Example
--------
+---------
 
 Patching the removal of the :code:`get_formsets()` method from django's :code:`ModelAdmin` (located in :code:`django.contrib.admin`):
 
@@ -61,3 +61,10 @@ Patching the removal of the :code:`get_formsets()` method from django's :code:`M
 
 - Tests for fixers use :code:`fix_<fixer_name>`
 - Every fixer must have a docstring explaining what it does (what breaking changes it deals with)
+
+
+Testing
+=========
+
+Simply install and run the "tox" python tool, from the root folder of the repository.
+
