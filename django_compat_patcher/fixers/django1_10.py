@@ -183,7 +183,6 @@ def fix_deletion_conf_urls_patterns(utils):
     Preserve the patterns() builder for django urls.
     """
     from django.core.urlresolvers import RegexURLPattern
-    from django.conf.urls import url
     from django.conf import urls
 
     def patterns(prefix, *args):
@@ -196,7 +195,7 @@ def fix_deletion_conf_urls_patterns(utils):
         pattern_list = []
         for t in args:
             if isinstance(t, (list, tuple)):
-                t = url(prefix=prefix, *t)
+                t = urls.url(prefix=prefix, *t)
             elif isinstance(t, RegexURLPattern):
                 t.add_prefix(prefix)
             pattern_list.append(t)

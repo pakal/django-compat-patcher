@@ -10,6 +10,13 @@ import sys
 from django.utils import six
 
 
+class SkipFixerException(Exception):
+    """
+    Exception to signal a fixer which is not 
+    applicable in that project context.
+    """
+    pass
+
 
 def get_patcher_setting(name, settings=None):
     """
@@ -106,6 +113,15 @@ def emit_warning(message, category=None, stacklevel=1):
 def get_django_version():
     import django
     return django.get_version()
+
+
+def skip_if_app_not_installed(app_name):
+    """
+    Raises a SkipFixerException if app_name is not enabled in Django settings.
+    """
+    from django.conf import settings
+    if app_name not in settings.INSTALLED_APPS:
+        raise SkipFixerException("%s is not enabled in INSTALLED_APPS" % app_name)
 
 
 def _patch_injected_object(object_to_patch):

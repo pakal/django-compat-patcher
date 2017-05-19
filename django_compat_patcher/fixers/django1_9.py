@@ -219,6 +219,7 @@ def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
 @django1_9_bc_fixer(fixer_delayed=True)
 def fix_deletion_contrib_sites_models_RequestSite(utils):
     """Preserve contrib.sites.models.RequestSite alias."""
+    utils.skip_if_app_not_installed("django.contrib.sites")
     import django.contrib.sites.models
     from django.contrib.sites.requests import RequestSite as RealRequestSite
     class RequestSite(RealRequestSite):
@@ -234,6 +235,7 @@ def fix_deletion_contrib_sites_models_RequestSite(utils):
 @django1_9_bc_fixer(fixer_delayed=True)
 def fix_deletion_contrib_sites_models_get_current_site(utils):
     """Preserve contrib.sites.models.get_current_site alias."""
+    utils.skip_if_app_not_installed("django.contrib.sites")
     import django.contrib.sites.models
     from django.contrib.sites.shortcuts import get_current_site as real_get_current_site
     def get_current_site(request):

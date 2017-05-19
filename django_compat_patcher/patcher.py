@@ -38,8 +38,13 @@ def patch(settings=None):
                 utilities.emit_log("Django compat fixer '{}-{}' is getting applied".format(
                     fixer["fixer_family"], fixer['fixer_id']), level="INFO"
                 )
-                fixer["fixer_callable"](utilities)
-                __APPLIED_FIXERS.add(fixer['fixer_id'])
+                try:
+                    fixer["fixer_callable"](utilities)
+                    __APPLIED_FIXERS.add(fixer['fixer_id'])
+                except utilities.SkipFixerException as e:
+                    utilities.emit_log("Django compat fixer '{}-{}' was not applied, reason: {}".format(
+                        fixer["fixer_family"], fixer['fixer_id'], e), level="WARNING"
+                    )
             else:
                 utilities.emit_log("Django compat fixer '{}' was already applied".
                                          format(fixer['fixer_id']), level="WARNING")
