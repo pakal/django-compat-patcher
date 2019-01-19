@@ -16,10 +16,20 @@ django1_10_bc_fixer = partial(register_compatibility_fixer,
 
 def _get_url_utils():
     try:
-        from django.urls.utils import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+        from django.urls import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
     except ImportError:
         from django.core.urlresolvers import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch   # old location
     return get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+
+
+
+@register_compatibility_fixer(fixer_reference_version="1.10", fixer_applied_upto_django="1.10")
+def fix_incoming_django_urls(utils):
+    """
+    Put a forward compatibility import path for django.urls, which replaces django.core.urlresolvers
+    """
+    from django.core import urlresolvers
+    utils.inject_module("django.urls", urlresolvers)
 
 
 @django1_10_bc_fixer()

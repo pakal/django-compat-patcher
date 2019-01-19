@@ -6,6 +6,12 @@ import pytest
 import _test_utilities
 
 
+
+def test_fix_incoming_django_urls():
+    from django.urls import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+    assert get_callable
+
+
 def test_fix_deletion_templatetags_future():
     from compat import render_to_string
     from django.templatetags.future import cycle, firstof
