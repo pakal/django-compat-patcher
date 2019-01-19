@@ -18,17 +18,19 @@ def _extract_doc(func):
 
 
 def register_compatibility_fixer(fixer_reference_version,
-                                 fixer_applied_from_django=None,
-                                 fixer_applied_upto_django=None,
+                                 fixer_applied_from_django=None,  # INCLUDING this version
+                                 fixer_applied_upto_django=None,  # EXCLUDING this version
                                  fixer_delayed=False,
                                  feature_supported_from_django=None,
                                  feature_supported_upto_django=None,
                                  ):
     """
     Registers a fixer, which will be executed only if current django version
-    is >= `apply_from_django` and <= `apply_upto_django` (let them None to have no limit).
+    is >= `fixer_applied_from_django` and < `fixer_applied_upto_django` (let them None to have no limit).
 
-    `feature_supported_from_django` and `feature_supported_upto_django` can be used to limit
+    `fixer_reference_version` is mainly here for documentation purposes.
+
+    `feature_supported_from_django` and `feature_supported_upto_django` will be used to limit
     range of django versions for which related unit-tests are expected to work (i.e versions
     for which the feature is available, either as a monkey-paching or as standard django code).
 
@@ -94,13 +96,12 @@ def get_relevant_fixers(current_django_version,
         assert fixer_id == fixer["fixer_id"], fixer
 
         if (fixer["fixer_applied_from_django"] and
-                    current_django_version < fixer["fixer_applied_from_django"]):
+                    current_django_version < fixer["fixer_applied_from_django"]):  # SMALLER STRICTLY
             log("Skipping fixer %s, useful only in subsequent django versions" % fixer_id)
             continue
 
         if (fixer["fixer_applied_upto_django"] and
-                    current_django_version > fixer["fixer_applied_upto_django"]):
-            assert False, "Please update tests to account for first 'fixer_applied_upto_django' usage"
+                    current_django_version >= fixer["fixer_applied_upto_django"]):  # GREATER OR EQUAL
             log("Skipping fixer %s, useful only in previous django versions" % fixer_id)
             continue
 
