@@ -1,3 +1,11 @@
+Version 0.4
+==================
+
+* change semantics of fixer_applied_upto_django (new excludes specified version).
+* add forward-compatibility fixer for Django1.10.
+* add support for Django1.11, python3.6 and python3.7.
+
+
 Version 0.3
 ==================
 
