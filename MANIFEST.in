@@ -4,4 +4,5 @@ include LICENSE
 include VERSION
 include README.rst
 graft django_compat_patcher
+graft tests
 global-exclude *.orig *.pyc *.log *.swp

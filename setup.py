@@ -22,6 +22,7 @@ Operating System :: Unix
 Operating System :: MacOS :: MacOS X
 """
 
+packages = find_packages(exclude="tests")
 
 setup(
     name='django-compat-patcher',
@@ -36,7 +37,7 @@ setup(
     long_description=read("README.rst"),
 
     #package_dir={'': 'src'},
-    packages=find_packages(),
+    packages=packages,
 
     # test_suite='your.module.tests',
 
