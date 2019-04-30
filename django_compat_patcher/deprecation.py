@@ -2,11 +2,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from django_compat_patcher.utilities import emit_warning
 
-class RemovedInDjango22Warning(PendingDeprecationWarning):
+
+class RemovedInDjango22Warning(DeprecationWarning):
     pass
 
 
-class RemovedInDjango21Warning(PendingDeprecationWarning):
+class RemovedInDjango21Warning(DeprecationWarning):
     pass
 
 
@@ -38,7 +39,8 @@ class RemovedInDjango16Warning(DeprecationWarning):
     pass
 
 
-RemovedInNextVersionWarning = RemovedInDjango21Warning
+# Beware, think about updating this one!
+RemovedInNextVersionWarning = RemovedInDjango22Warning
 
 
 # replacement for "import warnings", which behaves according to DCP settings
