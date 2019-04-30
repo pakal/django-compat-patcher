@@ -65,3 +65,12 @@ def test_fix_deletion_django_utils_functional_allow_lazy():
 
     value = proxy.__str__()
     assert value == "mystr"
+
+
+def test_fix_deletion_django_template_context_Context_has_key():
+    from django.template.context import Context
+
+    ctx = Context({"a": 65})
+    assert ctx.has_key("a")
+    assert not ctx.has_key("b")
+

@@ -11,6 +11,10 @@ django1_20_bc_fixer = partial(register_compatibility_fixer,
                               fixer_applied_from_django="2.0")
 
 
+# This change should not be patched, since security issues could ensue:
+# "Using User.is_authenticated() and User.is_anonymous() as methods rather than properties is no longer supported."
+
+
 @django1_20_bc_fixer()
 def fix_deletion_django_urls_RegexURLPattern_RegexURLResolver(utils):
     """
@@ -73,3 +77,18 @@ def fix_deletion_django_utils_functional_allow_lazy(utils):
             RemovedInDjango20Warning, 2)
         return keep_lazy(*resultclasses)(func)
     utils.inject_callable(django.utils.functional, "allow_lazy", allow_lazy)
+
+
+@django1_20_bc_fixer()
+def fix_deletion_django_template_context_Context_has_key(utils):
+    """
+    Preserve the Context.has_key() utility, replaced by "in" operator use.
+    """
+    import django.template.context
+    def has_key(self, key):
+        utils.emit_warning(
+            "%s.has_key() is deprecated in favor of the 'in' operator." % self.__class__.__name__,
+            RemovedInDjango20Warning
+        )
+        return key in self
+    utils.inject_callable(django.template.context.Context, "has_key", has_key)
