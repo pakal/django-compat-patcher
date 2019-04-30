@@ -15,12 +15,15 @@ django1_10_bc_fixer = partial(register_compatibility_fixer,
 
 
 def _get_url_utils():
+    """
+    Get URL utilities through versions, despite them being moved and refactored (with new "path()" syntax).
+    """
     try:
-        from django.urls import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+        from django.urls import get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch
     except ImportError:
-        from django.core.urlresolvers import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch   # old location
-    return get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
-
+        # previously, there was no "RoutePattern vs RegexPattern"
+        from django.core.urlresolvers import get_callable, RegexURLPattern, RegexURLPattern as URLPattern, RegexURLResolver, RegexURLResolver as URLResolver, NoReverseMatch   # old location
+    return get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch
 
 
 @register_compatibility_fixer(fixer_reference_version="1.10", fixer_applied_upto_django="1.10")
@@ -85,11 +88,11 @@ def fix_deletion_template_defaulttags_ssi(utils):
 @django1_10_bc_fixer()
 def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
     """
-    Restore support for dotted string view in RegexURLPattern,
-    instead of view object.
+    Restore support for dotted-string view parameter in RegexURLPattern, instead passing a view object.
     """
 
-    get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
+    get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = _get_url_utils()
+    del RegexURLPattern  # we work on the common URLPattern class
 
     @property
     def callback(self):
@@ -106,7 +109,7 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
 
     # we inject a DATA-DESCRIPTOR, so it'll be accessed in prority
     # over "self.callback" instance attribute
-    utils.inject_attribute(RegexURLPattern, "callback", callback)
+    utils.inject_attribute(URLPattern, "callback", callback)
 
     def add_prefix(self, prefix):
         """
@@ -116,9 +119,9 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
         if not prefix or not isinstance(callback, six.string_types):
             return
         self.callback = prefix + '.' + callback
-    utils.inject_callable(RegexURLPattern, "add_prefix", add_prefix)
+    utils.inject_callable(URLPattern, "add_prefix", add_prefix)
 
-    original_lookup_str = RegexURLPattern.lookup_str
+    original_lookup_str = URLPattern.lookup_str
     @property  # not cached...
     def lookup_str(self):
         callback = self.__dict__["callback"]
@@ -126,7 +129,7 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
             # no need for warning, already emitted above
             return callback  # already a dotted path to view
         return original_lookup_str.__get__(self, self.__class__)
-    utils.inject_attribute(RegexURLPattern, "lookup_str", lookup_str)
+    utils.inject_attribute(URLPattern, "lookup_str", lookup_str)
 
 
 @django1_10_bc_fixer()
@@ -136,9 +139,10 @@ def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
     instead of explicit view name.
     """
     from django.utils.functional import cached_property
-    get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
+    get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = _get_url_utils()
+    del RegexURLResolver  # we patch the common URLResolver class
 
-    original_reverse_with_prefix = RegexURLResolver._reverse_with_prefix
+    original_reverse_with_prefix = URLResolver._reverse_with_prefix
 
     def _reverse_with_prefix(self, lookup_view, _prefix, *args, **kwargs):
         original_lookup = lookup_view
@@ -152,7 +156,7 @@ def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
         except (ImportError, AttributeError) as e:
             raise NoReverseMatch("Error importing '%s': %s." % (lookup_view, e))
         return original_reverse_with_prefix(self, lookup_view, _prefix, *args, **kwargs)
-    utils.inject_callable(RegexURLResolver, "_reverse_with_prefix", _reverse_with_prefix)
+    utils.inject_callable(URLResolver, "_reverse_with_prefix", _reverse_with_prefix)
 
 
 
@@ -161,7 +165,8 @@ def fix_behaviour_conf_urls_url(utils):
     """
     Support passing views to url() as dotted strings instead of view objects.
     """
-    get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch = _get_url_utils()
+    get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = _get_url_utils()
+    del URLPattern  # we stick to the old "regex-only" URL system
 
     from django.conf import urls
 
@@ -192,8 +197,9 @@ def fix_deletion_conf_urls_patterns(utils):
     """
     Preserve the patterns() builder for django urls.
     """
-    from django.core.urlresolvers import RegexURLPattern
     from django.conf import urls
+    get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = _get_url_utils()
+    del URLPattern  # we stick to the old "regex-only" URL system
 
     def patterns(prefix, *args):
         utils.emit_warning(
