@@ -39,3 +39,13 @@ def test_fix_deletion_django_core_urlresolvers():
     from django.core.urlresolvers import get_resolver as get_resolver2
     assert get_resolver is get_resolver2
 
+
+def test_fix_deletion_django_template_library_assignment_tag():
+    from django import template
+    register = template.Library()
+
+    @register.assignment_tag
+    def mytag():
+        return "mycontent"
+
+    assert mytag() == "mycontent"

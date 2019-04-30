@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from functools import partial
 
+from ..deprecation import *
 from ..registry import register_compatibility_fixer
 
 # for backward-compatibility fixers
@@ -41,4 +42,18 @@ def fix_deletion_django_core_urlresolvers(utils):
     utils.inject_module("django.core.urlresolvers", urls)
 
 
+@django1_20_bc_fixer()
+def fix_deletion_django_template_library_assignment_tag(utils):
+    """
+    Preserve the assignment_tag() helper, superseded by simple_tag().
+    """
+    import django.template.library
 
+    def assignment_tag(self, func=None, takes_context=None, name=None):
+        utils.emit_warning(
+            "assignment_tag() is deprecated. Use simple_tag() instead",
+            RemovedInDjango20Warning,
+            stacklevel=2,
+        )
+        return self.simple_tag(func, takes_context, name)
+    utils.inject_callable(django.template.library.Library, "assignment_tag", assignment_tag)

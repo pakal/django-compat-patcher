@@ -2,11 +2,19 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from django_compat_patcher.utilities import emit_warning
 
+class RemovedInDjango22Warning(PendingDeprecationWarning):
+    pass
+
+
 class RemovedInDjango21Warning(PendingDeprecationWarning):
     pass
 
 
 class RemovedInDjango20Warning(DeprecationWarning):
+    pass
+
+
+class RemovedInDjango111Warning(DeprecationWarning):
     pass
 
 
