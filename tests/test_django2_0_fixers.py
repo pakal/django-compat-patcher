@@ -49,3 +49,19 @@ def test_fix_deletion_django_template_library_assignment_tag():
         return "mycontent"
 
     assert mytag() == "mycontent"
+
+
+def test_fix_deletion_django_utils_functional_allow_lazy():
+    import six
+    from django.utils.encoding import force_text
+    from django.utils.functional import allow_lazy, lazy
+
+    def myfunc(arg):
+        return arg
+    myfunc = allow_lazy(myfunc, six.text_type)
+
+    proxy = myfunc(lazy(force_text, six.text_type)("mystr"))
+    assert type(proxy) != str
+
+    value = proxy.__str__()
+    assert value == "mystr"

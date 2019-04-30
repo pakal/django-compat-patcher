@@ -57,3 +57,19 @@ def fix_deletion_django_template_library_assignment_tag(utils):
         )
         return self.simple_tag(func, takes_context, name)
     utils.inject_callable(django.template.library.Library, "assignment_tag", assignment_tag)
+
+
+@django1_20_bc_fixer()
+def fix_deletion_django_utils_functional_allow_lazy(utils):
+    """
+    Preserve the allow_lazy() utility, superseded by keep_lazy().
+    """
+    import django.utils.functional
+    def allow_lazy(func, *resultclasses):
+        from django.utils.functional import keep_lazy
+        utils.emit_warning(
+            "django.utils.functional.allow_lazy() is deprecated in favor of "
+            "django.utils.functional.keep_lazy()",
+            RemovedInDjango20Warning, 2)
+        return keep_lazy(*resultclasses)(func)
+    utils.inject_callable(django.utils.functional, "allow_lazy", allow_lazy)
