@@ -25,7 +25,8 @@ def fix_deletion_django_urls_RegexURLPattern_RegexURLResolver(utils):
 
     class RegexURLPattern(URLPattern):
         def __init__(self, pattern, *args, **kwargs):
-            URLPattern.__init__(self, RegexPattern(pattern), *args, **kwargs)
+            # we force is_endpoint else Warnings about "$" ends in regexes...
+            URLPattern.__init__(self, RegexPattern(pattern, is_endpoint=True), *args, **kwargs)
 
     utils.inject_class(django.urls.resolvers, "RegexURLPattern", RegexURLPattern)
     utils.inject_class(django.urls, "RegexURLPattern", RegexURLPattern)

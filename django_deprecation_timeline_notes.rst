@@ -12,8 +12,15 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 .. raw:: html
 
     <style> .kind {color: blue} </style>
-    
-    
+
+
+2.2
+----
+
+See https://docs.djangoproject.com/en/2.2/releases/2.2/#backwards-incompatible-changes-in-2-2
+
+
+
 2.1
 -----
 
@@ -26,10 +33,10 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 - Silencing of exceptions raised while rendering the {% include %} template tag will be removed. :kind:`DELETION`
 - DatabaseIntrospection.get_indexes() will be removed. :kind:`DELETION`
 - The authenticate() method of authentication backends will require a request argument.
-    
+
+
 2.0
 -----
-
 
 - The weak argument to django.dispatch.signals.Signal.disconnect() will be removed.
 - The django.forms.extras package will be removed.
@@ -93,6 +100,12 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 - Manager.use_for_related_fields will be removed.
 - Model Manager inheritance will follow MRO inheritance rules and the Meta.manager_inheritance_from_future to opt-in to this behavior will be removed.
 - Support for old-style middleware using settings.MIDDLEWARE_CLASSES will be removed.
+
+
+1.11
+---------
+
+See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-changes-in-1-11
 
 
 1.10
