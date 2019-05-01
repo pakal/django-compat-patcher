@@ -32,3 +32,36 @@ def fix_deletion_django_utils_translation_string_concat(utils):
 
     string_concat = lazy(_string_concat, str)
     utils.inject_callable(django.utils.translation, "string_concat", string_concat)
+
+
+@django1_21_bc_fixer()
+def fix_behaviour_widget_render_forced_renderer(utils):
+    """
+    Restore the behaviour where the "renderer" parameter of Widget.render() may not be supported by subclasses.
+    """
+    ###from django.forms.widgets import Widget
+    from django.forms.boundfield import BoundField
+
+    original_as_widget = BoundField.as_widget
+
+    def as_widget(self, widget=None, attrs=None, only_initial=False):
+
+        from django.utils.inspect import func_supports_parameter, func_accepts_kwargs
+        if not (func_supports_parameter(widget.render, 'renderer') or func_accepts_kwargs(widget.render)):
+            original_widget_render = widget.render
+
+            utils.emit_warning(
+                'Add the `renderer` argument to the render() method of %s. '
+                'It will be mandatory in Django 2.1.' % widget.__class__,
+                RemovedInDjango21Warning, stacklevel=2)
+
+            def instance_render(name, value, attrs=None, renderer=None):
+                del renderer  # restore non-mandatory support for this parameter
+                return original_widget_render(name=name, value=value, attrs=attrs)
+            utils.inject_callable(widget, "render", instance_render)  # beware, function stored in INSTANCE
+
+        return original_as_widget(self, widget=widget, attrs=attrs, only_initial=only_initial)
+
+    utils.inject_callable(BoundField, "as_widget", as_widget)
+
+
