@@ -36,3 +36,6 @@ def test_fix_behaviour_widget_render_forced_renderer():
 
     res = my_field.as_widget(NewWidget())
     assert res == "All is ok 2"
+
+    res = my_field.as_widget()  # implicit CharField widget
+    assert "<input " in res

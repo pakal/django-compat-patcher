@@ -46,6 +46,8 @@ def fix_behaviour_widget_render_forced_renderer(utils):
 
     def as_widget(self, widget=None, attrs=None, only_initial=False):
 
+        widget = widget or self.field.widget
+
         from django.utils.inspect import func_supports_parameter, func_accepts_kwargs
         if not (func_supports_parameter(widget.render, 'renderer') or func_accepts_kwargs(widget.render)):
             original_widget_render = widget.render
