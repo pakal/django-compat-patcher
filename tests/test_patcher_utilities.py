@@ -142,15 +142,16 @@ def test_no_stdlib_warnings():
     pkg_root = os.path.dirname(django_compat_patcher.__file__)
 
     # we authorize "warnings.warn", as long as it uses our custom WarningsProxy
-    forbidden_phrases = ["import warnings", "from warnings"]
+    forbidden_phrases = ["import warnings", "from warnings", "django.utils.deprecation"]
 
     for root, subdirs, files in os.walk(pkg_root):
         for f in [x for x in files if x.endswith(".py")]:
             full_path = os.path.join(root, f)
-            print(">> ANALYSING PYTHON FILE", full_path)
+            #print(">> ANALYSING PYTHON FILE", full_path)
             with open(full_path, "r") as s:
                 data = s.read()
             for forbidden_phrase in forbidden_phrases:
                 if forbidden_phrase in data:
-                    print(">>> ALERT, wrong phrase '%s' detected in %s" % (forbidden_phrase, full_path))
-
+                    if (f == "utilities.py") and ("import warnings as stdlib_warnings" in data):
+                        continue  # the only case OK is our own warnings utility
+                    raise Exception("ALERT, wrong phrase '%s' detected in %s" % (forbidden_phrase, full_path))

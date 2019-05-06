@@ -43,7 +43,7 @@ class RemovedInDjango16Warning(DeprecationWarning):
 RemovedInNextVersionWarning = RemovedInDjango22Warning
 
 
-# replacement for "import warnings", which behaves according to DCP settings
+# replacement for stdlib "warnings", which behaves according to DCP settings
 class WarningsProxy():
     def warn(self, *args, **kwargs):
         emit_warning(*args, **kwargs)
