@@ -93,3 +93,19 @@ def fix_deletion_django_template_context_Context_has_key(utils):
         )
         return key in self
     utils.inject_callable(django.template.context.Context, "has_key", has_key)
+
+
+@django1_20_bc_fixer()
+def fix_deletion_django_views_i18n_javascript_and_json_catalog(utils):
+    """
+    Preserve the javascript_catalog() and json_catalog() i18n views, superseded by class-based views.
+    """
+
+    from django_compat_patcher.django_legacy.django2_0.views.i18n import \
+        javascript_catalog, json_catalog, render_javascript_catalog, null_javascript_catalog
+
+    import django.views.i18n
+    utils.inject_callable(django.views.i18n, "javascript_catalog", javascript_catalog)
+    utils.inject_callable(django.views.i18n, "json_catalog", json_catalog)
+    utils.inject_callable(django.views.i18n, "render_javascript_catalog", render_javascript_catalog)
+    utils.inject_callable(django.views.i18n, "null_javascript_catalog", null_javascript_catalog)

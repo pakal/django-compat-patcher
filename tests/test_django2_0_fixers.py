@@ -76,3 +76,24 @@ def test_fix_deletion_django_template_context_Context_has_key():
     assert ctx.has_key("a")
     assert not ctx.has_key("b")
 
+
+def test_fix_deletion_django_views_i18n_javascript_and_json_catalog():
+    from django.views.i18n import (javascript_catalog, json_catalog,
+                                   render_javascript_catalog, null_javascript_catalog)
+    from django.http import HttpResponse
+    from django.test.client import RequestFactory
+
+    request = RequestFactory().get("/homepage/")
+
+    response = javascript_catalog(request)
+    assert isinstance(response, HttpResponse)
+
+    response = json_catalog(request)
+    assert isinstance(response, HttpResponse)
+
+    response = null_javascript_catalog(request)
+    assert isinstance(response, HttpResponse)
+
+    response = render_javascript_catalog({"château": "castle"})
+    assert isinstance(response, HttpResponse)
+  
