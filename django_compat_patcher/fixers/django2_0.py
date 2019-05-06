@@ -14,6 +14,8 @@ django1_20_bc_fixer = partial(register_compatibility_fixer,
 # This change should not be patched, since security issues could ensue:
 # "Using User.is_authenticated() and User.is_anonymous() as methods rather than properties is no longer supported."
 
+# Preserving mark_for_escaping() and related classes would be complicated and might raise security issues, so it's not done for now.
+
 
 @django1_20_bc_fixer()
 def fix_deletion_django_urls_RegexURLPattern_RegexURLResolver(utils):
@@ -109,3 +111,6 @@ def fix_deletion_django_views_i18n_javascript_and_json_catalog(utils):
     utils.inject_callable(django.views.i18n, "json_catalog", json_catalog)
     utils.inject_callable(django.views.i18n, "render_javascript_catalog", render_javascript_catalog)
     utils.inject_callable(django.views.i18n, "null_javascript_catalog", null_javascript_catalog)
+
+
+
