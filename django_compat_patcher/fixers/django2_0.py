@@ -113,4 +113,46 @@ def fix_deletion_django_views_i18n_javascript_and_json_catalog(utils):
     utils.inject_callable(django.views.i18n, "null_javascript_catalog", null_javascript_catalog)
 
 
+@django1_20_bc_fixer()
+def fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField(utils):
+    """
+    Let "on_delete" parameter of ForeignKey and OneToOneField be optional, defaulting to CASCADE.
+    """
+    from django.db.models import ForeignKey, OneToOneField, CASCADE
 
+    original_ForeignKey_init = ForeignKey.__dict__["__init__"]
+
+    def __init_ForeignKey__(self, to, on_delete=None, related_name=None, related_query_name=None,
+                 limit_choices_to=None, parent_link=False, to_field=None,
+                 db_constraint=True, **kwargs):
+
+        if on_delete is None:
+            utils.emit_warning(
+                "on_delete will be a required arg for %s in Django 2.0. Set "
+                "it to models.CASCADE on models and in existing migrations "
+                "if you want to maintain the current default behavior. ",
+                    RemovedInDjango20Warning, 2)
+            on_delete = CASCADE
+
+        original_ForeignKey_init(self, to, on_delete=on_delete, related_name=related_name,
+                                 related_query_name=related_query_name, limit_choices_to=limit_choices_to,
+                                 parent_link=parent_link, to_field=to_field, db_constraint=db_constraint, **kwargs)
+
+    utils.inject_callable(ForeignKey, "__init__", __init_ForeignKey__)
+
+
+    original_OneToOneField_init = OneToOneField.__dict__["__init__"]
+
+    def __init_OneToOneField__(self, to, on_delete=None, to_field=None, **kwargs):
+
+        if on_delete is None:
+            utils.emit_warning(
+                "on_delete will be a required arg for %s in Django 2.0. Set "
+                "it to models.CASCADE on models and in existing migrations "
+                "if you want to maintain the current default behavior. ",
+                    RemovedInDjango20Warning, 2)
+            on_delete = CASCADE
+
+        original_OneToOneField_init(self, to, on_delete=on_delete, to_field=to_field, **kwargs)
+
+    utils.inject_callable(OneToOneField, "__init__", __init_OneToOneField__)

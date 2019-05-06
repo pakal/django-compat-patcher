@@ -96,4 +96,32 @@ def test_fix_deletion_django_views_i18n_javascript_and_json_catalog():
 
     response = render_javascript_catalog({"château": "castle"})
     assert isinstance(response, HttpResponse)
-  
+
+
+def test_fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField():
+
+    from django.contrib.auth import get_user_model
+    from django.db.models import ForeignKey, OneToOneField, CASCADE, PROTECT
+
+    User = get_user_model()
+
+    fk = ForeignKey(User)
+    assert fk.remote_field.on_delete == CASCADE
+    del fk
+
+    fk = ForeignKey(User, on_delete=PROTECT)
+    assert fk.remote_field.on_delete == PROTECT
+    del fk
+
+    fk = OneToOneField(User)
+    assert fk.remote_field.on_delete == CASCADE
+    del fk
+
+    fk = OneToOneField(User, on_delete=PROTECT)
+    assert fk.remote_field.on_delete == PROTECT
+    del fk
+
+
+
+
+
