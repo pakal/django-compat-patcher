@@ -14,6 +14,7 @@ def test_fix_deletion_django_utils_translation_string_concat():
 def test_fix_behaviour_widget_render_forced_renderer():
 
     from django import forms
+    from django.forms.forms import BoundField  # not propagated in django1.8
 
     class MyForm(forms.Form):
         my_field = forms.CharField(label='My field', max_length=100)
@@ -29,7 +30,7 @@ def test_fix_behaviour_widget_render_forced_renderer():
     form = MyForm()
 
     my_field = form["my_field"]
-    assert isinstance(my_field, forms.BoundField)
+    assert isinstance(my_field, BoundField)
 
     res = my_field.as_widget(OldWidget())
     assert res == "All is ok 1"

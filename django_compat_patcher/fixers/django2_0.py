@@ -156,3 +156,36 @@ def fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField(util
         original_OneToOneField_init(self, to, on_delete=on_delete, to_field=to_field, **kwargs)
 
     utils.inject_callable(OneToOneField, "__init__", __init_OneToOneField__)
+
+
+@django1_20_bc_fixer()
+def fix_behaviour_django_conf_urls_include_3tuples(utils):
+    """
+    Keep accepting a 3-tuple (urlconf_module, app_name, namespace) as first argument of include(),
+    instead of providing namespace argument directly to include()
+    """
+
+    from django.core.exceptions import ImproperlyConfigured
+    from django.conf.urls import include as original_include
+
+    def include(arg, namespace=None):
+        if isinstance(arg, tuple):
+            if len(arg) == 3:
+                if namespace:
+                    raise ImproperlyConfigured(
+                        'Cannot override the namespace for a dynamic module that provides a namespace'
+                    )
+                utils.emit_warning(
+                    'Passing a 3-tuple to django.conf.urls.include() is deprecated. '
+                    'Pass a 2-tuple containing the list of patterns and app_name, '
+                    'and provide the namespace argument to include() instead.',
+                    RemovedInDjango20Warning, stacklevel=2
+                )
+                urlconf_module, app_name, namespace = arg
+                arg = (urlconf_module, app_name)
+        return original_include(arg, namespace=namespace)
+
+    import django.conf.urls
+    utils.inject_callable(django.conf.urls, "include", include)
+    import django.urls
+    utils.inject_callable(django.urls, "include", include)

@@ -77,6 +77,7 @@ def test_fix_deletion_django_template_context_Context_has_key():
     assert not ctx.has_key("b")
 
 
+@pytest.mark.skipif(_test_utilities.DJANGO_VERSION_TUPLE < (1, 9), reason="Requires json_catalog() view")
 def test_fix_deletion_django_views_i18n_javascript_and_json_catalog():
     from django.views.i18n import (javascript_catalog, json_catalog,
                                    render_javascript_catalog, null_javascript_catalog)
@@ -94,10 +95,11 @@ def test_fix_deletion_django_views_i18n_javascript_and_json_catalog():
     response = null_javascript_catalog(request)
     assert isinstance(response, HttpResponse)
 
-    response = render_javascript_catalog({"château": "castle"})
+    response = render_javascript_catalog({"chateau": "castle"})
     assert isinstance(response, HttpResponse)
 
 
+@pytest.mark.skipif(_test_utilities.DJANGO_VERSION_TUPLE < (2,0), reason="Requires field.remote_field attribute")
 def test_fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField():
 
     from django.contrib.auth import get_user_model
@@ -122,6 +124,21 @@ def test_fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField
     del fk
 
 
+def test_fix_behaviour_django_conf_urls_include_3tuples():
+    from django.conf.urls import include
 
+    try:
+        from django.urls import include as include2
+        assert include is include2
+    except ImportError:  # normal for old Django versions
+        if _test_utilities.DJANGO_VERSION_TUPLE >= (2,0):
+            raise
 
+    from django.contrib import admin
+    assert len(admin.site.urls) == 3
+    include(admin.site.urls)  # is OK as a 3-tuple
+
+    from django.core.exceptions import ImproperlyConfigured
+    with pytest.raises(ImproperlyConfigured):
+        include(admin.site.urls, namespace="mynamespace")
 
