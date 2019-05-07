@@ -61,7 +61,7 @@ You may provide a "settings" dictionary directly to the patch() method, in which
 
     django_compat_patcher.patch(settings=dict(DCP_INCLUDE_FIXER_IDS=["my_fixer_id"]))
 
-
+Note that exclusion filters have precedence over inclusion ones.
 
 
 DCP_INCLUDE_FIXER_IDS
@@ -82,7 +82,7 @@ List of fixer families to include. If :code:`"*"` is used, then all families are
 Note: If you want to include only specific families, remember to replace the value :code:`"*" from :code:`DCP_INCLUDE_FIXER_IDS` by, for example, an empty list.
 
 | **Default:** :code:`[]`
-| **Type:** List of strings
+| **Type:** List of strings, or :code:`"*"`
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_INCLUDE_FIXER_FAMILIES = ["django1.9"]`
 
@@ -90,24 +90,24 @@ Note: If you want to include only specific families, remember to replace the val
 DCP_EXCLUDE_FIXER_IDS
 *********************
 
-List of fixer identifiers to exclude.
+List of fixer identifiers to exclude. If :code:`"*"` is used, then all fixers are excluded.
 
 Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
 | **Default:** :code:`[]`
-| **Type:** List of strings
+| **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_EXCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
 
 DCP_EXCLUDE_FIXER_FAMILIES
 **************************
 
-List of fixer families to exclude.
+List of fixer families to exclude. If :code:`"*"` is used, then all families are excluded.
 
 Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
 | **Default:** :code:`[]`
-| **Type:** List of strings
+| **Type:** List of strings, or :code:`"*"`
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
 
