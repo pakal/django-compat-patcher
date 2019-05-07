@@ -16,6 +16,12 @@ Intended Audience :: Information Technology
 Intended Audience :: System Administrators
 License :: OSI Approved :: MIT License
 Programming Language :: Python
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Framework :: Django
 Topic :: Software Development :: Libraries :: Python Modules
 Operating System :: Microsoft :: Windows
 Operating System :: Unix
@@ -26,6 +32,10 @@ packages = find_packages(exclude="tests")
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 setup_requires = ['pytest-runner'] if needs_pytest else []
+
+extras = {
+    'comments': ['django-contrib-comments'],
+}
 
 setup(
     name='django-compat-patcher',
@@ -41,7 +51,8 @@ setup(
 
     packages=packages,
 
-    install_requires=['django-contrib-comments'] + (["Django<2"] if (sys.version_info < (3,)) else []),
+    install_requires=(['Django<2'] if (sys.version_info < (3,)) else ['Django']),
+    extras_require=extras,
     setup_requires=setup_requires,
     tests_require=["pytest", "pytest-pythonpath", "django-compat"],
 
