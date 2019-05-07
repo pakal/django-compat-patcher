@@ -39,7 +39,6 @@ def fix_behaviour_widget_render_forced_renderer(utils):
     """
     Restore the behaviour where the "renderer" parameter of Widget.render() may not be supported by subclasses.
     """
-    ###from django.forms.widgets import Widget
     from django.forms.boundfield import BoundField
 
     original_as_widget = BoundField.as_widget
