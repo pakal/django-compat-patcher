@@ -84,7 +84,7 @@ def apply_runtime_settings(settings):
         DCP_LOGGING_LEVEL = dcp_logging_level
 
 
-# lazy setup of the following settings
+# for lazy setup of the some settings
 _initial_setup_done = False
 
 # global on/off switch for (deprecation) warnings, to be modified by patch() if wanted

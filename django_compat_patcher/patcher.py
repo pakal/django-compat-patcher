@@ -33,7 +33,6 @@ def patch(settings=None):
     def _apply_fixers(fixers):
         for fixer in fixers:
             # print("Applying fixer", fixer)
-            # TODO - create custom injected "utils" object with context information, logging, warnings, etc.
             if fixer['fixer_id'] not in __APPLIED_FIXERS:
                 utilities.emit_log("Django compat fixer '{}-{}' is getting applied".format(
                     fixer["fixer_family"], fixer['fixer_id']), level="INFO"
