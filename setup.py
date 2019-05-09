@@ -41,7 +41,7 @@ setup(
 
     packages=packages,
 
-    install_requires=['django-contrib-comments'],
+    install_requires=['django-contrib-comments'] + (["Django<2"] if (sys.version_info < (3,)) else []),
     setup_requires=setup_requires,
     tests_require=["pytest", "pytest-pythonpath", "django-compat"],
 
