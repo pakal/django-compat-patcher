@@ -1,9 +1,11 @@
 
-Version 0.5.1
+Version 0.6
 ==================
 
 * prevent tests from access DB
 * improve packaging metadata
+* make tests launchable via "python setup.py test"
+* normalize fixer names (might outdate some DCP_xxx user confs)
 
 
 Version 0.5
