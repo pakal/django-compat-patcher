@@ -7,7 +7,7 @@ import _test_utilities
 
 
 @pytest.mark.skipif(_test_utilities.DJANGO_VERSION_TUPLE < (1, 10), reason="requires django.urls subpackage")
-def test_fix_deletion_django_urls_RegexURLPattern_RegexURLResolver():
+def test_fix_deletion_urls_RegexURLPattern_RegexURLResolver():
 
     from django.urls import RegexURLPattern
     from django.urls.resolvers import RegexURLPattern as RegexURLPattern2
@@ -35,14 +35,14 @@ def test_fix_deletion_django_urls_RegexURLPattern_RegexURLResolver():
 
 
 @pytest.mark.skipif(_test_utilities.DJANGO_VERSION_TUPLE < (1, 10), reason="requires django.urls subpackage")
-def test_fix_deletion_django_core_urlresolvers():
+def test_fix_deletion_core_urlresolvers():
 
     from django.urls import get_resolver
     from django.core.urlresolvers import get_resolver as get_resolver2
     assert get_resolver is get_resolver2
 
 
-def test_fix_deletion_django_template_library_assignment_tag():
+def test_fix_deletion_template_library_assignment_tag():
     from django import template
     register = template.Library()
 
@@ -53,7 +53,7 @@ def test_fix_deletion_django_template_library_assignment_tag():
     assert mytag() == "mycontent"
 
 
-def test_fix_deletion_django_utils_functional_allow_lazy():
+def test_fix_deletion_utils_functional_allow_lazy():
     import six
     from django.utils.encoding import force_text
     from django.utils.functional import allow_lazy, lazy
@@ -69,7 +69,7 @@ def test_fix_deletion_django_utils_functional_allow_lazy():
     assert value == "mystr"
 
 
-def test_fix_deletion_django_template_context_Context_has_key():
+def test_fix_deletion_template_context_Context_has_key():
     from django.template.context import Context
 
     ctx = Context({"a": 65})
@@ -78,7 +78,7 @@ def test_fix_deletion_django_template_context_Context_has_key():
 
 
 @pytest.mark.skipif(_test_utilities.DJANGO_VERSION_TUPLE < (1, 9), reason="Requires json_catalog() view")
-def test_fix_deletion_django_views_i18n_javascript_and_json_catalog():
+def test_fix_deletion_views_i18n_javascript_and_json_catalog():
     from django.views.i18n import (javascript_catalog, json_catalog,
                                    render_javascript_catalog, null_javascript_catalog)
     from django.http import HttpResponse
@@ -100,7 +100,7 @@ def test_fix_deletion_django_views_i18n_javascript_and_json_catalog():
 
 
 @pytest.mark.skipif(_test_utilities.DJANGO_VERSION_TUPLE < (2,0), reason="Requires field.remote_field attribute")
-def test_fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField():
+def test_fix_behaviour_db_models_fields_related_ForeignKey_OneToOneField():
 
     from django.contrib.auth import get_user_model
     from django.db.models import ForeignKey, OneToOneField, CASCADE, PROTECT
@@ -124,7 +124,7 @@ def test_fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField
     del fk
 
 
-def test_fix_behaviour_django_conf_urls_include_3tuples():
+def test_fix_behaviour_conf_urls_include_3tuples():
     from django.conf.urls import include
 
     try:

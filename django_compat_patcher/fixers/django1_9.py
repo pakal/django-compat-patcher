@@ -182,7 +182,7 @@ def fix_deletion_forms_fields_IPAddressField(utils):
 
 
 @django1_9_bc_fixer()
-def fix_deletion_django_core_management_base_AppCommand_handle_app(utils):
+def fix_deletion_core_management_base_AppCommand_handle_app(utils):
     """Preserve the fallback to AppCommand.handle_app() method in django management commands."""
 
     from django.core.management.base import CommandError, AppCommand

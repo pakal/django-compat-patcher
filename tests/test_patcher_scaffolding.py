@@ -34,7 +34,7 @@ def test_get_relevant_fixer_ids():
     assert len(fixer_ids) > 5
 
     fixer_ids = get_relevant_fixer_ids(current_django_version="1.3")
-    assert fixer_ids == ['fix_incoming_django_urls']
+    assert fixer_ids == ['fix_incoming_urls_submodule']
 
     # TODO update this test when new fixers arrive, and test inclusion/exclusion filters
 

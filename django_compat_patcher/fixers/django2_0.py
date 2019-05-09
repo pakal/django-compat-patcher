@@ -18,7 +18,7 @@ django1_20_bc_fixer = partial(register_compatibility_fixer,
 
 
 @django1_20_bc_fixer()
-def fix_deletion_django_urls_RegexURLPattern_RegexURLResolver(utils):
+def fix_deletion_urls_RegexURLPattern_RegexURLResolver(utils):
     """
     Preserve RegexURLPattern and RegexURLResolver in django.urls, which disappeared due to DEP 0201.
     """
@@ -41,7 +41,7 @@ def fix_deletion_django_urls_RegexURLPattern_RegexURLResolver(utils):
 
 
 @django1_20_bc_fixer()
-def fix_deletion_django_core_urlresolvers(utils):
+def fix_deletion_core_urlresolvers(utils):
     """
     Preserve django.core.urlresolvers module, now replaced by django.urls.
     """
@@ -50,7 +50,7 @@ def fix_deletion_django_core_urlresolvers(utils):
 
 
 @django1_20_bc_fixer()
-def fix_deletion_django_template_library_assignment_tag(utils):
+def fix_deletion_template_library_assignment_tag(utils):
     """
     Preserve the assignment_tag() helper, superseded by simple_tag().
     """
@@ -67,7 +67,7 @@ def fix_deletion_django_template_library_assignment_tag(utils):
 
 
 @django1_20_bc_fixer()
-def fix_deletion_django_utils_functional_allow_lazy(utils):
+def fix_deletion_utils_functional_allow_lazy(utils):
     """
     Preserve the allow_lazy() utility, superseded by keep_lazy().
     """
@@ -83,7 +83,7 @@ def fix_deletion_django_utils_functional_allow_lazy(utils):
 
 
 @django1_20_bc_fixer()
-def fix_deletion_django_template_context_Context_has_key(utils):
+def fix_deletion_template_context_Context_has_key(utils):
     """
     Preserve the Context.has_key() utility, replaced by "in" operator use.
     """
@@ -98,7 +98,7 @@ def fix_deletion_django_template_context_Context_has_key(utils):
 
 
 @django1_20_bc_fixer()
-def fix_deletion_django_views_i18n_javascript_and_json_catalog(utils):
+def fix_deletion_views_i18n_javascript_and_json_catalog(utils):
     """
     Preserve the javascript_catalog() and json_catalog() i18n views, superseded by class-based views.
     """
@@ -114,7 +114,7 @@ def fix_deletion_django_views_i18n_javascript_and_json_catalog(utils):
 
 
 @django1_20_bc_fixer()
-def fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField(utils):
+def fix_behaviour_db_models_fields_related_ForeignKey_OneToOneField(utils):
     """
     Let "on_delete" parameter of ForeignKey and OneToOneField be optional, defaulting to CASCADE.
     """
@@ -159,7 +159,7 @@ def fix_behaviour_django_deb_models_fields_related_ForeignKey_OneToOneField(util
 
 
 @django1_20_bc_fixer()
-def fix_behaviour_django_conf_urls_include_3tuples(utils):
+def fix_behaviour_conf_urls_include_3tuples(utils):
     """
     Keep accepting a 3-tuple (urlconf_module, app_name, namespace) as first argument of include(),
     instead of providing namespace argument directly to include()

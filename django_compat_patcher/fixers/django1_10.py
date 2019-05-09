@@ -27,7 +27,7 @@ def _get_url_utils():
 
 
 @register_compatibility_fixer(fixer_reference_version="1.10", fixer_applied_upto_django="1.10")
-def fix_incoming_django_urls(utils):
+def fix_incoming_urls_submodule(utils):
     """
     Put a forward compatibility import path for django.urls, which replaces django.core.urlresolvers
     """

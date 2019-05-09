@@ -12,7 +12,7 @@ django1_21_bc_fixer = partial(register_compatibility_fixer,
 
 
 @django1_21_bc_fixer()
-def fix_deletion_django_utils_translation_string_concat(utils):
+def fix_deletion_utils_translation_string_concat(utils):
     """
     Preserve django.utils.translation.string_concat(), superseded by django.utils.text.format_lazy().
     """

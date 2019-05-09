@@ -148,7 +148,7 @@ def test_fix_deletion_utils_unittest():
     assert callable(unittest.TestCase)
 
 
-def test_fix_deletion_django_core_management_base_AppCommand_handle_app():
+def test_fix_deletion_core_management_base_AppCommand_handle_app():
     from django.core.management.base import AppCommand
 
     class DummyAppconfig(object):

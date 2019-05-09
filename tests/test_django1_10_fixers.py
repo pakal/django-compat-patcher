@@ -7,7 +7,7 @@ import _test_utilities
 
 
 
-def test_fix_incoming_django_urls():
+def test_fix_incoming_urls_submodule():
     from django.urls import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
     assert get_callable
 
