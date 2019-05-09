@@ -41,7 +41,7 @@ Name
 ------
 
 - Fixers have to be decorated using :code:`register_compatibility_fixer` and the like (found in :code:`registry.py`). Hint: you can be DRY using :code:`functools.partial`
-- Fixers are named using the following syntax: :code:`fix_<kind>_<path>_<element>(<utils>, \*args, \*\*kwargs)`
+- Fixers are (except special cases) named using the following syntax: :code:`fix_<kind>_<path>_<element>(<utils>, \*args, \*\*kwargs)`
 
     - :code:`<kind>` is one of the following :
         - deletion
@@ -66,5 +66,9 @@ Patching the removal of the :code:`get_formsets()` method from django's :code:`M
 Testing
 =========
 
-Simply install and run the "tox" python tool, from the root folder of the repository.
+You can run "python setup.py test", which will install test requirements in a temporary folder, annd launch pytest.
+
+You can also install "pip install -r requirements.txt" to get all dependencies in your current environement, and then use pytest directly.
+
+MOST IMPORTANTLY, to test cross-version compatibility of your changes, install and run the "tox" python tool, from the root folder of the repository.
 
