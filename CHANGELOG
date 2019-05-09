@@ -1,3 +1,19 @@
+
+Version 0.5.1
+==================
+
+* prevent tests from access DB
+* improve packaging metadata
+
+
+Version 0.5
+==================
+
+* correct the check that all DCP warnings are emitted through its own utilities, not direct stdlib calls
+* add support for python 3.6 and 3.7, and django up to 2.2.1
+* add fixers for Django 2.0, 2.1 and 2.2
+
+
 Version 0.4
 ==================
 
