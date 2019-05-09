@@ -1,11 +1,12 @@
 
-git+https://github.com/arteria/django-compat
+# external ports of contrib packages removed from django
+django-contrib-comments
+
+
+## FOR TESTING ##
 
 pytest
 pytest-pythonpath
-
+git+https://github.com/arteria/django-compat
 tox
 
-
-# external ports of contrib packages removed from django
-django-contrib-comments
