@@ -3,6 +3,11 @@ include CHANGELOG
 include LICENSE
 include VERSION
 include README.rst
-graft django_compat_patcher
-graft tests
-global-exclude *.orig *.pyc *.log *.swp
+include MANIFEST.in
+include django_deprecation_timeline_notes.rst
+recursive-include tests *.py *.html
+include requirements.txt
+include pytest.ini
+include conftest.py
+include tox.ini
+global-exclude *.orig *.py[co] *.log *.swp
