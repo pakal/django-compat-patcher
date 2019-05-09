@@ -9,7 +9,7 @@ import os
 import django
 django_version = django.VERSION
 
-from test_project.minimal_settings import *
+from .minimal_settings import *
 
 
 SITE_ID = 1
