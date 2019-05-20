@@ -25,10 +25,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'test_project',
-
-    # old contrib packages, restored by proxifier in their original django.contrib.* namespace
-    'django_comments' if django_version >= (1, 8) else "django.contrib.comments"
 ]
+
+if not os.environ.get("IGNORE_CONTRIB_COMMENTS"):
+    # old contrib packages, restored by proxifier in their original django.contrib.* namespace
+    INSTALLED_APPS.append('django_comments' if django_version >= (1, 8) else "django.contrib.comments")
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
