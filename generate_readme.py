@@ -3,8 +3,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 from functools import reduce
 from io import open  # Python2 compatibility
 
-from django_compat_patcher.registry import get_all_fixers
-from django_compat_patcher.utilities import _detuplify_version
+from django_compat_patcher.registry import django_fixers_registry
+from compat_patcher.utilities import PatchingUtilities
 
 
 def make_table(grid):
@@ -46,8 +46,8 @@ def _create_fixer_list(all_fixers, grid):
         grid.append([
             "**{}** (:code:`{}`)".format(*format_tuple),
             fixer['fixer_family'],
-            _detuplify_version(fixer["fixer_applied_from_django"]),
-            _detuplify_version(fixer['fixer_applied_upto_django'])
+            PatchingUtilities._detuplify_software_version(fixer["fixer_applied_from_version"]),
+            _detuplify_software_version(fixer['fixer_applied_upto_version'])
         ])
 
 

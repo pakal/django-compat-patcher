@@ -2,10 +2,10 @@ import copy
 from _pytest.python import Function
 
 import _test_utilities  # initializes django
-from django_compat_patcher.registry import get_all_fixers
+from django_compat_patcher.registry import django_fixers_registry
 
 def ensure_all_fixers_have_a_test(config, items):
-    all_fixers = get_all_fixers()
+    all_fixers = django_fixers_registry.get_all_fixers()
     all_tests_names = [test.name for test in items]
     for fixer in all_fixers:
         expected_test_name = "test_{}".format(fixer['fixer_callable'].__name__)

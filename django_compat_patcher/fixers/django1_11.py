@@ -2,12 +2,12 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from functools import partial
 
-from ..registry import register_compatibility_fixer
+from ..registry import register_django_compatibility_fixer
 
 # for backward-compatibility fixers
-django1_11_bc_fixer = partial(register_compatibility_fixer,
+django1_11_bc_fixer = partial(register_django_compatibility_fixer,
                               fixer_reference_version="1.11",
-                              fixer_applied_from_django="1.11")
+                              fixer_applied_from_version="1.11")
 
 
 

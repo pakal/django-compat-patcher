@@ -1,6 +1,11 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-from django_compat_patcher.utilities import emit_warning
+from compat_patcher.utilities import WarningsProxy
+
+
+# Proxy meant to be imported by fixer submodules instead of stdlib "warnings" package
+warnings = WarningsProxy()
+
 
 
 class RemovedInDjango22Warning(DeprecationWarning):
@@ -42,9 +47,3 @@ class RemovedInDjango16Warning(DeprecationWarning):
 # Beware, think about updating this one!
 RemovedInNextVersionWarning = RemovedInDjango22Warning
 
-
-# replacement for stdlib "warnings", which behaves according to DCP settings
-class WarningsProxy():
-    def warn(self, *args, **kwargs):
-        emit_warning(*args, **kwargs)
-warnings = WarningsProxy()

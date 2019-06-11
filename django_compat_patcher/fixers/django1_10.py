@@ -6,12 +6,12 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
 
 from ..deprecation import *
-from ..registry import register_compatibility_fixer
+from ..registry import register_django_compatibility_fixer
 
 # for backward-compatibility fixers
-django1_10_bc_fixer = partial(register_compatibility_fixer,
+django1_10_bc_fixer = partial(register_django_compatibility_fixer,
                               fixer_reference_version="1.10",
-                              fixer_applied_from_django="1.10")
+                              fixer_applied_from_version="1.10")
 
 
 def _get_url_utils():
@@ -26,7 +26,7 @@ def _get_url_utils():
     return get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch
 
 
-@register_compatibility_fixer(fixer_reference_version="1.10", fixer_applied_upto_django="1.10")
+@register_django_compatibility_fixer(fixer_reference_version="1.10", fixer_applied_upto_version="1.10")
 def fix_incoming_urls_submodule(utils):
     """
     Put a forward compatibility import path for django.urls, which replaces django.core.urlresolvers
