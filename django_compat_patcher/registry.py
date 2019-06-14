@@ -19,10 +19,13 @@ def get_current_django_version():
 
     return django.get_version()
 
+def populate_django_fixers_registry(registry):
+    import django_compat_patcher.fixers  # Triggers mass registration
+
 
 # Must be instantiated HERE so that fixer submodules can access it at import time
 django_patching_registry = DjangoPatchingRegistry(
-    family_prefix="django", current_software_version=get_current_django_version
+    family_prefix="django", populate_callable=populate_django_fixers_registry, current_software_version=get_current_django_version
 )
 
 register_django_compatibility_fixer = (

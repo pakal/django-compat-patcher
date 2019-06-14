@@ -115,11 +115,11 @@ Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take pr
 DCP_PATCH_INJECTED_OBJECTS
 ***************************
 
-If True, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones.
+By default, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones.
 
-| **Default:** :code:`True`
-| **Type:** Boolean
-| **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = False`
+| **Default:** :code:`"__dcp_injected__"`
+| **Type:** Str (or bool for an automatic attribute name)
+| **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = None`
 
 
 DCP_ENABLE_WARNINGS

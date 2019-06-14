@@ -13,8 +13,6 @@ def patch(settings=None):
     from .utilities import DjangoPatchingUtilities
     from .runner import DjangoPatchingRunner
 
-    from . import fixers  # Force-load every fixer submodule
-
     django_config_provider = DjangoConfigProvider(settings=settings)
 
     generic_patch_software(
