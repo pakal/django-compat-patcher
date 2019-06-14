@@ -6,7 +6,7 @@ def patch(settings=None):
 
     from .config import DjangoConfigProvider
     from .utilities import DjangoPatchingUtilities
-    from .registry import DjangoFixersRegistry
+    from .registry import DjangoPatchingRegistry
     from .runner import DjangoPatchingRunner
 
     config_provider = DjangoConfigProvider(settings=settings)
@@ -17,10 +17,10 @@ def patch(settings=None):
     deprecation.warnings.set_patching_utilities(patching_utilities)
 
     from . import fixers  # Force-load every fixer submodule
-    from .registry import django_fixers_registry
+    from .registry import django_patching_registry
 
     django_patching_runner = DjangoPatchingRunner(config_provider=config_provider,
                                                   patching_utilities=patching_utilities,
-                                                  fixers_registry=django_fixers_registry,)
+                                                  patching_registry=django_patching_registry,)
     django_patching_runner.patch_software()
 

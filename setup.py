@@ -51,7 +51,7 @@ setup(
 
     packages=packages,
 
-    install_requires=(['Django<2'] if (sys.version_info < (3,)) else ['Django']),
+    install_requires=['Django<2' if (sys.version_info < (3,)) else 'Django'],
     extras_require=extras,
     setup_requires=setup_requires,
     tests_require=["pytest", "pytest-pythonpath", "django-compat"],
