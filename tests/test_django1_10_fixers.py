@@ -1,27 +1,34 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-import os, sys
-import pytest
-
 import _test_utilities
-
+import os
+import pytest
+import sys
 
 
 def test_fix_incoming_urls_submodule():
-    from django.urls import get_callable, RegexURLPattern, RegexURLResolver, NoReverseMatch
+    from django.urls import (
+        get_callable,
+        RegexURLPattern,
+        RegexURLResolver,
+        NoReverseMatch,
+    )
+
     assert get_callable
 
 
 def test_fix_deletion_templatetags_future():
     from compat import render_to_string
     from django.templatetags.future import cycle, firstof
-    rendered = render_to_string('core_tags/test_future_cycle_and_firstof.html')
-    assert rendered.strip() == 'row1\nA'
+
+    rendered = render_to_string("core_tags/test_future_cycle_and_firstof.html")
+    assert rendered.strip() == "row1\nA"
 
 
 def test_fix_deletion_template_defaulttags_ssi():
     # already tested in "test_fix_deletion_templatetags_future_ssi()"
     from django.template.defaulttags import ssi
+
     assert callable(ssi)
 
 
@@ -72,7 +79,7 @@ def test_fix_behaviour_core_urlresolvers_reverse_with_prefix():
         from django.urls import reverse
 
     view = reverse("homepage")  # by view name
-    assert view == '/homepage/'
+    assert view == "/homepage/"
 
     view = reverse("test_project.views.my_view")  # by dotted path
     assert view == "/my_view/"
@@ -80,22 +87,24 @@ def test_fix_behaviour_core_urlresolvers_reverse_with_prefix():
 
 def test_fix_behaviour_conf_urls_url():
     from django.conf.urls import url
-    url(r'^admin2/', "test_project.views.my_view", name="test_admin_abc"),
+
+    url(r"^admin2/", "test_project.views.my_view", name="test_admin_abc"),
 
 
 def test_fix_deletion_conf_urls_patterns():
     import django.conf.urls
     from django.conf.urls import patterns, url
-    patterns("admin",
-        (r'^admin1/', "test_project.views.my_view"),
-        url(r'^admin2/', "test_project.views.my_view", name="test_admin_other"),
+
+    patterns(
+        "admin",
+        (r"^admin1/", "test_project.views.my_view"),
+        url(r"^admin2/", "test_project.views.my_view", name="test_admin_other"),
     )
     assert "patterns" in django.conf.urls.__all__
 
 
 def test_fix_behaviour_template_smartif_OPERATORS_equals():
     from compat import render_to_string
-    rendered = render_to_string('core_tags/test_smartif_operators.html', dict(a=3))
-    assert rendered.strip() == 'hello\nbye'
 
-
+    rendered = render_to_string("core_tags/test_smartif_operators.html", dict(a=3))
+    assert rendered.strip() == "hello\nbye"

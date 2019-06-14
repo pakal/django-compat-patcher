@@ -1,13 +1,14 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-import os, sys
-import pytest
-
 import _test_utilities
+import os
+import pytest
+import sys
 
 
 def test_fix_deletion_utils_translation_string_concat():
     from django.utils.translation import string_concat
+
     assert string_concat("a", "b", "c") == "abc"
 
 
@@ -17,7 +18,7 @@ def test_fix_behaviour_widget_render_forced_renderer():
     from django.forms.forms import BoundField  # not propagated in django1.8
 
     class MyForm(forms.Form):
-        my_field = forms.CharField(label='My field', max_length=100)
+        my_field = forms.CharField(label="My field", max_length=100)
 
     class OldWidget(forms.Widget):
         def render(self, name, value, attrs=None):  # no "renderer" parameter expected

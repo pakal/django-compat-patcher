@@ -2,7 +2,6 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from compat_patcher.utilities import WarningsProxy
 
-
 # Proxy meant to be imported by fixer submodules instead of stdlib "warnings" package
 warnings = WarningsProxy()
 
@@ -45,4 +44,3 @@ class RemovedInDjango16Warning(DeprecationWarning):
 
 # Beware, think about updating this one!
 RemovedInNextVersionWarning = RemovedInDjango22Warning
-

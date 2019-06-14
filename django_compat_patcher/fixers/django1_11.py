@@ -5,10 +5,11 @@ from functools import partial
 from ..registry import register_django_compatibility_fixer
 
 # for backward-compatibility fixers
-django1_11_bc_fixer = partial(register_django_compatibility_fixer,
-                              fixer_reference_version="1.11",
-                              fixer_applied_from_version="1.11")
-
+django1_11_bc_fixer = partial(
+    register_django_compatibility_fixer,
+    fixer_reference_version="1.11",
+    fixer_applied_from_version="1.11",
+)
 
 
 @django1_11_bc_fixer()
@@ -33,9 +34,12 @@ def fix_behaviour_widget_build_attrs(utils):
             if extra_attrs is not None:
                 attrs.update(extra_attrs)
         return attrs
+
     utils.inject_callable(Widget, "build_attrs", build_attrs)
 
-'''
+
+""" CHANGED UTILITY:
+
 def build_attrs(self, extra_attrs=None, **kwargs):
     "Helper function for building an attribute dictionary."
     attrs = dict(self.attrs, **kwargs)
@@ -49,4 +53,4 @@ def build_attrs(self, base_attrs, extra_attrs=None):
     if extra_attrs is not None:
         attrs.update(extra_attrs)
     return attrs
-'''
+"""
