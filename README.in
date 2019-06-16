@@ -67,6 +67,8 @@ DCP_INCLUDE_FIXER_IDS
 
 List of fixer identifiers to include. If :code:`"*"` is used, then all fixers are included.
 
+In rare case of name conflicts when using several registries at once, you may use qualified qualified fixer names like "fixer_family|fixer_id".
+
 | **Default:** :code:`"*"`
 | **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_INCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
@@ -89,6 +91,8 @@ DCP_EXCLUDE_FIXER_IDS
 *********************
 
 List of fixer identifiers to exclude. If :code:`"*"` is used, then all fixers are excluded.
+
+In rare case of name conflicts when using several registries at once, you may use qualified qualified fixer names like "fixer_family|fixer_id".
 
 Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
@@ -116,7 +120,7 @@ DCP_PATCH_INJECTED_OBJECTS
 By default, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones. Set this setting to True to automatically choose the attribute name, or False to disable the feature.
 
 | **Default:** :code:`"__dcp_injected__"`
-| **Type:** Str (or bool)
+| **Type:** Str (or Boolean)
 | **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = False`
 
 

@@ -1,8 +1,9 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-from compat_patcher import generic_patch_software
+from compat_patcher import generic_patch_software, make_safe_patcher
 
 
+@make_safe_patcher
 def patch(settings=None):
     """Load every dependency, and apply registered fixers according to provided settings (or Django settings as a fallback)."""
 
