@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 os.environ["DJANGO_SETTINGS_MODULE"] = "test_project.minimal_settings"
 
 import django
-from src import django_compat_patcher
+import django_compat_patcher
 
 django_compat_patcher.patch()  # fixers which can't apply should be skipped, not crash
 
