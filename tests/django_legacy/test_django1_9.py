@@ -7,11 +7,11 @@ import unittest
 
 from django.test import SimpleTestCase
 from django.utils import six
-from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
 
 
 class SortedDictTests(SimpleTestCase):
     def setUp(self):
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         super(SortedDictTests, self).setUp()
         self.d1 = SortedDict()
         self.d1[7] = "seven"
@@ -70,6 +70,7 @@ class SortedDictTests(SimpleTestCase):
         A real dict will actually take the second value so we will too, but
         we'll keep the ordering from the first key found.
         """
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         tuples = ((2, "two"), (1, "one"), (2, "second-two"))
         d = SortedDict(tuples)
 
@@ -105,10 +106,12 @@ class SortedDictTests(SimpleTestCase):
         self.assertEqual(l - len(self.d1), 1)
 
     def test_dict_equality(self):
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         d = SortedDict((i, i) for i in range(3))
         self.assertEqual(d, {0: 0, 1: 1, 2: 2})
 
     def test_tuple_init(self):
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         d = SortedDict(((1, "one"), (0, "zero"), (2, "two")))
         self.assertEqual(repr(d), "{1: 'one', 0: 'zero', 2: 'two'}")
 
@@ -118,6 +121,7 @@ class SortedDictTests(SimpleTestCase):
         )
 
     def test_copy(self):
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         orig = SortedDict(((1, "one"), (0, "zero"), (2, "two")))
         copied = copy.copy(orig)
         self.assertEqual(list(six.iterkeys(orig)), [1, 0, 2])
@@ -137,6 +141,7 @@ class SortedDictTests(SimpleTestCase):
 
 class MergeDictTests(SimpleTestCase):
     def test_simple_mergedict(self):
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         d1 = {
             "chris": "cool",
             "camri": "cute",
@@ -170,6 +175,7 @@ class MergeDictTests(SimpleTestCase):
 
     def test_mergedict_merges_multivaluedict(self):
         """ MergeDict can merge MultiValueDicts """
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
 
         multi1 = MultiValueDict({"key1": ["value1"], "key2": ["value2", "value3"]})
 
@@ -203,6 +209,7 @@ class MergeDictTests(SimpleTestCase):
         )
 
     def test_bool_casting(self):
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         empty = MergeDict({}, {}, {})
         not_empty = MergeDict({}, {}, {"key": "value"})
         self.assertFalse(empty)
@@ -212,12 +219,13 @@ class MergeDictTests(SimpleTestCase):
         """
         Test that the message of KeyError contains the missing key name.
         """
+        from django.utils.datastructures import MergeDict, MultiValueDict, SortedDict
         d1 = MergeDict({"key1": 42})
         with six.assertRaisesRegex(self, KeyError, "key2"):
             d1["key2"]
 
 
-from django.utils.tzinfo import FixedOffset, LocalTimezone
+
 
 
 class TzinfoTests(unittest.TestCase):
@@ -248,6 +256,7 @@ class TzinfoTests(unittest.TestCase):
         super(TzinfoTests, cls).tearDownClass()
 
     def test_fixedoffset(self):
+        from django.utils.tzinfo import FixedOffset, LocalTimezone
         self.assertEqual(repr(FixedOffset(0)), "+0000")
         self.assertEqual(repr(FixedOffset(60)), "+0100")
         self.assertEqual(repr(FixedOffset(-60)), "-0100")
@@ -263,6 +272,7 @@ class TzinfoTests(unittest.TestCase):
     def test_16899(self):
         if not self.tz_tests:
             return
+        from django.utils.tzinfo import FixedOffset, LocalTimezone
         ts = 1289106000
         # Midnight at the end of DST in US/Eastern: 2010-11-07T05:00:00Z
         dt = datetime.datetime.utcfromtimestamp(ts)
@@ -282,16 +292,19 @@ class TzinfoTests(unittest.TestCase):
         )
 
     def test_copy(self):
+        from django.utils.tzinfo import FixedOffset, LocalTimezone
         now = datetime.datetime.now()
         self.assertIsInstance(copy.copy(FixedOffset(90)), FixedOffset)
         self.assertIsInstance(copy.copy(LocalTimezone(now)), LocalTimezone)
 
     def test_deepcopy(self):
+        from django.utils.tzinfo import FixedOffset, LocalTimezone
         now = datetime.datetime.now()
         self.assertIsInstance(copy.deepcopy(FixedOffset(90)), FixedOffset)
         self.assertIsInstance(copy.deepcopy(LocalTimezone(now)), LocalTimezone)
 
     def test_pickling_unpickling(self):
+        from django.utils.tzinfo import FixedOffset, LocalTimezone
         now = datetime.datetime.now()
         self.assertIsInstance(pickle.loads(pickle.dumps(FixedOffset(90))), FixedOffset)
         self.assertIsInstance(

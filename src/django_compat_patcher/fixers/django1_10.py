@@ -180,7 +180,6 @@ def fix_behaviour_core_urlresolvers_reverse_with_prefix(utils):
     Preserve the ability to call urlresolver on dotted string view,
     instead of explicit view name.
     """
-    from django.utils.functional import cached_property
 
     get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = (
         _get_url_utils()

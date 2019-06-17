@@ -52,7 +52,7 @@ setup(
     install_requires=["Django<2" if (sys.version_info < (3,)) else "Django"],
     extras_require=extras,
     setup_requires=setup_requires,
-    tests_require=["pytest", "pytest-pythonpath", "django-compat"],
+    tests_require=["pytest", "pytest-cov", "django-compat"],
     use_2to3=True,
     # convert_2to3_doctests=['src/your/module/README.txt'],
     # use_2to3_fixers=['your.fixers'],

@@ -16,11 +16,10 @@ class DjangoPatchingRegistry(PatchingRegistry):
 
 def get_current_django_version():
     import django
-
     return django.get_version()
 
 def populate_django_fixers_registry(registry):
-    import django_compat_patcher.fixers  # Triggers mass registration
+    import django_compat_patcher.fixers
 
 
 # Must be instantiated HERE so that fixer submodules can access it at import time
