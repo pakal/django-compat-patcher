@@ -51,9 +51,7 @@ i.e all that support your currently installed django version.
 
 This behaviour can be customized via the Django settings below.
 
-Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.10, apply fixers from Django1.8 up to Django1.10, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
-
-"Families" identify the Django version where the breaking change was introduced (for backwards compatibility fixers), or where the new feature was introduced (for forwards compatibility fixers). It is not related to the appearance of corresponding PendingDeprecationWarnings in the framework.
+Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.11, apply fixers from Django1.8 up to Django1.11, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
 
 You may provide a "settings" dictionary directly to the patch() method, in which case your DCP django settings will be completely ignored (only library defaults will be used as fallbacks)::
 
