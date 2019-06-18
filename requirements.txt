@@ -1,13 +1,5 @@
+-r requirements-base.txt
 
-compat-patcher-core
-
-# external ports of contrib packages removed from django
+# External ports of contrib packages removed from django
+# Stored here because of conflicts with some django versions (see tox.ini)
 django-contrib-comments
-
-
-## FOR TESTING ##
-
-pytest
-pytest-covgit+https://github.com/arteria/django-compat
-
-

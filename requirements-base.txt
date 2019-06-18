@@ -1,0 +1,10 @@
+compat-patcher-core
+
+
+## FOR TESTING ##
+
+pytest
+pytest-cov
+git+https://github.com/arteria/django-compat
+
+
