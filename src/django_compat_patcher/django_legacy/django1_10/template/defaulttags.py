@@ -1,12 +1,12 @@
 import os
 
 from django.conf import settings
-
 from django.template.base import (
     Node, Template, TemplateSyntaxError,
 )
 
 from django_compat_patcher.deprecation import *
+
 
 def include_is_allowed(filepath, allowed_include_roots):
     filepath = os.path.abspath(filepath)

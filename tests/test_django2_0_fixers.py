@@ -1,9 +1,9 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-import _test_utilities
 import os
 import pytest
-import sys
+
+import _test_utilities
 
 
 @pytest.mark.skipif(

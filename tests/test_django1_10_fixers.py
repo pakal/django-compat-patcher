@@ -1,9 +1,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import _test_utilities
-import os
 import pytest
-import sys
 
 
 def test_fix_incoming_urls_submodule():

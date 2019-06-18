@@ -16,7 +16,6 @@ from django.views.i18n import js_catalog_template, get_formats
 
 from django_compat_patcher.deprecation import *
 
-
 DEFAULT_PACKAGES = ['django.conf']
 LANGUAGE_QUERY_PARAMETER = 'language'
 

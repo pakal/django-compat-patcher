@@ -3,6 +3,7 @@ from functools import wraps
 
 from django_compat_patcher.deprecation import *
 
+
 def memoize(func, cache, num_args):
     """
     Wrap a function so that results for any argument tuple are stored in

@@ -1,6 +1,7 @@
 
 
 from django.template import Library, defaulttags
+
 from django_compat_patcher.deprecation import *
 
 register = Library()

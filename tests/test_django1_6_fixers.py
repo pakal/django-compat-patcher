@@ -1,8 +1,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import _test_utilities
-import os
-import sys
 
 
 def test_fix_deletion_http_request_HttpRequest_raw_post_data():

@@ -1,8 +1,9 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
+from functools import partial
+
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
-from functools import partial
 
 from ..deprecation import *
 from ..registry import register_django_compatibility_fixer
