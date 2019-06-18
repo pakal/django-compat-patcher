@@ -48,12 +48,16 @@ setup(
     description="A monkey-patching system to ease the transition between Django versions.",
     classifiers=filter(None, classifiers.split("\n")),
     long_description=read("README.rst"),
-    package_dir = {'': "src"},
+    package_dir={"": "src"},
     packages=packages,
     install_requires=["Django<2" if (sys.version_info < (3,)) else "Django"],
     extras_require=extras,
     setup_requires=setup_requires,
-    tests_require=["pytest", "pytest-cov", "django-compat"],  # Beware, keep in sync with tox.ini
+    tests_require=[
+        "pytest",
+        "pytest-cov",
+        "django-compat",
+    ],  # Beware, keep in sync with tox.ini
     use_2to3=True,
     # convert_2to3_doctests=['src/your/module/README.txt'],
     # use_2to3_fixers=['your.fixers'],

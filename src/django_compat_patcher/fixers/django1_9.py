@@ -150,7 +150,9 @@ def fix_deletion_templatetags_future_url(utils):
     from django.template import defaulttags
     from django.templatetags import future
 
-    new_tag = utils.inject_callable_alias(future, "url", source_object=defaulttags, source_attrname="url", )
+    new_tag = utils.inject_callable_alias(
+        future, "url", source_object=defaulttags, source_attrname="url"
+    )
     future.register.tag(new_tag)
 
 
@@ -160,7 +162,9 @@ def fix_deletion_templatetags_future_ssi(utils):
     from django.template import defaulttags
     from django.templatetags import future
 
-    new_tag = utils.inject_callable_alias(future, "ssi", source_object=defaulttags, source_attrname="ssi")
+    new_tag = utils.inject_callable_alias(
+        future, "ssi", source_object=defaulttags, source_attrname="ssi"
+    )
     future.register.tag(new_tag)
 
 

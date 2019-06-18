@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-from compat_patcher.utilities import WarningsProxy
+from compat_patcher_core.utilities import WarningsProxy
 
 # Proxy meant to be imported by fixer submodules instead of stdlib "warnings" package
 warnings = WarningsProxy()

@@ -1,5 +1,5 @@
-from compat_patcher.utilities import PatchingUtilities
-from compat_patcher import SkipFixerException
+from compat_patcher_core.utilities import PatchingUtilities
+from compat_patcher_core import SkipFixerException
 
 
 class DjangoPatchingUtilities(PatchingUtilities):

@@ -1,4 +1,4 @@
-class DjangoConfigProvider(object):
+class DjangoSettingsProvider(object):
 
     _settings = None
 
@@ -26,4 +26,3 @@ class DjangoConfigProvider(object):
             # print("EXCEPTION IN get_patcher_setting", name, e)
             value = self._fallback_settings[item]
         return value
-

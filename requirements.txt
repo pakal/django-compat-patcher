@@ -1,4 +1,6 @@
 
+compat-patcher-core
+
 # external ports of contrib packages removed from django
 django-contrib-comments
 
@@ -6,7 +8,6 @@ django-contrib-comments
 ## FOR TESTING ##
 
 pytest
-pytest-pythonpath
-git+https://github.com/arteria/django-compat
-tox
+pytest-covgit+https://github.com/arteria/django-compat
+
 

@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
-from compat_patcher import generic_patch_software, make_safe_patcher
+from compat_patcher_core import generic_patch_software, make_safe_patcher
 
 
 @make_safe_patcher
@@ -10,14 +10,14 @@ def patch(settings=None):
     from .registry import django_patching_registry
     from .deprecation import warnings as warnings_proxy
 
-    from .config import DjangoConfigProvider
+    from .config import DjangoSettingsProvider
     from .utilities import DjangoPatchingUtilities
     from .runner import DjangoPatchingRunner
 
-    django_config_provider = DjangoConfigProvider(settings=settings)
+    django_settings_provider = DjangoSettingsProvider(settings=settings)
 
     generic_patch_software(
-        config_provider=django_config_provider,
+        settings=django_settings_provider,
         patching_registry=django_patching_registry,
         patching_utilities_class=DjangoPatchingUtilities,
         patching_runner_class=DjangoPatchingRunner,

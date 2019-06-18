@@ -1,4 +1,4 @@
-from compat_patcher.registry import PatchingRegistry
+from compat_patcher_core.registry import PatchingRegistry
 
 
 class DjangoPatchingRegistry(PatchingRegistry):
@@ -16,7 +16,9 @@ class DjangoPatchingRegistry(PatchingRegistry):
 
 def get_current_django_version():
     import django
+
     return django.get_version()
+
 
 def populate_django_fixers_registry(registry):
     import django_compat_patcher.fixers
@@ -24,7 +26,9 @@ def populate_django_fixers_registry(registry):
 
 # Must be instantiated HERE so that fixer submodules can access it at import time
 django_patching_registry = DjangoPatchingRegistry(
-    family_prefix="django", populate_callable=populate_django_fixers_registry, current_software_version=get_current_django_version
+    family_prefix="django",
+    populate_callable=populate_django_fixers_registry,
+    current_software_version=get_current_django_version,
 )
 
 register_django_compatibility_fixer = (

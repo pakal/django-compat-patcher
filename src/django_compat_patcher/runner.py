@@ -1,4 +1,4 @@
-from compat_patcher.runner import PatchingRunner
+from compat_patcher_core.runner import PatchingRunner
 
 
 class DjangoPatchingRunner(PatchingRunner):
@@ -14,10 +14,11 @@ class DjangoPatchingRunner(PatchingRunner):
         post_fixers = [f for f in relevant_fixers if "fixer_delayed" in f["fixer_tags"]]
         assert len(relevant_fixers) == len(pre_fixers) + len(post_fixers)
 
-        just_applied_fixers = self._apply_selected_fixers(pre_fixers)
+        fixers_just_applied = self._apply_selected_fixers(pre_fixers)
         import django
 
         django.setup()  # Theoretically idempotent (except regarding logging?)
-        just_applied_fixers += self._apply_selected_fixers(post_fixers)
+        fixers_just_applied += self._apply_selected_fixers(post_fixers)
 
-        return just_applied_fixers
+        # Be consistent with origianl signature
+        return dict(fixers_just_applied=fixers_just_applied)
