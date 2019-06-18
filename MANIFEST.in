@@ -4,9 +4,11 @@ include LICENSE
 include VERSION
 include README.rst
 include MANIFEST.in
-include django_deprecation_timeline_notes.rst
+recursive-include src *.py
+recursive-include docs *.rst
 recursive-include tests *.py *.html
 include requirements.txt
+include requirements-base.txt
 include pytest.ini
 include conftest.py
 include tox.ini
