@@ -1,4 +1,10 @@
 
+Version 0.7
+==================
+
+* decouple DCP from the new core library, Compat-Patcher-Core
+
+
 Version 0.6
 ==================
 
