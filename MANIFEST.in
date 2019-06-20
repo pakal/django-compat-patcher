@@ -1,15 +1,16 @@
 include AUTHORS
+include CONTRIBUTING
 include CHANGELOG
 include LICENSE
 include VERSION
 include README.rst
-include MANIFEST.in
+
 recursive-include src *.py
-recursive-include docs *.rst
 recursive-include tests *.py *.html
+recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
+
 include requirements.txt
 include requirements-base.txt
 include pytest.ini
-include conftest.py
 include tox.ini
 global-exclude *.orig *.py[co] *.log *.swp

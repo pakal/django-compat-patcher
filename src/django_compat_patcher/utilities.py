@@ -1,3 +1,5 @@
+from __future__ import absolute_import, print_function, unicode_literals
+
 from compat_patcher_core.utilities import PatchingUtilities
 from compat_patcher_core import SkipFixerException
 

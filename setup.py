@@ -30,7 +30,7 @@ Operating System :: Unix
 Operating System :: MacOS :: MacOS X
 """
 
-packages = find_packages(where="src", exclude="tests")
+packages = find_packages(where="src")
 
 needs_pytest = {"pytest", "test", "ptr"}.intersection(sys.argv)
 setup_requires = ["pytest-runner"] if needs_pytest else []
@@ -50,7 +50,8 @@ setup(
     long_description=read("README.rst"),
     package_dir={"": "src"},
     packages=packages,
-    install_requires=["Django<2" if (sys.version_info < (3,)) else "Django"],
+    install_requires=['Django<2; python_version<"3.0"',
+                      'Django; python_version>="3.0"'],
     extras_require=extras,
     setup_requires=setup_requires,
     tests_require=[

@@ -6,5 +6,5 @@ compat-patcher-core
 pytest
 pytest-cov
 git+https://github.com/arteria/django-compat
-
+tox
 

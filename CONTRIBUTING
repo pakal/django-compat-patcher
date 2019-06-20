@@ -3,7 +3,7 @@ Django-compat-patcher warmly welcomes new fixers, and bugfixes
 ===============================================================
 
 
-See "django_deprecation_timeline_notes.rst" for a list of breaking changes in Django history, and their current status in DCP.
+See "docs/django_deprecation_timeline_notes.rst" for a list of breaking changes in Django history, and their current status in DCP.
 
 
 
