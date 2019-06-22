@@ -120,7 +120,7 @@ def fix_deletion_views_i18n_javascript_and_json_catalog(utils):
     Preserve the javascript_catalog() and json_catalog() i18n views, superseded by class-based views.
     """
 
-    from django_compat_patcher.django_legacy.django2_0 import (
+    from django_compat_patcher.django_legacy.django2_0.views.i18n import (
         javascript_catalog,
         json_catalog,
         render_javascript_catalog,

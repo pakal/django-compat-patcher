@@ -1,10 +1,12 @@
 compat-patcher-core
 
 
-## FOR TESTING ##
+## FOR TESTING AND BUILDING ##
 
 pytest
 pytest-cov
 git+https://github.com/arteria/django-compat
+
 tox
+check-manifest
 

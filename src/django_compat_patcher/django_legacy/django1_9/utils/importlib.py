@@ -23,7 +23,7 @@ def _resolve_name(name, package, level):
 
 
 if six.PY3:
-    pass
+    from importlib import import_module
 else:
     def import_module(name, package=None):
         """Import a module.

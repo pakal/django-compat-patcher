@@ -24,8 +24,9 @@ class MergeDict(object):
     def __bool__(self):
         return any(self.dicts)
 
-    def __nonzero__(self):
-        return type(self).__bool__(self)
+    if six.PY2:
+        def __nonzero__(self):
+            return type(self).__bool__(self)
 
     def __getitem__(self, key):
         for dict_ in self.dicts:
