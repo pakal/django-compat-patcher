@@ -8,28 +8,22 @@ django-compat-patcher
 
     *Compatibility Matters*
 
-DCP is a "magic" package which adds backward/forward compatibility patches to Django, so that your app ecosystem doesn't get broken by trivial changes made to the core of the framework.
 
-It injects compatibility shims like function/attribute aliases, restores data structures which were replaced by stdlib ones, extends the behaviour of callables (eg. referring to a view by object, by name, or by dotted path), and can even preserve deprecated module as "import aliases" (ex. keep importing from "django.contrib.comments" instead of the now external "django_comments").
+DCP is a companion application which adds backward/forward compatibility patches to Django, so that your app ecosystem doesn't get broken by trivial changes made to the core of the framework. You can thus mix bleeding-edge applications with others that are still stuck at much older Django versions.
 
-This allows to you upgrade your dependencies one at a time, to fork/patch them when you have a proper opportunity, and most importantly to not get stuck, when deadlines are tight and your dependencies suddenly have conflicting requirements. DCP will however not provide patches for changes related to security (permissions, html escaping, cookie parameters...), because of the risks involved. Also, changes that only impact project-level code (eg. *settings* module) will often not get patches, since it's easier and cleaner to simply update your project code.
-
-Technically, DCP manages a set of "fixers", small utilities which advertise the change that they make, the versions of Django that they support, and which monkey-patch the Django framework on demand. By applying these fixers in a proper order (sometimes before, sometimes after django.setup()), DCP can work around multiple breaking changes which target the same part of the code (eg. a tag library being added and then removed).
+To know more about the whole concept of Compat Patchers, see the documentation of the underlying `Compat Patcher Core <https://compat-patcher-core.readthedocs.io/en/latest/index.html>`_.
 
 Note that DCP is aimed at project maintainers. If you are developing a reusable Django application, you can't expect all your users to integrate DCP as well. In this case, to support a wide range of Django versions, you should rather use a toolkit like `Django-compat <https://github.com/arteria/django-compat>`_. You may think of DCP as a "runtime 2to3 for Django', whereas Django-Compat is rather a "*six* module for Django".
 
-Feel free to contribute new fixers, for backwards or forwards compatibility, depending on the compatibility troubles you encounter on your projects (see `CONTRIBUTE.rst`)
+Feel free to contribute new fixers, for backwards or forwards compatibility, depending on the compatibility troubles you encounter on your own projects. See `docs/django_deprecation_timeline_notes.rst` for a list of breaking changes in Django history, and their current status in DCP.
 
 
 
-
-How to install
+How to setup
 ==================
 
 
-Django-compat-patcher is currently tested on python2.7/3.4/3.5/3.6/3.7, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2, where these combinations make sense (eg. Django2+ dropped support for Python2).
-
-
+Django-compat-patcher is currently tested on python2.7/3.4/3.5/3.6/3.7, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2, where these combinations make sense (e.g. Django2+ dropped support for Python2).
 
 Add :code:`django-compat-patcher` to your pip requirements, install it, and then activate it with::
     
@@ -51,9 +45,7 @@ i.e all that support your currently installed django version.
 
 This behaviour can be customized via the Django settings below.
 
-Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.10, apply fixers from Django1.8 up to Django1.10, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
-
-"Families" identify the Django version where the breaking change was introduced (for backwards compatibility fixers), or where the new feature was introduced (for forwards compatibility fixers). It is not related to the appearance of corresponding PendingDeprecationWarnings in the framework.
+Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.11, apply fixers from Django1.8 up to Django1.11, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
 
 You may provide a "settings" dictionary directly to the patch() method, in which case your DCP django settings will be completely ignored (only library defaults will be used as fallbacks)::
 
