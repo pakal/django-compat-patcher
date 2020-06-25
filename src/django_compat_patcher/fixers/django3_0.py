@@ -49,3 +49,20 @@ def fix_deletion_utils_decorators_ContextDecorator(utils):
     from contextlib import ContextDecorator
     from django.utils import decorators
     utils.inject_class(decorators, "ContextDecorator", ContextDecorator)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_utils_decorators_available_attrs(utils):
+    """Preserve django.utils.decorators.available_attrs, which just returns functools.WRAPPER_ASSIGNMENTS."""
+
+    def available_attrs(fn):  # For backwards compatibility in Django 2.0.
+        """
+        Return the list of functools-wrappable attributes on a callable.
+        This was required as a workaround for https://bugs.python.org/issue3445
+        under Python 2.
+        """
+        from functools import WRAPPER_ASSIGNMENTS
+        return WRAPPER_ASSIGNMENTS
+
+    from django.utils import decorators
+    utils.inject_callable(decorators, "available_attrs", available_attrs)

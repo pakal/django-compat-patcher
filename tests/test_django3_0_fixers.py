@@ -22,3 +22,13 @@ def test_fix_deletion_utils_decorators_ContextDecorator():
     from contextlib import ContextDecorator as ContextDecoratorOriginal
     assert isinstance(ContextDecorator, type)
     assert ContextDecorator is ContextDecoratorOriginal
+
+
+def test_fix_deletion_utils_decorators_available_attrs():
+    from django.utils.decorators import available_attrs
+    from functools import WRAPPER_ASSIGNMENTS
+
+    def func():
+        pass
+
+    assert available_attrs(func) == WRAPPER_ASSIGNMENTS
