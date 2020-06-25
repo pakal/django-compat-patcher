@@ -4,9 +4,9 @@ import os
 import pickle
 import time
 import unittest
+import six
 
 from django.test import SimpleTestCase
-from django.utils import six
 
 
 class SortedDictTests(SimpleTestCase):
