@@ -14,11 +14,72 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
     <style> .kind {color: blue} </style>
 
 
+3.0
+----
+
+- Model.save() when providing a default for the primary key¶
+- New default value for the FILE_UPLOAD_PERMISSIONS setting
+- New default values for security settings
+
+Removed private Python 2 compatibility APIs:
+
+- django.test.utils.str_prefix() - Strings don’t have ‘u’ prefixes in Python 3.
+- django.test.utils.patch_logger() - Use unittest.TestCase.assertLogs() instead.
+- django.utils.lru_cache.lru_cache() - Alias of functools.lru_cache().
+- django.utils.decorators.available_attrs() - This function returns functools.WRAPPER_ASSIGNMENTS.
+- django.utils.decorators.ContextDecorator - Alias of contextlib.ContextDecorator.
+- django.utils._os.abspathu() - Alias of os.path.abspath().
+- django.utils._os.upath() and npath() - These functions do nothing on Python 3.
+- django.utils.six - Remove usage of this vendored library or switch to six.
+- django.utils.encoding.python_2_unicode_compatible() - Alias of six.python_2_unicode_compatible().
+- django.utils.functional.curry() - Use functools.partial() or functools.partialmethod. See 5b1c389603a353625ae1603.
+- django.utils.safestring.SafeBytes - Unused since Django 2.0.
+
+Miscellaneous:
+
+- ContentType.__str__() now includes the model’s app_label to disambiguate models with the same name in different apps.
+- Because accessing the language in the session rather than in the cookie is deprecated, LocaleMiddleware no longer looks for the user’s language in the session and django.contrib.auth.logout() no longer preserves the session’s language after logout.
+- django.utils.html.escape() now uses html.escape() to escape HTML. This converts ' to &#x27; instead of the previous equivalent decimal code &#39;.
+- The django-admin test -k option now works as the unittest -k option rather than as a shortcut for --keepdb.
+- Support for pywatchman < 1.2.0 is removed.
+- urlencode() now encodes iterable values as they are when doseq=False, rather than iterating them, bringing it into line with the standard library urllib.parse.urlencode() function.
+- intword template filter now translates 1.0 as a singular phrase and all other numeric values as plural. This may be incorrect for some languages.
+- Assigning a value to a model’s ForeignKey or OneToOneField '_id' attribute now unsets the corresponding field. Accessing the field afterwards will result in a query.
+- patch_vary_headers() now handles an asterisk '*' according to RFC 7231#section-7.1.4, i.e. if a list of header field names contains an asterisk, then the Vary header will consist of a single asterisk '*'.
+- On MySQL 8.0.16+, PositiveIntegerField and PositiveSmallIntegerField now include a check constraint to prevent negative values in the database.
+- alias=None is added to the signature of Expression.get_group_by_cols().
+- RegexPattern, used by re_path(), no longer returns keyword arguments with None values to be passed to the view for the optional named groups that are missing.
+
+
 2.2
 ----
 
-See https://docs.djangoproject.com/en/2.2/releases/2.2/#backwards-incompatible-changes-in-2-2
+- Admin actions are no longer collected from base ModelAdmin classes¶
+- TransactionTestCase serialized data loading
+- sqlparse is required dependency
+- cached_property aliases
+- Permissions for proxy models¶
+- Merging of form Media assets
 
+- To improve readability, the UUIDField form field now displays values with dashes, e.g. 550e8400-e29b-41d4-a716-446655440000 instead of 550e8400e29b41d4a716446655440000.
+- On SQLite, PositiveIntegerField and PositiveSmallIntegerField now include a check constraint to prevent negative values in the database. If you have existing invalid data and run a migration that recreates a table, you’ll see CHECK constraint failed.
+- For consistency with WSGI servers, the test client now sets the Content-Length header to a string rather than an integer.
+- The return value of django.utils.text.slugify() is no longer marked as HTML safe.
+- The default truncation character used by the urlizetrunc, truncatechars, truncatechars_html, truncatewords, and truncatewords_html template filters is now the real ellipsis character (…) instead of 3 dots. You may have to adapt some test output comparisons.
+- Support for bytestring paths in the template filesystem loader is removed.
+- django.utils.http.urlsafe_base64_encode() now returns a string instead of a bytestring, and django.utils.http.urlsafe_base64_decode() may no longer be passed a bytestring.
+- Support for cx_Oracle < 6.0 is removed.
+- The minimum supported version of mysqlclient is increased from 1.3.7 to 1.3.13.
+- The minimum supported version of SQLite is increased from 3.7.15 to 3.8.3.
+- In an attempt to provide more semantic query data, NullBooleanSelect now renders <option> values of unknown, true, and false instead of 1, 2, and 3. For backwards compatibility, the old values are still accepted as data.
+- Group.name max_length is increased from 80 to 150 characters.
+- Tests that violate deferrable database constraints now error when run on SQLite 3.20+, just like on other backends that support such constraints.
+- To catch usage mistakes, the test Client and django.utils.http.urlencode() now raise TypeError if None is passed as a value to encode because None can’t be encoded in GET and POST data. Either pass an empty string or omit the value.
+- The ping_google management command now defaults to https instead of http for the sitemap’s URL. If your site uses http, use the new ping_google --sitemap-uses-http option. If you use the ping_google() function, set the new sitemap_uses_https argument to False.
+- runserver no longer supports pyinotify (replaced by Watchman).
+- The Avg, StdDev, and Variance aggregate functions now return a Decimal instead of a float when the input is Decimal.
+- Tests will fail on SQLite if apps without migrations have relations to apps with migrations. This has been a documented restriction since migrations were added in Django 1.7, but it fails more reliably now. You’ll see tests failing with errors like no such table: <app_label>_<model>. This was observed with several third-party apps that had models in tests without migrations. You must add migrations for such models.
+- Providing an integer in the key argument of the cache.delete() or cache.get() now raises ValueError.
 
 
 2.1
