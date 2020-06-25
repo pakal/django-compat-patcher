@@ -3,7 +3,6 @@ from __future__ import absolute_import, print_function, unicode_literals
 from functools import partial
 
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six
 
 from ..deprecation import *
 from ..registry import register_django_compatibility_fixer
@@ -94,6 +93,7 @@ def fix_deletion_template_defaulttags_ssi(utils):
     """
     Preserve the "ssi" default template tag.
     """
+    from django.utils import six
     import django.template.defaulttags
     from ..django_legacy.django1_10.template import defaulttags
 
@@ -128,6 +128,7 @@ def fix_behaviour_urls_resolvers_RegexURLPattern(utils):
     """
     Restore support for dotted-string view parameter in RegexURLPattern, instead passing a view object.
     """
+    from django.utils import six
 
     get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = (
         _get_url_utils()
@@ -211,6 +212,8 @@ def fix_behaviour_conf_urls_url(utils):
     """
     Support passing views to url() as dotted strings instead of view objects.
     """
+    from django.utils import six
+
     get_callable, RegexURLPattern, URLPattern, RegexURLResolver, URLResolver, NoReverseMatch = (
         _get_url_utils()
     )
