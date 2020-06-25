@@ -15,3 +15,10 @@ def test_fix_deletion_utils_upath_npath_abspathu():
     assert abspathu(".") == abspath(".")
     assert upath("/something/file.txt") == "/something/file.txt"  # No-op
     assert npath("/something2/file.txt") == "/something2/file.txt"  # No-op
+
+
+def test_fix_deletion_utils_decorators_ContextDecorator():
+    from django.utils.decorators import ContextDecorator
+    from contextlib import ContextDecorator as ContextDecoratorOriginal
+    assert isinstance(ContextDecorator, type)
+    assert ContextDecorator is ContextDecoratorOriginal

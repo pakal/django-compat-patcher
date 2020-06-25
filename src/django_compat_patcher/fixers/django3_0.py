@@ -17,13 +17,13 @@ django1_30_bc_fixer = partial(
 def fix_deletion_utils_six(utils):
     """Preserve the vendored copy of "six" compatibility utility, in django.utils"""
     import six
-    utils.inject_module("django.utils.six", six)
+    utils.inject_import_alias(alias_name="django.utils.six", real_name="six")
 
 
 @django1_30_bc_fixer()
 def fix_deletion_utils_upath_npath_abspathu(utils):
     """Preserve python2 path normalization functions."""
-    
+
     from os.path import abspath as abspathu  # For backwards-compatibility in Django 2.0
 
     def upath(path):
@@ -41,3 +41,11 @@ def fix_deletion_utils_upath_npath_abspathu(utils):
     utils.inject_callable(_os, "abspathu", abspathu)
     utils.inject_callable(_os, "upath", upath)
     utils.inject_callable(_os, "npath", npath)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_utils_decorators_ContextDecorator(utils):
+    """Preserve django.utils.decorators.ContextDecorator, alias of contextlib.ContextDecorator."""
+    from contextlib import ContextDecorator
+    from django.utils import decorators
+    utils.inject_class(decorators, "ContextDecorator", ContextDecorator)
