@@ -32,3 +32,10 @@ def test_fix_deletion_utils_decorators_available_attrs():
         pass
 
     assert available_attrs(func) == WRAPPER_ASSIGNMENTS
+
+
+def test_fix_deletion_django_utils_lru_cache_lru_cache():
+    from django.utils.lru_cache import lru_cache as django_lru_cache_function
+    from functools import lru_cache
+    assert callable(django_lru_cache_function)
+    assert django_lru_cache_function is lru_cache
