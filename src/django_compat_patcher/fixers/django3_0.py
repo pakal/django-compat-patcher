@@ -142,3 +142,12 @@ def fix_deletion_test_utils_patch_logger(utils):
         finally:
             setattr(logger, log_level, orig)
     utils.inject_callable(test_utils, "patch_logger", patch_logger)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_utils_encoding_python_2_unicode_compatible(utils):
+    """Perserve django.utils.encoding.python_2_unicode_compatible() class decorator."""
+    import six
+    from django.utils import encoding
+    utils.inject_callable(encoding, "python_2_unicode_compatible", six.python_2_unicode_compatible)
+
