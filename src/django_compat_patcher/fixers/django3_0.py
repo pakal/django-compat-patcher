@@ -70,14 +70,14 @@ def fix_deletion_utils_decorators_available_attrs(utils):
 
 @django1_30_bc_fixer()
 def fix_deletion_utils_lru_cache_lru_cache(utils):
-    """Perserve django.utils.lru_cache.lru_cache(), alias of functools.lru_cache(), and its containing module."""
+    """Preserve django.utils.lru_cache.lru_cache(), alias of functools.lru_cache(), and its containing module."""
     from ..django_legacy.django3_0 import lru_cache as django_lru_cache_module
     utils.inject_module("django.utils.lru_cache", django_lru_cache_module)
 
 
 @django1_30_bc_fixer()
 def fix_deletion_utils_safestring_SafeBytes(utils):
-    """Perserve django.utils.safestring.SafeBytes class."""
+    """Preserve django.utils.safestring.SafeBytes class."""
     from django.utils.safestring import SafeData, SafeText
     from django.utils import safestring
 
@@ -106,7 +106,7 @@ def fix_deletion_utils_safestring_SafeBytes(utils):
 
 @django1_30_bc_fixer()
 def fix_deletion_test_utils_str_prefix(utils):
-    """Perserve django.test.utils.str_prefix class."""
+    """Preserve django.test.utils.str_prefix class."""
     from django.test import utils as test_utils
     def str_prefix(s):
         return s % {'_': ''}
@@ -115,7 +115,7 @@ def fix_deletion_test_utils_str_prefix(utils):
 
 @django1_30_bc_fixer()
 def fix_deletion_test_utils_patch_logger(utils):
-    """Perserve django.test.utils.patch_logger() context manager."""
+    """Preserve django.test.utils.patch_logger() context manager."""
     from contextlib import contextmanager
     import logging
     from django.test import utils as test_utils
@@ -146,7 +146,7 @@ def fix_deletion_test_utils_patch_logger(utils):
 
 @django1_30_bc_fixer()
 def fix_deletion_utils_encoding_python_2_unicode_compatible(utils):
-    """Perserve django.utils.encoding.python_2_unicode_compatible() class decorator."""
+    """Preserve django.utils.encoding.python_2_unicode_compatible() class decorator."""
     import six
     from django.utils import encoding
     utils.inject_callable(encoding, "python_2_unicode_compatible", six.python_2_unicode_compatible)
@@ -154,7 +154,7 @@ def fix_deletion_utils_encoding_python_2_unicode_compatible(utils):
 
 @django1_30_bc_fixer()
 def fix_deletion_django_utils_functional_curry(utils):
-    """Perserve django.utils.functional.curry()function."""
+    """Preserve django.utils.functional.curry()function."""
 
     from django.utils import functional
     # You can't trivially replace this with `functools.partial` because this binds
