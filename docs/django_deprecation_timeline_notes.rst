@@ -17,7 +17,7 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 3.0
 ----
 
-- Model.save() when providing a default for the primary key¶
+- Model.save() when providing a default for the primary key
 - New default value for the FILE_UPLOAD_PERMISSIONS setting
 - New default values for security settings
 
@@ -54,11 +54,11 @@ Miscellaneous:
 2.2
 ----
 
-- Admin actions are no longer collected from base ModelAdmin classes¶
+- Admin actions are no longer collected from base ModelAdmin classes
 - TransactionTestCase serialized data loading
 - sqlparse is required dependency
 - cached_property aliases
-- Permissions for proxy models¶
+- Permissions for proxy models
 - Merging of form Media assets
 
 - To improve readability, the UUIDField form field now displays values with dashes, e.g. 550e8400-e29b-41d4-a716-446655440000 instead of 550e8400e29b41d4a716446655440000.
