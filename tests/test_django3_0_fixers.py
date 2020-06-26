@@ -39,3 +39,8 @@ def test_fix_deletion_django_utils_lru_cache_lru_cache():
     from functools import lru_cache
     assert callable(django_lru_cache_function)
     assert django_lru_cache_function is lru_cache
+
+
+def test_fix_deletion_django_utils_safestring_SafeBytes():
+    from django.utils.safestring import SafeBytes
+    assert SafeBytes("abc", "ascii") == bytes("abc", "ascii")
