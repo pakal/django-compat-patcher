@@ -151,3 +151,19 @@ def fix_deletion_utils_encoding_python_2_unicode_compatible(utils):
     from django.utils import encoding
     utils.inject_callable(encoding, "python_2_unicode_compatible", six.python_2_unicode_compatible)
 
+
+@django1_30_bc_fixer()
+def fix_deletion_django_utils_functional_curry(utils):
+    """Perserve django.utils.functional.curry()function."""
+
+    from django.utils import functional
+    # You can't trivially replace this with `functools.partial` because this binds
+    # to classes and returns bound instances, whereas functools.partial (on
+    # CPython) is a type and its instances don't bind. --> see `functools.partialmethod` now!
+    def curry(_curried_func, *args, **kwargs):
+        def _curried(*moreargs, **morekwargs):
+            return _curried_func(*args, *moreargs, **{**kwargs, **morekwargs})
+        return _curried
+
+    utils.inject_callable(functional, "curry", curry)
+
