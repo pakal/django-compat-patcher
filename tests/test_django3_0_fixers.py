@@ -49,3 +49,12 @@ def test_fix_deletion_utils_safestring_SafeBytes():
 def test_fix_deletion_test_utils_str_prefix():
     from django.test.utils import str_prefix
     assert str_prefix("%(_)shello") == "hello"
+
+
+def test_fix_deletion_test_utils_patch_logger():
+    import logging
+    from django.test.utils import patch_logger
+    with patch_logger("django", "info") as calls:
+        logging.getLogger("django").info("Patch-logger context manager seems to work %s", "fine")
+    assert len(calls) == 1
+    assert calls == ["Patch-logger context manager seems to work fine"]

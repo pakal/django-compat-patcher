@@ -111,3 +111,34 @@ def fix_deletion_test_utils_str_prefix(utils):
     def str_prefix(s):
         return s % {'_': ''}
     utils.inject_callable(test_utils, "str_prefix", str_prefix)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_test_utils_patch_logger(utils):
+    """Perserve django.test.utils.patch_logger() context manager."""
+    from contextlib import contextmanager
+    import logging
+    from django.test import utils as test_utils
+
+    @contextmanager
+    def patch_logger(logger_name, log_level, log_kwargs=False):
+        """
+        Context manager that takes a named logger and the logging level
+        and provides a simple mock-like list of messages received.
+
+        Use unittest.assertLogs() if you only need Python 3 support. This
+        private API will be removed after Python 2 EOL in 2020 (#27753).
+        """
+        calls = []
+
+        def replacement(msg, *args, **kwargs):
+            call = msg % args
+            calls.append((call, kwargs) if log_kwargs else call)
+        logger = logging.getLogger(logger_name)
+        orig = getattr(logger, log_level)
+        setattr(logger, log_level, replacement)
+        try:
+            yield calls
+        finally:
+            setattr(logger, log_level, orig)
+    utils.inject_callable(test_utils, "patch_logger", patch_logger)
