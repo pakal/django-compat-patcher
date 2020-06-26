@@ -102,3 +102,12 @@ def fix_deletion_utils_safestring_SafeBytes(utils):
             return t
 
     utils.inject_class(safestring, "SafeBytes", SafeBytes)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_test_utils_str_prefix(utils):
+    """Perserve django.test.utils.str_prefix class."""
+    from django.test import utils as test_utils
+    def str_prefix(s):
+        return s % {'_': ''}
+    utils.inject_callable(test_utils, "str_prefix", str_prefix)

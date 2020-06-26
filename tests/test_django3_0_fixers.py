@@ -44,3 +44,8 @@ def test_fix_deletion_utils_lru_cache_lru_cache():
 def test_fix_deletion_utils_safestring_SafeBytes():
     from django.utils.safestring import SafeBytes
     assert SafeBytes("abc", "ascii") == bytes("abc", "ascii")
+
+
+def test_fix_deletion_test_utils_str_prefix():
+    from django.test.utils import str_prefix
+    assert str_prefix("%(_)shello") == "hello"
