@@ -13,10 +13,10 @@ def test_fix_outsourcing_contrib_comments():
         "IGNORE_CONTRIB_COMMENTS"
     ):  # case where external dependency "django_comments" isn't loaded
 
-        with pytest.raises(ImportError) as exc:
+        with pytest.raises(ImportError) as excinfo:
             from django.contrib import comments
+        exc = excinfo.value
         expected_error = str(exc)
-        expected_error = expected_error.replace(r"\'", "'")  # Sometimes quotes are escaped...
         assert (
             "No module named 'django_comments' (when loading alias name 'django.contrib.comments')"
             in expected_error
