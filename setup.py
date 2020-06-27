@@ -51,8 +51,9 @@ setup(
     package_dir={"": "src"},
     packages=packages,
     install_requires=['compat-patcher-core',
-                      'Django<2; python_version<"3.0"',
-                      'Django; python_version>="3.0"'],
+                      'six',
+                      'Django<2;python_version<"3.0"',
+                      'Django;python_version>="3.0"'],
     extras_require=extras,
     setup_requires=setup_requires,
     tests_require=[
