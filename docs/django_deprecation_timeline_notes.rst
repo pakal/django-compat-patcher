@@ -21,7 +21,7 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 - New default value for the FILE_UPLOAD_PERMISSIONS setting
 - New default values for security settings
 
-Removed private Python 2 compatibility APIs:
+Removed private Python 2 compatibility APIs:  :kind:`DELETION` [ALL FIXED]
 
 - django.test.utils.str_prefix() - Strings don’t have ‘u’ prefixes in Python 3.
 - django.test.utils.patch_logger() - Use unittest.TestCase.assertLogs() instead.
@@ -88,12 +88,16 @@ Miscellaneous:
 - contrib.auth.views.login(), logout(), password_change(), password_change_done(), password_reset(), password_reset_done(), password_reset_confirm(), and password_reset_complete() will be removed. :kind:`DELETION`
 - The extra_context parameter of contrib.auth.views.logout_then_login() will be removed. :kind:`DELETION`
 - django.test.runner.setup_databases() will be removed. :kind:`DELETION`
-- django.utils.translation.string_concat() will be removed. :kind:`DELETION`
+- django.utils.translation.string_concat() will be removed. :kind:`DELETION` [FIXED]
 - django.core.cache.backends.memcached.PyLibMCCache will no longer support passing pylibmc behavior settings as top-level attributes of OPTIONS.
 - The host parameter of django.utils.http.is_safe_url() will be removed. :kind:`DELETION`
 - Silencing of exceptions raised while rendering the {% include %} template tag will be removed. :kind:`DELETION`
 - DatabaseIntrospection.get_indexes() will be removed. :kind:`DELETION`
 - The authenticate() method of authentication backends will require a request argument.
+
+MISSING ENTRY IN OFFICIAL DOCS:
+
+- The "renderer" parameter of Widget.render() must now be supported by subclasses.  :kind:`BEHAVIOUR` [FIXED]
 
 
 2.0
@@ -101,11 +105,11 @@ Miscellaneous:
 
 - The weak argument to django.dispatch.signals.Signal.disconnect() will be removed.
 - The django.forms.extras package will be removed.
-- The assignment_tag helper will be removed.
+- The assignment_tag helper will be removed.  :kind:`DELETION` [FIXED]
 - The host argument to assertsRedirects will be removed. The compatibility layer which allows absolute URLs to be considered equal to relative ones when the path is identical will also be removed.
 - Field.rel will be removed.
 - Field.remote_field.to attribute will be removed.
-- The on_delete argument for ForeignKey and OneToOneField will be required.
+- The on_delete argument for ForeignKey and OneToOneField will be required.  :kind:`BEHAVIOUR` [FIXED]
 - django.db.models.fields.add_lazy_relation() will be removed.
 - When time zone support is enabled, database backends that don't support time zones won't convert aware datetimes to naive values in UTC anymore when such values are passed as parameters to SQL queries executed outside of the ORM, e.g. with cursor.execute().
 - The django.contrib.auth.tests.utils.skipIfCustomUser() decorator will be removed.
@@ -124,7 +128,7 @@ Miscellaneous:
 - Support for custom error views with a single positional parameter will be dropped.
 - The mime_type attribute of django.utils.feedgenerator.Atom1Feed and django.utils.feedgenerator.RssFeed will be removed in favor of content_type.
 - The app_name argument to include() will be removed.
-- Support for passing a 3-tuple as the first argument to include() will be removed.
+- Support for passing a 3-tuple as the first argument to include() will be removed.  :kind:`BEHAVIOUR` [FIXED]
 - Support for setting a URL instance namespace without an application namespace will be removed.
 - Field._get_val_from_obj() will be removed in favor of Field.value_from_object().
 - django.template.loaders.eggs.Loader will be removed.
@@ -139,11 +143,11 @@ Miscellaneous:
 - The get_x(), set_x(), get_y(), set_y(), get_z(), and set_z() methods of django.contrib.gis.geos.Point will be removed.
 - The get_coords() and set_coords() methods of django.contrib.gis.geos.Point will be removed.
 - The cascaded_union property of django.contrib.gis.geos.MultiPolygon will be removed.
-- django.utils.functional.allow_lazy() will be removed.
+- django.utils.functional.allow_lazy() will be removed.  :kind:`DELETION` [FIXED]
 - The shell --plain option will be removed.
-- The django.core.urlresolvers module will be removed.
+- The django.core.urlresolvers module will be removed.  :kind:`DELETION` [FIXED]
 - The model CommaSeparatedIntegerField will be removed. A stub field will remain for compatibility with historical migrations.
-- Support for the template Context.has_key() method will be removed.
+- Support for the template Context.has_key() method will be removed.  :kind:`DELETION` [FIXED]
 - Support for the django.core.files.storage.Storage.accessed_time(), created_time(), and modified_time() methods will be removed.
 - Support for query lookups using the model name when Meta.default_related_name is set will be removed.
 - The __search query lookup and the DatabaseOperations.fulltext_search_sql() method will be removed.
@@ -151,7 +155,7 @@ Miscellaneous:
 - Using User.is_authenticated() and User.is_anonymous() as methods will no longer be supported.
 - The private attribute virtual_fields of Model._meta will be removed.
 - The private keyword arguments virtual_only in Field.contribute_to_class() and virtual in Model._meta.add_field() will be removed.
-- The javascript_catalog() and json_catalog() views will be removed.
+- The javascript_catalog() and json_catalog() views will be removed.  :kind:`DELETION` [FIXED]
 - The django.contrib.gis.utils.precision_wkt() function will be removed.
 - In multi-table inheritance, implicit promotion of a OneToOneField to a parent_link will be removed.
 - Support for Widget._format_value() will be removed.
@@ -168,6 +172,8 @@ Miscellaneous:
 
 See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-changes-in-1-11
 
+- The signature of private API Widget.build_attrs() changed from extra_attrs=None, **kwargs to base_attrs, extra_attrs=None. :kind:`BEHAVIOUR` [FIXED]
+
 
 1.10
 -----
@@ -180,7 +186,7 @@ See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-
 - Using an incorrect count of unpacked values in the for template tag will raise an exception rather than fail silently.
 - The ability to reverse URLs using a dotted Python path will be removed. :kind:`BEHAVIOUR` [FIXED]
 - The ability to use a dotted Python path for the LOGIN_URL and LOGIN_REDIRECT_URL settings will be removed.
-- Support for optparse will be dropped for custom management commands (replaced by argparse).
+- Support for optparse will be dropped for custom management commands (replaced by argparse).  :kind:`BEHAVIOUR` [FIXED]
 - The class django.core.management.NoArgsCommand will be removed. Use BaseCommand instead, which takes no arguments by default.
 - django.core.context_processors module will be removed.
 - django.db.models.sql.aggregates module will be removed.

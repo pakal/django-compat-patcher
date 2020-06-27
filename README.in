@@ -15,7 +15,7 @@ To know more about the whole concept of Compat Patchers, see the documentation o
 
 Note that DCP is aimed at project maintainers. If you are developing a reusable Django application, you can't expect all your users to integrate DCP as well. In this case, to support a wide range of Django versions, you should rather use a toolkit like `Django-compat <https://github.com/arteria/django-compat>`_. You may think of DCP as a "runtime 2to3 for Django', whereas Django-Compat is rather a "*six* module for Django".
 
-Feel free to contribute new fixers, for backwards or forwards compatibility, depending on the compatibility troubles you encounter on your own projects. See `docs/django_deprecation_timeline_notes.rst` for a list of breaking changes in Django history, and their current status in DCP.
+Feel free to ask for (or contribute) new fixers, for backwards or forwards compatibility, depending on the compatibility troubles you encounter on your own projects. See `docs/django_deprecation_timeline_notes.rst` for a list of breaking changes in Django history, and their current status in DCP.
 
 
 
@@ -23,7 +23,7 @@ How to setup
 ==================
 
 
-Django-compat-patcher is currently tested on python2.7/3.4/3.5/3.6/3.7, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2, where these combinations make sense (e.g. Django2+ dropped support for Python2).
+Django-compat-patcher is currently tested on python2.7/3.4/3.5/3.6/3.7/3.8, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0, where these combinations make sense (e.g. Django2+ dropped support for Python2).
 
 Add :code:`django-compat-patcher` to your pip requirements, install it, and then activate it with::
     

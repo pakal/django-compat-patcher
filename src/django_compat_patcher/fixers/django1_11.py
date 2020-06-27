@@ -15,7 +15,7 @@ django1_11_bc_fixer = partial(
 @django1_11_bc_fixer()
 def fix_behaviour_widget_build_attrs(utils):
     """
-    Preserve the "future" templatetags library, with its improved `firstof` and `cycle` tags.
+    Preserve compatibility with the old signature of Widget.build_attrs(): extra_attrs=None, **kwargs.
     """
     from django.forms.widgets import Widget
 
