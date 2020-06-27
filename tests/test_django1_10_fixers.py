@@ -106,3 +106,24 @@ def test_fix_behaviour_template_smartif_OPERATORS_equals():
 
     rendered = render_to_string("core_tags/test_smartif_operators.html", dict(a=3))
     assert rendered.strip() == "hello\nbye"
+
+
+def test_fix_behaviour_core_management_parser_optparse():
+    from django.core import management
+    from six import StringIO
+    from django.test.utils import captured_stderr, captured_stdout
+
+    out = StringIO()
+    management.call_command('optparse_cmd', stdout=out)
+    assert out.getvalue() == "All right, let's dance Rock'n'Roll.\n"
+
+    # Simulate command line execution
+    with captured_stdout() as stdout, captured_stderr():
+        # We skip checks since test project is not complete
+        management.execute_from_command_line(['django-admin', 'optparse_cmd', "--skip-checks"])
+    assert stdout.getvalue() == "All right, let's dance Rock'n'Roll.\n"
+
+    with captured_stdout() as stdout, captured_stderr():
+        # Check that new, argparse-based commands, still work as intended!
+        management.execute_from_command_line(['django-admin', 'diffsettings'])
+    assert "ALLOWED_HOSTS" in stdout.getvalue()

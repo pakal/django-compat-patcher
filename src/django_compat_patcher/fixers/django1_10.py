@@ -306,3 +306,163 @@ def fix_deletion_core_context_processors(utils):
     import_proxifier.register_module_alias(module_alias="django.core.context_processors middlewares",
                                            real_module="django.template.context_processors")
 '''
+
+
+@django1_10_bc_fixer()
+def fix_behaviour_core_management_parser_optparse(utils):
+    """Preserve the support for old optparse instead of argparse parser, in management commands.
+
+    Beware, Bash shell autocompletion might fail if some management commands use Optparse!
+    """
+    import sys
+    from django.core.management import base, BaseCommand
+
+    utils.inject_attribute(BaseCommand, "option_list", ())
+    utils.inject_attribute(BaseCommand, "args", '')
+
+    # ---
+
+    @property
+    def use_argparse(self):
+        return not bool(self.option_list)
+    utils.inject_attribute(BaseCommand, "use_argparse", use_argparse)
+
+    def usage(self, subcommand):  # Predecessor of self.print_help()
+        """
+        Return a brief description of how to use this command, by
+        default from the attribute ``self.help``.
+        """
+        usage = '%%prog %s [options] %s' % (subcommand, self.args)
+        if self.help:
+            return '%s\n\n%s' % (usage, self.help)
+        else:
+            return usage
+    utils.inject_callable(BaseCommand, "usage", usage)
+
+    # ---
+
+    original_create_parser = BaseCommand.create_parser
+
+    def create_parser(self, prog_name, subcommand, **kwargs):
+        if not self.use_argparse:
+            from optparse import OptionParser
+
+            def store_as_int(option, opt_str, value, parser):
+                setattr(parser.values, option.dest, int(value))
+
+            # Backwards compatibility: use deprecated optparse module
+            warnings.warn("OptionParser usage for Django management commands "
+                          "is deprecated, use ArgumentParser instead",
+                          RemovedInDjango110Warning)
+            parser = OptionParser(prog=prog_name,
+                                usage=self.usage(subcommand),
+                                version=self.get_version())
+            parser.add_option('-v', '--verbosity', action='callback', dest='verbosity', default=1,
+                type='choice', choices=['0', '1', '2', '3'], callback=store_as_int,
+                help='Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output')
+            parser.add_option('--settings',
+                help=(
+                    'The Python path to a settings module, e.g. '
+                    '"myproject.settings.main". If this isn\'t provided, the '
+                    'DJANGO_SETTINGS_MODULE environment variable will be used.'
+                ),
+            )
+            parser.add_option('--pythonpath',
+                help='A directory to add to the Python path, e.g. "/home/djangoprojects/myproject".'),
+            parser.add_option('--traceback', action='store_true',
+                help='Raise on CommandError exceptions')
+            parser.add_option('--no-color', action='store_true', dest='no_color', default=False,
+                help="Don't colorize the command output.")
+            parser.add_option('--force-color', action='store_true',  # ADDED to old code
+                help='FORWARD-COMPATIBILITY OPTION FOR OLD OPTPARSE PARSER')
+            parser.add_option('--skip-checks', action='store_true',  # ADDED to old code
+                help='FORWARD-COMPATIBILITY OPTION FOR OLD OPTPARSE PARSER')
+            for opt in self.option_list:
+                parser.add_option(opt)
+        else:
+            parser = original_create_parser(self, prog_name, subcommand)
+            if self.args:
+                # Keep compatibility and always accept positional arguments, like optparse when args is set
+                parser.add_argument('args', nargs='*')
+        return parser
+    utils.inject_callable(BaseCommand, "create_parser", create_parser)
+
+    # ---
+
+    original_run_from_argv = BaseCommand.run_from_argv
+
+    def run_from_argv(self, argv):
+        """
+        Set up any environment changes requested (e.g., Python path
+        and Django settings), then run this command. If the
+        command raises a ``CommandError``, intercept it and print it sensibly
+        to stderr. If the ``--traceback`` option is present or the raised
+        ``Exception`` is not ``CommandError``, raise it.
+        """
+
+        if self.use_argparse:
+            original_run_from_argv(self, argv)
+            return
+
+        # Fallback for OPTPARSE #
+        self._called_from_command_line = True
+        parser = self.create_parser(argv[0], argv[1])
+        options, args = parser.parse_args(argv[2:])
+        cmd_options = vars(options)
+
+        # Copy of the remainder of the original run_from_argv() method
+        base.handle_default_options(options)
+        try:
+            self.execute(*args, **cmd_options)
+        except Exception as e:
+            if options.traceback or not isinstance(e, base.CommandError):
+                raise
+
+            # SystemCheckError takes care of its own formatting.
+            if isinstance(e, base.SystemCheckError):
+                self.stderr.write(str(e), lambda x: x)
+            else:
+                self.stderr.write('%s: %s' % (e.__class__.__name__, e))
+            sys.exit(1)
+        finally:
+            base.connections.close_all()
+    utils.inject_callable(BaseCommand, "run_from_argv", run_from_argv)
+
+    # ---
+
+    from django.core import management
+    original_call_command = management.call_command
+
+    def call_command(name, *args, **options):
+        try:
+            return original_call_command(name, *args, **options)
+        except AttributeError as exc:
+            # We expect something like "AttributeError: 'OptionParser' object has no attribute '_actions'"
+
+            if "OptionParser" not in str(exc):
+                raise  # It's an unrelated exception
+
+            # FALLBACK TO OPTPARSE PARSER, by reproducing call_command() code
+
+            # Load the command object.
+            try:
+                app_name = management.get_commands()[name]
+            except KeyError:
+                raise management.CommandError("Unknown command: %r" % name)
+
+            if isinstance(app_name, BaseCommand):
+                # If the command is already loaded, use it directly.
+                command = app_name
+            else:
+                command = management.load_command_class(app_name, name)
+
+            # Simulate argument parsing to get the option defaults (see #10080 for details).
+            parser = command.create_parser('', name)
+            # Legacy optparse method
+            defaults, _ = parser.parse_args(args=[])
+            defaults = dict(defaults.__dict__, **options)
+            if 'skip_checks' not in options:
+                defaults['skip_checks'] = True
+
+            return command.execute(*args, **defaults)
+    utils.inject_callable(management, "call_command", call_command)
