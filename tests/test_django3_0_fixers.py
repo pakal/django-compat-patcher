@@ -1,4 +1,9 @@
+import sys
 
+import pytest
+
+
+skip_on_python2 = pytest.mark.skipif(sys.version_info < (3,), reason="This Django3 fixer requires python3 or higher")
 
 
 def test_fix_deletion_utils_six():
@@ -17,6 +22,7 @@ def test_fix_deletion_utils_upath_npath_abspathu():
     assert npath("/something2/file.txt") == "/something2/file.txt"  # No-op
 
 
+@skip_on_python2
 def test_fix_deletion_utils_decorators_ContextDecorator():
     from django.utils.decorators import ContextDecorator
     from contextlib import ContextDecorator as ContextDecoratorOriginal
@@ -34,6 +40,7 @@ def test_fix_deletion_utils_decorators_available_attrs():
     assert available_attrs(func) == WRAPPER_ASSIGNMENTS
 
 
+@skip_on_python2
 def test_fix_deletion_utils_lru_cache_lru_cache():
     from django.utils.lru_cache import lru_cache as django_lru_cache_function
     from functools import lru_cache
@@ -41,11 +48,13 @@ def test_fix_deletion_utils_lru_cache_lru_cache():
     assert django_lru_cache_function is lru_cache
 
 
+@skip_on_python2
 def test_fix_deletion_utils_safestring_SafeBytes():
     from django.utils.safestring import SafeBytes
     assert SafeBytes("abc", "ascii") == bytes("abc", "ascii")
 
 
+@skip_on_python2
 def test_fix_deletion_test_utils_str_prefix():
     from django.test.utils import str_prefix
     assert str_prefix("%(_)shello") == "hello"
@@ -60,12 +69,14 @@ def test_fix_deletion_test_utils_patch_logger():
     assert calls == ["Patch-logger context manager seems to work fine"]
 
 
+@skip_on_python2
 def test_fix_deletion_utils_encoding_python_2_unicode_compatible():
     from django.utils.encoding import python_2_unicode_compatible
 
     @python_2_unicode_compatible
     class MyClass:
-        pass
+        def __str__(self):
+            return "<Some MyClass object>"
 
     obj = MyClass()
     assert isinstance(obj, MyClass)

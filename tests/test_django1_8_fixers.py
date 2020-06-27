@@ -15,9 +15,11 @@ def test_fix_outsourcing_contrib_comments():
 
         with pytest.raises(ImportError) as exc:
             from django.contrib import comments
+        expected_error = str(exc)
+        expected_error = expected_error.replace(r"\'", "'")  # Sometimes quotes are escaped...
         assert (
             "No module named 'django_comments' (when loading alias name 'django.contrib.comments')"
-            in str(exc)
+            in expected_error
         )
 
     else:
