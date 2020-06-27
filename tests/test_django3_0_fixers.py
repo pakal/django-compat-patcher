@@ -75,9 +75,9 @@ def test_fix_deletion_django_utils_functional_curry():
 
     from django.utils.functional import curry
 
-    def func(value1, value2):
-        return value1 + value2
+    def func(value1, value2, value3, value4):
+        return value1 + value2 + value3 + value4
 
-    func2 = curry(func, "hello", value2="there")
-    assert func2() == "hellothere"
+    func2 = curry(func, "hello", value3="general")
+    assert func2("there", value4="kenobi") == "hellotheregeneralkenobi"
 

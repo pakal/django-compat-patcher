@@ -162,7 +162,9 @@ def fix_deletion_django_utils_functional_curry(utils):
     # CPython) is a type and its instances don't bind. --> see `functools.partialmethod` now!
     def curry(_curried_func, *args, **kwargs):
         def _curried(*moreargs, **morekwargs):
-            return _curried_func(*args, *moreargs, **{**kwargs, **morekwargs})
+            allkwargs = dict(**kwargs)
+            allkwargs.update(morekwargs)
+            return _curried_func(*(args + moreargs), **allkwargs)
         return _curried
 
     utils.inject_callable(functional, "curry", curry)
