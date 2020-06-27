@@ -117,10 +117,14 @@ def test_fix_behaviour_core_management_parser_optparse():
     management.call_command('optparse_cmd', stdout=out)
     assert out.getvalue() == "All right, let's dance Rock'n'Roll.\n"
 
+    from django.core.management import BaseCommand
+    needs_skip_checks = hasattr(BaseCommand, "requires_system_checks")
+
     # Simulate command line execution
     with captured_stdout() as stdout, captured_stderr():
         # We skip checks since test project is not complete
-        management.execute_from_command_line(['django-admin', 'optparse_cmd', "--skip-checks"])
+        management.execute_from_command_line(['django-admin', 'optparse_cmd'] +
+                                             ["--skip-checks"] if needs_skip_checks else [])
     assert stdout.getvalue() == "All right, let's dance Rock'n'Roll.\n"
 
     with captured_stdout() as stdout, captured_stderr():
