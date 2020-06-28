@@ -109,25 +109,31 @@ def test_fix_behaviour_template_smartif_OPERATORS_equals():
 
 
 def test_fix_behaviour_core_management_parser_optparse():
+    from django import VERSION
     from django.core import management
     from six import StringIO
     from django.test.utils import captured_stderr, captured_stdout
 
+    with captured_stdout() as stdout, captured_stderr():
+        # Check that new, argparse-based commands, still work as intended!
+        management.execute_from_command_line(['django-admin', 'diffsettings'])
+    stdout_value = stdout.getvalue()
+    print(stdout_value)
+    assert "ALLOWED_HOSTS" in stdout_value
+
+    # Check that optparse-based command works
     out = StringIO()
     management.call_command('optparse_cmd', stdout=out)
     assert out.getvalue() == "All right, let's dance Rock'n'Roll.\n"
 
-    from django.core.management import BaseCommand
-    needs_skip_checks = hasattr(BaseCommand, "requires_system_checks")
-
     # Simulate command line execution
     with captured_stdout() as stdout, captured_stderr():
         # We skip checks since test project is not complete
-        management.execute_from_command_line(['django-admin', 'optparse_cmd'] +
-                                             ["--skip-checks"] if needs_skip_checks else [])
-    assert stdout.getvalue() == "All right, let's dance Rock'n'Roll.\n"
+        needs_skip_checks = (VERSION >= (1, 10))
+        cmd_line = ['django-admin', 'optparse_cmd'] + (["--skip-checks"] if needs_skip_checks else [])
+        management.execute_from_command_line(cmd_line)
+    stdout_value = stdout.getvalue()
+    print(stdout_value)
+    assert stdout_value == "All right, let's dance Rock'n'Roll.\n"
 
-    with captured_stdout() as stdout, captured_stderr():
-        # Check that new, argparse-based commands, still work as intended!
-        management.execute_from_command_line(['django-admin', 'diffsettings'])
-    assert "ALLOWED_HOSTS" in stdout.getvalue()
+
