@@ -1,4 +1,19 @@
 
+
+Version 0.8
+==================
+
+* add trivial fixers for Django3.0 compatibility
+* add fixer to preserve optparse support in django>=1.0
+* update test coverage to python3.8 and Django3.0
+
+
+Version 0.7.1
+==================
+
+* fix missing dependency to compat-patcher-core
+
+
 Version 0.7
 ==================
 
