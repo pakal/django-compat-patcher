@@ -13,10 +13,9 @@ DCP is a companion application which adds backward/forward compatibility patches
 
 To know more about the whole concept of Compat Patchers, see the documentation of the underlying `Compat Patcher Core <https://compat-patcher-core.readthedocs.io/en/latest/index.html>`_.
 
-Note that DCP is aimed at project maintainers. If you are developing a reusable Django application, you can't expect all your users to integrate DCP as well. In this case, to support a wide range of Django versions, you should rather use a toolkit like `Django-compat <https://github.com/arteria/django-compat>`_. You may think of DCP as a "runtime 2to3 for Django', whereas Django-Compat is rather a "*six* module for Django".
+Note that DCP is aimed at project maintainers. If you are developing a reusable Django application, you can't expect all your users to integrate DCP as well. In this case, to support a wide range of Django versions, you should rather use a toolkit like `Django-compat <https://github.com/arteria/django-compat>`_. You may think of DCP as a "runtime 2to3 and 3to2 for the Django core framework', whereas Django-Compat is rather a "*six* module for Django". If you only seek to upgrade your own codebase to newer Django versions, look at `Django Codemod <https://github.com/browniebroke/django-codemod>`_ too (which is like a "static 2to3 for Django-dependent code repositories").
 
 Feel free to ask for (or contribute) new fixers, for backwards or forwards compatibility, depending on the compatibility troubles you encounter on your own projects. See `docs/django_deprecation_timeline_notes.rst` for a list of breaking changes in Django history, and their current status in DCP.
-
 
 
 How to setup
