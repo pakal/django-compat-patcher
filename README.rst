@@ -33,7 +33,14 @@ This code should be placed before any use of Django (eg. in your :code:`manage.p
 
 In particular, some fixers only work if they are applied before the loading of INSTALLED_APPS (so before django.setup() gets called).
 
-The Django settings of your project are not altered by compatibility shims, so they should be kept up-to-date with your installed Django version (eg. now use `TEMPLATES`, `MIDDLEWARE`, and not deprecated settings...). In particular, always put real package names in INSTALLED_APPS, not their potential "import aliases".
+The Django settings of your project are not altered by compatibility shims, so they should be kept up-to-date with your installed Django version (eg. now use `TEMPLATES`, `MIDDLEWARE`, and not deprecated equivalents). In particular, always put real package names in INSTALLED_APPS, not their potential "import aliases".
+
+Despite DCP patching, you might encounter errors raised by the Django check framework, like the following. Use the `SILENCED_SYSTEM_CHECKS <https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS>`_ setting to bypass such blocking checks.
+
+::
+
+    (fields.E900) IPAddressField has been removed except for support in historical migrations. HINT: Use GenericIPAddressField instead.
+    (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
 
 
 Django settings
