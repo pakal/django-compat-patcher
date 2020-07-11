@@ -166,3 +166,47 @@ def test_fix_behaviour_conf_urls_include_3tuples():
 
     with pytest.raises(ImproperlyConfigured):
         include(admin.site.urls, namespace="mynamespace")
+
+
+def test_fix_behaviour_contrib_auth_user_is_anonymous_is_authenticated_callability():
+    from django.contrib.auth.models import AnonymousUser
+    from django.contrib.auth import get_user_model
+    from django import VERSION
+    from django.conf import settings
+
+    property_usage_enabled = (VERSION >= (1, 10))
+
+    # In Django>=2.0, importing ANonymousUser triggers import of ContentTypes, so in minimal-settings mode its gives a
+    # "RuntimeError: Model class django.contrib.contenttypes.models.ContentType doesn't declare an explicit app_label
+    # and isn't in an application in INSTALLED_APPS."
+    patching_is_impossible = (VERSION >= (2, 0) and "django.contrib.contenttypes" not in settings.INSTALLED_APPS)
+
+    user = AnonymousUser()
+
+    if not patching_is_impossible:
+        assert user.is_anonymous()
+        assert user.is_anonymous() == 1 == True
+        assert not user.is_authenticated()
+        assert user.is_authenticated() == 0 == False
+
+    if property_usage_enabled:
+        assert user.is_anonymous
+        assert user.is_anonymous == 1 == True
+        assert not user.is_authenticated
+        assert user.is_authenticated == 0 == False
+
+    User = get_user_model()
+    user = User(username="john")
+
+    if not patching_is_impossible:
+        assert not user.is_anonymous()
+        assert user.is_anonymous() == 0 == False
+        assert user.is_authenticated()
+        assert user.is_authenticated() == 1 == True
+
+    if property_usage_enabled:
+        assert not user.is_anonymous
+        assert user.is_anonymous == 0 == False
+        assert user.is_authenticated
+        assert user.is_authenticated == 1 == True
+

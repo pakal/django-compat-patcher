@@ -241,3 +241,47 @@ def fix_behaviour_conf_urls_include_3tuples(utils):
     import django.urls
 
     utils.inject_callable(django.urls, "include", include)
+
+
+@django1_20_bc_fixer(fixer_delayed=True)  # "User" model might be unavailable before setup() is done!
+def fix_behaviour_contrib_auth_user_is_anonymous_is_authenticated_callability(utils):
+    """
+    Make user.is_anonymous and user.is_authenticated behave both as properties and methods,
+    by preserving their callability like in earlier Django version.
+    """
+    utils.skip_if_app_not_installed("django.contrib.contenttypes")  # BEFORE IMPORTS!
+
+    from django.contrib.auth.base_user import AbstractBaseUser
+    from django.contrib.auth.models import AnonymousUser
+    from ..django_legacy.django2_0.utils.deprecation import CallableFalse, CallableTrue
+
+    @property
+    def is_anonymous_for_AbstractBaseUser(self):
+        """
+        Always return False. This is a way of comparing User objects to
+        anonymous users.
+        """
+        return CallableFalse
+
+    @property
+    def is_authenticated_for_AbstractBaseUser(self):
+        """
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return CallableTrue
+
+    utils.inject_attribute(AbstractBaseUser, "is_anonymous", is_anonymous_for_AbstractBaseUser)
+    utils.inject_attribute(AbstractBaseUser, "is_authenticated", is_authenticated_for_AbstractBaseUser)
+
+    @property
+    def is_anonymous_for_AnonymousUser(self):
+        return CallableTrue
+
+    @property
+    def is_authenticated_for_AnonymousUser(self):
+        return CallableFalse
+
+    utils.inject_attribute(AnonymousUser, "is_anonymous", is_anonymous_for_AnonymousUser)
+    utils.inject_attribute(AnonymousUser, "is_authenticated", is_authenticated_for_AnonymousUser)
+
