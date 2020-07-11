@@ -239,6 +239,41 @@ def fix_deletion_core_management_base_AppCommand_handle_app(utils):
     utils.inject_callable(AppCommand, "handle_app_config", handle_app_config)
 
 
+@django1_9_bc_fixer()
+def fix_deletion_core_cache_get_cache(utils):
+    """Preserve django.core.cache.get_cache() utility, superseded by django.core.cache.caches"""
+    def get_cache(backend, **kwargs):
+        """
+        Function to create a cache backend dynamically. This is flexible by design
+        to allow different use cases:
+
+        To load a backend that is pre-defined in the settings::
+
+            cache = get_cache('default')
+
+        To create a backend with its dotted import path,
+        including arbitrary options::
+
+            cache = get_cache('django.core.cache.backends.memcached.MemcachedCache', **{
+                'LOCATION': '127.0.0.1:11211', 'TIMEOUT': 30,
+            })
+
+        """
+        warnings.warn("'get_cache' is deprecated in favor of 'caches'.",
+                      RemovedInDjango19Warning, stacklevel=2)
+        from django.core import signals
+        from django.core.cache import _create_cache
+        cache = _create_cache(backend, **kwargs)
+        # Some caches -- python-memcached in particular -- need to do a cleanup at the
+        # end of a request cycle. If not implemented in a particular backend
+        # cache.close is a no-op
+        signals.request_finished.connect(cache.close)
+        return cache
+
+    from django.core import cache
+    utils.inject_callable(cache, "get_cache", get_cache)
+
+
 @django1_9_bc_fixer(fixer_delayed=True)
 def fix_deletion_contrib_sites_models_RequestSite(utils):
     """Preserve contrib.sites.models.RequestSite alias."""

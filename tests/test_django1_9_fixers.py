@@ -1,5 +1,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
+from django.core import signals
+
 import _test_utilities
 
 import os
@@ -202,3 +204,32 @@ def test_fix_deletion_contrib_sites_models_get_current_site():
 
     with pytest.raises(ImproperlyConfigured):  # DCP tests have no DB access for now
         assert get_current_site(request)
+
+
+def test_fix_deletion_core_cache_get_cache():
+    from django.core.cache import get_cache, caches, DEFAULT_CACHE_ALIAS, InvalidCacheBackendError, close_caches
+
+    assert isinstance(caches[DEFAULT_CACHE_ALIAS], get_cache('default').__class__)
+
+    cache = get_cache(
+        'django.core.cache.backends.dummy.DummyCache',
+        **{'TIMEOUT': 120}
+    )
+    assert cache.default_timeout == 120
+
+    with pytest.raises(InvalidCacheBackendError):
+        get_cache('does_not_exist')
+
+    # Test old signaling system on get_cache()
+
+    cache = get_cache('test_project.utilities.CacheClass')
+    assert not cache.closed
+
+    # Ensure that we don't close the global cache instances.
+    signals.request_finished.disconnect(close_caches)
+    try:
+        signals.request_finished.send(None)
+        assert cache.closed
+    finally:
+        signals.request_finished.connect(close_caches)
+

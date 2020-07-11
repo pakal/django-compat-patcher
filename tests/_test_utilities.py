@@ -16,3 +16,7 @@ django_compat_patcher.patch()
 django.setup()  # idempotent
 
 DJANGO_VERSION_TUPLE = django.VERSION
+
+
+
+
