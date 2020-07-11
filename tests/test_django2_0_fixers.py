@@ -171,15 +171,14 @@ def test_fix_behaviour_conf_urls_include_3tuples():
 def test_fix_behaviour_contrib_auth_user_is_anonymous_is_authenticated_callability():
     from django.contrib.auth.models import AnonymousUser
     from django.contrib.auth import get_user_model
-    from django import VERSION
     from django.conf import settings
 
-    property_usage_enabled = (VERSION >= (1, 10))
+    property_usage_enabled = (_test_utilities.DJANGO_VERSION_TUPLE >= (1, 10))
 
     # In Django>=2.0, importing ANonymousUser triggers import of ContentTypes, so in minimal-settings mode its gives a
     # "RuntimeError: Model class django.contrib.contenttypes.models.ContentType doesn't declare an explicit app_label
     # and isn't in an application in INSTALLED_APPS."
-    patching_is_impossible = (VERSION >= (2, 0) and "django.contrib.contenttypes" not in settings.INSTALLED_APPS)
+    patching_is_impossible = (_test_utilities.DJANGO_VERSION_TUPLE >= (2, 0) and "django.contrib.contenttypes" not in settings.INSTALLED_APPS)
 
     user = AnonymousUser()
 

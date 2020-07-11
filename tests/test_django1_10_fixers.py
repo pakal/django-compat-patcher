@@ -109,7 +109,6 @@ def test_fix_behaviour_template_smartif_OPERATORS_equals():
 
 
 def test_fix_behaviour_core_management_parser_optparse():
-    from django import VERSION
     from django.core import management
     from six import StringIO
     from django.test.utils import captured_stderr, captured_stdout
@@ -129,7 +128,7 @@ def test_fix_behaviour_core_management_parser_optparse():
     # Simulate command line execution
     with captured_stdout() as stdout, captured_stderr():
         # We skip checks since test project is not complete
-        needs_skip_checks = (VERSION >= (1, 10))
+        needs_skip_checks = (_test_utilities.DJANGO_VERSION_TUPLE >= (1, 10))
         cmd_line = ['django-admin', 'optparse_cmd'] + (["--skip-checks"] if needs_skip_checks else [])
         management.execute_from_command_line(cmd_line)
     stdout_value = stdout.getvalue()
