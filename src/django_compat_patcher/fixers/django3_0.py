@@ -169,3 +169,25 @@ def fix_deletion_django_utils_functional_curry(utils):
 
     utils.inject_callable(functional, "curry", curry)
 
+
+@django1_30_bc_fixer()
+def fix_deletion_shortcuts_render_to_response(utils):
+    """Preserve django.shortcuts.render_to_response(), superseded by render()."""
+    from django import shortcuts
+
+    def render_to_response(template_name, context=None, content_type=None, status=None, using=None):
+        """
+        Return a HttpResponse whose content is filled with the result of calling
+        django.template.loader.render_to_string() with the passed arguments.
+        """
+        warnings.warn(
+            'render_to_response() is deprecated in favor of render(). It has the '
+            'same signature except that it also requires a request.',
+            RemovedInDjango30Warning, stacklevel=2,
+        )
+        from django.template import loader
+        from django.http import HttpResponse
+        content = loader.render_to_string(template_name, context, using=using)
+        return HttpResponse(content, content_type, status)
+
+    utils.inject_callable(shortcuts, "render_to_response", render_to_response)

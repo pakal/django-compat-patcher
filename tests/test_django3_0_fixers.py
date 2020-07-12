@@ -1,5 +1,6 @@
 import sys
 
+import six
 import pytest
 
 
@@ -91,4 +92,13 @@ def test_fix_deletion_django_utils_functional_curry():
 
     func2 = curry(func, "hello", value3="general")
     assert func2("there", value4="kenobi") == "hellotheregeneralkenobi"
+
+
+def test_fix_deletion_shortcuts_render_to_response():
+    from django.shortcuts import render_to_response
+    res = render_to_response("example_template.html", context=dict(message="ThiIsATest"),
+                             content_type="dummycontenttype", status=201)
+    assert res['Content-Type'] == "dummycontenttype"
+    assert res.status_code == 201
+    assert six.b("ThiIsATest") in res.content
 

@@ -50,6 +50,19 @@ Miscellaneous:
 - alias=None is added to the signature of Expression.get_group_by_cols().
 - RegexPattern, used by re_path(), no longer returns keyword arguments with None values to be passed to the view for the optional named groups that are missing.
 
+Features removed in 3.0:
+
+- The django.db.backends.postgresql_psycopg2 module is removed.
+- django.shortcuts.render_to_response() is removed.
+- The DEFAULT_CONTENT_TYPE setting is removed.
+- HttpRequest.xreadlines() is removed.
+- Support for the context argument of Field.from_db_value() and Expression.convert_value() is removed.
+- The field_name keyword argument of QuerySet.earliest() and latest() is removed.
+- The ForceRHR GIS function is removed.
+- django.utils.http.cookie_date() is removed.
+- The staticfiles and admin_static template tag libraries are removed.
+- django.contrib.staticfiles.templatetags.staticfiles.static() is removed.
+
 
 2.2
 ----

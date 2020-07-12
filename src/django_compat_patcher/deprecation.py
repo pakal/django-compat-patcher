@@ -6,6 +6,14 @@ from compat_patcher_core.utilities import WarningsProxy
 warnings = WarningsProxy()
 
 
+class RemovedInDjango31Warning(DeprecationWarning):
+    pass
+
+
+class RemovedInDjango30Warning(DeprecationWarning):
+    pass
+
+
 class RemovedInDjango22Warning(DeprecationWarning):
     pass
 
