@@ -53,7 +53,7 @@ Miscellaneous:
 Features removed in 3.0:
 
 - The django.db.backends.postgresql_psycopg2 module is removed.
-- django.shortcuts.render_to_response() is removed.
+- django.shortcuts.render_to_response() is removed.  :kind:`DELETION` [FIXED]
 - The DEFAULT_CONTENT_TYPE setting is removed.
 - HttpRequest.xreadlines() is removed.
 - Support for the context argument of Field.from_db_value() and Expression.convert_value() is removed.
@@ -165,7 +165,7 @@ MISSING ENTRY IN OFFICIAL DOCS:
 - Support for query lookups using the model name when Meta.default_related_name is set will be removed.
 - The __search query lookup and the DatabaseOperations.fulltext_search_sql() method will be removed.
 - The shim for supporting custom related manager classes without a _apply_rel_filters() method will be removed.
-- Using User.is_authenticated() and User.is_anonymous() as methods will no longer be supported.
+- Using User.is_authenticated() and User.is_anonymous() as methods will no longer be supported.  :kind:`BEHAVIOUR` [FIXED]
 - The private attribute virtual_fields of Model._meta will be removed.
 - The private keyword arguments virtual_only in Field.contribute_to_class() and virtual in Model._meta.add_field() will be removed.
 - The javascript_catalog() and json_catalog() views will be removed.  :kind:`DELETION` [FIXED]
@@ -315,7 +315,7 @@ See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-
 - The class django.utils.datastructures.MergeDict will be removed. :kind:`DELETION` [FIXED]
 - The zh-cn and zh-tw language codes will be removed and have been replaced by the zh-hans and zh-hant language code respectively.
 - The internal django.utils.functional.memoize will be removed. :kind:`DELETION` [FIXED]
-- django.core.cache.get_cache will be removed. Add suitable entries to CACHES and use django.core.cache.caches instead.
+- django.core.cache.get_cache will be removed. Add suitable entries to CACHES and use django.core.cache.caches instead.  :kind:`DELETION` [FIXED]
 - django.db.models.loading will be removed.
 - Passing callable arguments to querysets will no longer be possible.
 - BaseCommand.requires_model_validation will be removed in favor of requires_system_checks. Admin validators will be replaced by admin checks.

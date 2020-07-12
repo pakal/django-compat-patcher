@@ -3,7 +3,9 @@
 Version 0.8
 ==================
 
-* add trivial fixers for Django3.0 compatibility
+* add lots of trivial fixers for Django3.0 compatibility
+* add fixer to preserve callability of user.is_authenticated and user.is_anonymous in Django>=2.0
+* add fixer for get_cache() removable in Django>=1.9
 * add fixer to preserve optparse support in django>=1.0
 * update test coverage to python3.8 and Django3.0
 
