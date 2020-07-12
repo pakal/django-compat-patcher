@@ -153,7 +153,7 @@ def fix_deletion_utils_encoding_python_2_unicode_compatible(utils):
 
 
 @django1_30_bc_fixer()
-def fix_deletion_django_utils_functional_curry(utils):
+def fix_deletion_utils_functional_curry(utils):
     """Preserve django.utils.functional.curry()function."""
 
     from django.utils import functional

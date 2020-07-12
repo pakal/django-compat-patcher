@@ -83,7 +83,7 @@ def test_fix_deletion_utils_encoding_python_2_unicode_compatible():
     assert isinstance(obj, MyClass)
 
 
-def test_fix_deletion_django_utils_functional_curry():
+def test_fix_deletion_utils_functional_curry():
 
     from django.utils.functional import curry
 
