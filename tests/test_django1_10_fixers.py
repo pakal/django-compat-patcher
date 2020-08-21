@@ -3,6 +3,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import _test_utilities
 import pytest
 
+import django_compat_patcher
+from django_compat_patcher import default_settings
+from django_compat_patcher.registry import django_patching_registry
+
 
 def test_fix_incoming_urls_submodule():
     from django.urls import (
@@ -135,4 +139,7 @@ def test_fix_behaviour_core_management_parser_optparse():
     print(stdout_value)
     assert stdout_value == "All right, let's dance Rock'n'Roll.\n"
 
-
+    # This fixer is UNSAFE!
+    fixer_id = "fix_behaviour_core_management_parser_optparse"
+    assert django_patching_registry.get_fixer_by_id(fixer_id)
+    assert fixer_id in default_settings.DCP_EXCLUDE_FIXER_IDS

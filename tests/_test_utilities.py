@@ -11,7 +11,8 @@ import django
 import django_compat_patcher
 
 # This MUST happen BEFORE django is setup(), else import proxies can't be installed
-django_compat_patcher.patch()
+settings = dict(DCP_EXCLUDE_FIXER_IDS=[])  # REMOVE the disabling of unsafe fixers, for tests!
+django_compat_patcher.patch(settings)
 
 django.setup()  # idempotent
 

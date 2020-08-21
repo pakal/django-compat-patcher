@@ -5,7 +5,7 @@ DCP_INCLUDE_FIXER_IDS = "*"
 DCP_INCLUDE_FIXER_FAMILIES = []
 
 # Filters applied last
-DCP_EXCLUDE_FIXER_IDS = []
+DCP_EXCLUDE_FIXER_IDS = ["fix_behaviour_core_management_parser_optparse"]
 DCP_EXCLUDE_FIXER_FAMILIES = []
 
 DCP_PATCH_INJECTED_OBJECTS = "__dcp_injected__"
