@@ -43,22 +43,25 @@ Despite DCP patching, you might encounter errors raised by the Django check fram
     (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
 
 
-Django settings
-====================
+Django settings for DCP
+==========================
 
 By default, DCP emits logs and warnings when patching the code, and applies all "relevant" fixers,
 i.e all that support your currently installed django version, and are not deemed **unsafe**.
 
 Unsafe fixers are the few ones which might conflict with modern third-party libraries , e.g. if these
-add their own workarounds for Django incompatibilites).
+add their own workarounds for Django incompatibilites (see `DCP_EXCLUDE_FIXER_IDS` default below).
 
 This behaviour can be customized via the Django settings below.
 
 Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.11, apply fixers from Django1.8 up to Django1.11, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
 
-You may provide a "settings" dictionary directly to the patch() method, in which case your DCP django settings will be completely ignored (only library defaults will be used as fallbacks)::
+You may provide a "settings" dictionary directly to the patch() method, in which case the DCP django settings of your project will be **entirely** ignored (only DCP library defaults will be used as fallbacks)::
 
     django_compat_patcher.patch(settings=dict(DCP_INCLUDE_FIXER_IDS=["my_fixer_id"]))
+
+It is also possible to override only one or more of these settings, using environment variables with the same name (e.g. "DCP_INCLUDE_FIXER_IDS"),
+in JSON format (so a string must be passed as '"*"' for example, or a boolean as 'true').
 
 Note that exclusion filters have precedence over inclusion ones.
 
@@ -118,7 +121,8 @@ Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take pr
 DCP_PATCH_INJECTED_OBJECTS
 ***************************
 
-By default, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones. Set this setting to True to automatically choose the attribute name, or False to disable the feature.
+By default, the patcher sets an attribute (with value :code:`True`) on injected objects (callables, classes, modules, attributes...) when possible,
+with this attribute name, to differentiate them from original objects. Set this setting to True to automatically choose the attribute name, or False to disable the feature.
 
 | **Default:** :code:`{DCP_PATCH_INJECTED_OBJECTS!r}`
 | **Type:** Str (or Boolean)

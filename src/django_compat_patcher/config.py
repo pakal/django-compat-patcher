@@ -1,11 +1,19 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
+import json
+from os import getenv
+
 class DjangoSettingsProvider(object):
 
     _settings = None
 
     def __init__(self, settings):
+        """
+        Either directly provided `settings` parameter (if set) or
+        Django project settings are used, but no fallback occurs between them.
 
+        Environment variables (in JSON format) have precedence over all DCP settings.
+        """
         if settings:
             self._settings = settings
         else:
@@ -18,9 +26,13 @@ class DjangoSettingsProvider(object):
         self._fallback_settings = default_settings.__dict__
 
     def __getitem__(self, item):
-        # Might raise KeyError if setting not existing at all
+        """Might raise KeyError if setting is not existing at all"""
 
         item = "DCP_" + item.upper()  # Turn to Django naming convention
+
+        value = getenv(item, default=None)
+        if value is not None:
+            return json.loads(value)
 
         try:
             value = self._settings[item]
