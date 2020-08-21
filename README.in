@@ -47,7 +47,10 @@ Django settings
 ====================
 
 By default, DCP emits logs and warnings when patching the code, and applies all "relevant" fixers,
-i.e all that support your currently installed django version.
+i.e all that support your currently installed django version, and are not deemed **unsafe**.
+
+Unsafe fixers are the few ones which might conflict with modern third-party libraries , e.g. if these
+add their own workarounds for Django incompatibilites).
 
 This behaviour can be customized via the Django settings below.
 
@@ -67,7 +70,7 @@ List of fixer identifiers to include. If :code:`"*"` is used, then all fixers ar
 
 In rare case of name conflicts when using several registries at once, you may use qualified qualified fixer names like "fixer_family|fixer_id".
 
-| **Default:** :code:`"*"`
+| **Default:** :code:`{DCP_INCLUDE_FIXER_IDS!r}`
 | **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_INCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
@@ -79,7 +82,7 @@ List of fixer families to include. If :code:`"*"` is used, then all families are
 
 Note: If you want to include only specific families, remember to replace the value :code:`"*" from :code:`DCP_INCLUDE_FIXER_IDS` by, for example, an empty list.
 
-| **Default:** :code:`[]`
+| **Default:** :code:`{DCP_INCLUDE_FIXER_FAMILIES!r}`
 | **Type:** List of strings, or :code:`"*"`
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_INCLUDE_FIXER_FAMILIES = ["django1.9"]`
@@ -94,7 +97,7 @@ In rare case of name conflicts when using several registries at once, you may us
 
 Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
-| **Default:** :code:`[]`
+| **Default:** :code:`{DCP_EXCLUDE_FIXER_IDS!r}`
 | **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_EXCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
@@ -106,7 +109,7 @@ List of fixer families to exclude. If :code:`"*"` is used, then all families are
 
 Note: The "EXCLUDE" filters are applied AFTER the "INCLUDE" ones, and so take precedence.
 
-| **Default:** :code:`[]`
+| **Default:** :code:`{DCP_EXCLUDE_FIXER_FAMILIES!r}`
 | **Type:** List of strings, or :code:`"*"`
 | **Choices:** :code:`("djangoX.Y")` where :code:`X` and :code:`Y` are respectively the major and minor versions
 | **Example:** :code:`DCP_EXCLUDE_FIXER_FAMILIES = ["django1.6", "django1.9"]`
@@ -117,7 +120,7 @@ DCP_PATCH_INJECTED_OBJECTS
 
 By default, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones. Set this setting to True to automatically choose the attribute name, or False to disable the feature.
 
-| **Default:** :code:`"__dcp_injected__"`
+| **Default:** :code:`{DCP_PATCH_INJECTED_OBJECTS!r}`
 | **Type:** Str (or Boolean)
 | **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = False`
 
@@ -130,7 +133,7 @@ to help detect deprecated code. These warnings are mostly subclasses of :code:`D
 
 Once emitted, the handling of warnings depends on your setup (python command line flags, logging config...), see the `official doc on warnings <https://docs.python.org/3/library/warnings.html>`_ for more information.
 
-| **Default:** :code:`True`
+| **Default:** :code:`{DCP_ENABLE_WARNINGS!r}`
 | **Type:** Boolean
 | **Example:** :code:`DCP_ENABLE_WARNINGS = False`
 
@@ -144,7 +147,7 @@ This setting sets the logging level of that information stream, which is typical
 
 Note that DCP does NOT actually use stdlib loggers, because it mostly performs operations before Django logging has been setup (ex. using the LOGGING setting), so log entries would most probably get discarded.
 
-| **Default:** :code:`"INFO"`
+| **Default:** :code:`{DCP_LOGGING_LEVEL!r}`
 | **Type:** Logging level string, or None
 | **Example:** :code:`DCP_LOGGING_LEVEL = "DEBUG"`
 

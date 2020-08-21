@@ -47,7 +47,10 @@ Django settings
 ====================
 
 By default, DCP emits logs and warnings when patching the code, and applies all "relevant" fixers,
-i.e all that support your currently installed django version.
+i.e all that support your currently installed django version, and are not deemed **unsafe**.
+
+Unsafe fixers are the few ones which might conflict with modern third-party libraries , e.g. if these
+add their own workarounds for Django incompatibilites).
 
 This behaviour can be customized via the Django settings below.
 
@@ -67,7 +70,7 @@ List of fixer identifiers to include. If :code:`"*"` is used, then all fixers ar
 
 In rare case of name conflicts when using several registries at once, you may use qualified qualified fixer names like "fixer_family|fixer_id".
 
-| **Default:** :code:`"*"`
+| **Default:** :code:`'*'`
 | **Type:** List of strings, or :code:`"*"`
 | **Example:** :code:`DCP_INCLUDE_FIXER_IDS = ['fix_deletion_templatetags_future_url']`
 
@@ -117,7 +120,7 @@ DCP_PATCH_INJECTED_OBJECTS
 
 By default, the patcher adds a :code:`__dcp_injected__ = True` attribute to the injected objects (callables, classes, modules, attributes...), when possible, to differentiate them from original ones. Set this setting to True to automatically choose the attribute name, or False to disable the feature.
 
-| **Default:** :code:`"__dcp_injected__"`
+| **Default:** :code:`'__dcp_injected__'`
 | **Type:** Str (or Boolean)
 | **Example:** :code:`DCP_PATCH_INJECTED_OBJECTS = False`
 
@@ -144,7 +147,7 @@ This setting sets the logging level of that information stream, which is typical
 
 Note that DCP does NOT actually use stdlib loggers, because it mostly performs operations before Django logging has been setup (ex. using the LOGGING setting), so log entries would most probably get discarded.
 
-| **Default:** :code:`"INFO"`
+| **Default:** :code:`'INFO'`
 | **Type:** Logging level string, or None
 | **Example:** :code:`DCP_LOGGING_LEVEL = "DEBUG"`
 
