@@ -21,10 +21,14 @@ Feel free to ask for (or contribute) new fixers, for backwards or forwards compa
 How to setup
 ==================
 
-
 Django-compat-patcher is currently tested on python2.7/3.4/3.5/3.6/3.7/3.8, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0, where these combinations make sense (e.g. Django2+ dropped support for Python2).
 
-Add :code:`django-compat-patcher` to your pip requirements, install it, and then activate it with::
+First add :code:`django-compat-patcher` to your project requirements, or install it directly with `pip install django-compat-patcher`.
+
+Activation method 1 - with code
+******************************************
+
+You can activate patching with::
     
     import django_compat_patcher
     django_compat_patcher.patch()
@@ -42,8 +46,27 @@ Despite DCP patching, you might encounter errors raised by the Django check fram
     (fields.E900) IPAddressField has been removed except for support in historical migrations. HINT: Use GenericIPAddressField instead.
     (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
 
+Activation method 2 - with launcher
+******************************************
 
-Django settings for DCP
+You may force the patching of Django at python startup using https://pypi.org/project/main-wrapper/::
+
+    pip install main-wrapper
+    export DJANGO_SETTINGS_MODULE=<your-settings-module>  # Mandatory
+    export DCP_INCLUDE_FIXER_FAMILIES='["django3.0"]'  # Optional DCP setting tweaks
+    python-main-wrapper django_compat_patcher:patch <your-normal-command-line>
+
+This unintrusive method is especially useful to repeatedly launch the unit-tests of a library, with different settings, and thus
+determine how many fixers it needs to function properly under latest Django version::
+
+    python-main-wrapper django_compat_patcher:patch django test
+    python-main-wrapper django_compat_patcher:patch pytest
+    python-main-wrapper django_compat_patcher:patch -m <some-module>
+
+See `python-main-wrapper -h` for more details on this launcher.
+
+
+Tweaking DCP settings
 ==========================
 
 By default, DCP emits logs and warnings when patching the code, and applies all "relevant" fixers,
@@ -52,15 +75,15 @@ i.e all that support your currently installed django version, and are not deemed
 Unsafe fixers are the few ones which might conflict with modern third-party libraries , e.g. if these
 add their own workarounds for Django incompatibilites (see `DCP_EXCLUDE_FIXER_IDS` default below).
 
-This behaviour can be customized via the Django settings below.
+This behaviour can be customized via the Django settings documented below.
 
 Note however, that some fixers depend on other fixers, so it's advised to be consistent and always include contiguous series of fixers around your current version (ex. if you use Django1.11, apply fixers from Django1.8 up to Django1.11, or up to Django2.X if yo want some forward compatibility as well). DCP filters out, by himself, fixers which are useless for your Django version.
 
-You may provide a "settings" dictionary directly to the patch() method, in which case the DCP django settings of your project will be **entirely** ignored (only DCP library defaults will be used as fallbacks)::
+You might also provide a `settings` dictionary directly to `patch()`, in which case the DCP django settings of your project will be **entirely** ignored (only DCP library defaults will be used as fallbacks)::
 
     django_compat_patcher.patch(settings=dict(DCP_INCLUDE_FIXER_IDS=["my_fixer_id"]))
 
-It is also possible to override only one or more of these settings, using environment variables with the same name (e.g. "DCP_INCLUDE_FIXER_IDS"),
+It is also possible to override only one or more of these settings by using environment variables with the same name (e.g. "DCP_INCLUDE_FIXER_IDS"),
 in JSON format (so a string must be passed as '"*"' for example, or a boolean as 'true'; beware of single quotes, forbidden for JSON strings).
 
 Note that exclusion filters have precedence over inclusion ones.
