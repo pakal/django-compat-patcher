@@ -8,6 +8,8 @@ Version 0.8
 * add fixer for get_cache() removable in Django>=1.9
 * add fixer to preserve optparse support in django>=1.0
 * update test coverage to python3.8 and Django3.0
+* allow passing DCP settings as ENV variables
+* add instructions on how to unintrusively patch Django via python-main-wrapper
 
 
 Version 0.7.1

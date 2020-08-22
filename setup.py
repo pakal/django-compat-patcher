@@ -45,7 +45,7 @@ setup(
     url="https://github.com/pakal/django-compat-patcher",
     license="MIT",
     platforms=["any"],
-    description="A monkey-patching system to ease the transition between Django versions.",
+    description="A monkey-patcher to ease the transition of project to latest Django versions.",
     classifiers=filter(None, classifiers.split("\n")),
     long_description=read("README.rst"),
     package_dir={"": "src"},
