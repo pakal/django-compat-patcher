@@ -61,7 +61,7 @@ You may provide a "settings" dictionary directly to the patch() method, in which
     django_compat_patcher.patch(settings=dict(DCP_INCLUDE_FIXER_IDS=["my_fixer_id"]))
 
 It is also possible to override only one or more of these settings, using environment variables with the same name (e.g. "DCP_INCLUDE_FIXER_IDS"),
-in JSON format (so a string must be passed as '"*"' for example, or a boolean as 'true').
+in JSON format (so a string must be passed as '"*"' for example, or a boolean as 'true'; beware of single quotes, forbidden for JSON strings).
 
 Note that exclusion filters have precedence over inclusion ones.
 
