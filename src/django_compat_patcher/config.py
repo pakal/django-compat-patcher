@@ -32,7 +32,7 @@ class DjangoSettingsProvider(object):
 
         value = getenv(item, default=None)
         if value is not None:
-            return json.loads(value)
+                return json.loads(value)
 
         try:
             value = self._settings[item]
