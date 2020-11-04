@@ -20,3 +20,10 @@ def test_fix_deletion_db_models_fields_FieldDoesNotExist():
 
     from django.db.models import fields
     assert "FieldDoesNotExist" in fields.__all__
+
+
+def test_fix_deletion_forms_forms_pretty_name_BoundField():
+    from django.forms.forms import BoundField
+    assert BoundField
+    from django.forms.forms import pretty_name
+    assert pretty_name("my_dog") == "My dog"

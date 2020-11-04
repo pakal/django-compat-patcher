@@ -40,3 +40,18 @@ def fix_deletion_db_models_fields_FieldDoesNotExist(utils):
 
     utils.inject_class(fields, "FieldDoesNotExist", FieldDoesNotExist)
     fields.__all__.append("FieldDoesNotExist")  # Preserve star import
+
+
+@django1_31_bc_fixer()
+def fix_deletion_forms_forms_pretty_name_BoundField(utils):
+    """
+    Preserve the compatibility imports of django.forms.utils.pretty_name() and
+    django.forms.boundfield.BoundField in django.forms.forms
+    """
+    from django.forms import forms
+
+    from django.forms.boundfield import BoundField
+    from django.forms.utils import pretty_name
+
+    utils.inject_class(forms, "BoundField", BoundField)
+    utils.inject_callable(forms, "pretty_name", pretty_name)
