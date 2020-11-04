@@ -27,3 +27,8 @@ def test_fix_deletion_forms_forms_pretty_name_BoundField():
     assert BoundField
     from django.forms.forms import pretty_name
     assert pretty_name("my_dog") == "My dog"
+
+
+def test_fix_deletion_forms_fields_EMPTY_VALUES():
+    from django.forms.fields import EMPTY_VALUES
+    assert EMPTY_VALUES

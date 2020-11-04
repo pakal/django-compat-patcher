@@ -55,3 +55,13 @@ def fix_deletion_forms_forms_pretty_name_BoundField(utils):
 
     utils.inject_class(forms, "BoundField", BoundField)
     utils.inject_callable(forms, "pretty_name", pretty_name)
+
+
+@django1_31_bc_fixer()
+def fix_deletion_forms_fields_EMPTY_VALUES(utils):
+    """
+    Preserve the compatibility import of django.core.validators.EMPTY_VALUES in django.forms.fields
+    """
+    from django.core.validators import EMPTY_VALUES
+    from django.forms import fields
+    utils.inject_attribute(fields, "EMPTY_VALUES", EMPTY_VALUES)
