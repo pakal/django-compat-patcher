@@ -12,3 +12,11 @@ def test_fix_deletion_db_models_submodules_EmptyResultSet():
 
     import django.db.models.sql
     assert "EmptyResultSet" in django.db.models.sql.__all__
+
+
+def test_fix_deletion_db_models_fields_FieldDoesNotExist():
+    from django.db.models.fields import FieldDoesNotExist
+    assert FieldDoesNotExist
+
+    from django.db.models import fields
+    assert "FieldDoesNotExist" in fields.__all__

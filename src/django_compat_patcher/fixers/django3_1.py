@@ -28,3 +28,15 @@ def fix_deletion_db_models_submodules_EmptyResultSet(utils):
     utils.inject_class(datastructures, "EmptyResultSet", EmptyResultSet)
 
     sql.__all__.append("EmptyResultSet")  # Preserve star import
+
+
+@django1_31_bc_fixer()
+def fix_deletion_db_models_fields_FieldDoesNotExist(utils):
+    """
+    Preserve compatibility import of django.core.exceptions.FieldDoesNotExist in django.db.models.fields
+    """
+    from django.core.exceptions import FieldDoesNotExist
+    from django.db.models import fields
+
+    utils.inject_class(fields, "FieldDoesNotExist", FieldDoesNotExist)
+    fields.__all__.append("FieldDoesNotExist")  # Preserve star import
