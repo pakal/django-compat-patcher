@@ -12,7 +12,10 @@ def test_fix_deletion_utils_translation_string_concat():
 def test_fix_behaviour_widget_render_forced_renderer():
 
     from django import forms
-    from django.forms.forms import BoundField  # not propagated in django1.8
+    try:
+        from django.forms import BoundField
+    except ImportError:
+        from django.forms.forms import BoundField  # not propagated in django1.8
 
     class MyForm(forms.Form):
         my_field = forms.CharField(label="My field", max_length=100)
