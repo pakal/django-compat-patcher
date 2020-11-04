@@ -65,3 +65,25 @@ def fix_deletion_forms_fields_EMPTY_VALUES(utils):
     from django.core.validators import EMPTY_VALUES
     from django.forms import fields
     utils.inject_attribute(fields, "EMPTY_VALUES", EMPTY_VALUES)
+
+
+@django1_31_bc_fixer()
+def fix_deletion_template_base_Context_classes(utils):
+    """
+    Preserve the compatibility imports django.template.Context, django.template.RequestContext
+    and django.template.ContextPopException
+    """
+    from django.template.context import (Context, RequestContext, ContextPopException)
+    from django.template import base
+    utils.inject_class(base, "Context", Context)
+    utils.inject_class(base, "RequestContext", RequestContext)
+    utils.inject_class(base, "ContextPopException", ContextPopException)
+
+
+@django1_31_bc_fixer()
+def fix_deletion_core_management_commands_runserver(utils):
+    """
+    Preserve the compatibility alias django.core.management.commands.runserver.BaseRunserverCommand
+    """
+    from django.core.management.commands import runserver
+    utils.inject_class(runserver, "BaseRunserverCommand", runserver.Command)

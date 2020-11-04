@@ -32,3 +32,15 @@ def test_fix_deletion_forms_forms_pretty_name_BoundField():
 def test_fix_deletion_forms_fields_EMPTY_VALUES():
     from django.forms.fields import EMPTY_VALUES
     assert EMPTY_VALUES
+
+
+def test_fix_deletion_template_base_Context_classes():
+    from django.template.base import (Context, RequestContext, ContextPopException)
+    assert Context
+    assert RequestContext
+    assert ContextPopException
+
+
+def test_fix_deletion_core_management_commands_runserver():
+    from django.core.management.commands.runserver import Command, BaseRunserverCommand
+    assert Command is BaseRunserverCommand
