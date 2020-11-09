@@ -13,6 +13,10 @@ def test_fix_deletion_utils_six():
     assert django.utils.six.string_types
     assert six2.string_types
 
+    from django.utils.encoding import six as six3
+    assert isinstance(six3.PY2, bool)
+    assert six3 is six2
+
 
 def test_fix_deletion_utils_upath_npath_abspathu():
     from os.path import abspath

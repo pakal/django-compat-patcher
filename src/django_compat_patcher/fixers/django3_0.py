@@ -15,9 +15,15 @@ django1_30_bc_fixer = partial(
 
 @django1_30_bc_fixer()
 def fix_deletion_utils_six(utils):
-    """Preserve the vendored copy of "six" compatibility utility, in django.utils"""
+    """Preserve the vendored copy of "six" compatibility utility, in django.utils,
+    as well as the `six` import in django.utils.encoding"""
     import six
     utils.inject_import_alias(alias_name="django.utils.six", real_name="six")
+
+    import sys, six
+    from django.utils import encoding
+    if not hasattr(encoding, "six"):
+        utils.inject_attribute(encoding, "six", six)
 
 
 @django1_30_bc_fixer()
