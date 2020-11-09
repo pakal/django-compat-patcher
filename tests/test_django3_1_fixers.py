@@ -1,6 +1,8 @@
 
 import pytest
 
+import _test_utilities
+
 
 def test_fix_deletion_db_models_submodules_EmptyResultSet():
     from django.db.models.query import EmptyResultSet as EmptyResultSet1
@@ -44,3 +46,19 @@ def test_fix_deletion_template_base_Context_classes():
 def test_fix_deletion_core_management_commands_runserver():
     from django.core.management.commands.runserver import Command, BaseRunserverCommand
     assert Command is BaseRunserverCommand
+
+
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (1, 9),
+    reason="requires django.utils.decorators.classproperty introduction",
+)
+def test_fix_deletion_utils_decorators_classproperty():
+    from django.utils.decorators import classproperty
+
+    class MyClass:
+        @classproperty
+        def myfunc(cls):
+            return 43
+
+    assert MyClass.myfunc == 43
+    assert MyClass().myfunc == 43

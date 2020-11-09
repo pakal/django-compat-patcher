@@ -87,3 +87,13 @@ def fix_deletion_core_management_commands_runserver(utils):
     """
     from django.core.management.commands import runserver
     utils.inject_class(runserver, "BaseRunserverCommand", runserver.Command)
+
+
+@django1_31_bc_fixer()
+def fix_deletion_utils_decorators_classproperty(utils):
+    """
+    Preserve django.utils.decorators.classproperty as alias of new django.utils.functional.classproperty
+    """
+    from django.utils.functional import classproperty
+    from django.utils import decorators
+    utils.inject_class(decorators, "classproperty", classproperty)
