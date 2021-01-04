@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 import pytest
+from django.contrib.auth.models import Permission
 
 import _test_utilities
 
@@ -209,3 +210,35 @@ def test_fix_behaviour_contrib_auth_user_is_anonymous_is_authenticated_callabili
         assert user.is_authenticated
         assert user.is_authenticated == 1 == True
 
+
+@pytest.mark.django_db
+def test_fix_behaviour_db_models_fields_related_descriptors_ReverseManyToOneDescriptor_setter(db):
+    from django.contrib.auth.models import User, Group
+    from django.contrib.contenttypes.models import ContentType
+    from test_project.models import SimpleModel, SimpleModelChild
+
+    # MANY2MANY CASE
+
+    group1 = Group.objects.create(name="group1")
+    group2 = Group.objects.create(name="group2")
+    user = User.objects.create_user(username="username")
+
+    assert not group1.user_set.count()
+    assert not group2.user_set.count()
+
+    user.groups = [group1, group2]
+
+    assert group1.user_set.get() == user
+    assert group2.user_set.get() == user
+
+    # MANY2ONE CASE
+
+    model = SimpleModel.objects.create(name="parent")
+    assert model.simplemodelchild_set.count() == 0
+
+    from test_project.models import SimpleModelChild
+    model_child = SimpleModelChild.objects.create(name="child")
+
+    model.simplemodelchild_set = [model_child]
+
+    assert model.simplemodelchild_set.get() == model_child

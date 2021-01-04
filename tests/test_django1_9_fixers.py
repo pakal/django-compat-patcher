@@ -194,6 +194,7 @@ def test_fix_deletion_contrib_sites_models_RequestSite():
     assert issubclass(RequestSite, RealRequestSite)
 
 
+@pytest.mark.django_db
 def test_fix_deletion_contrib_sites_models_get_current_site():
     from django.core.exceptions import ImproperlyConfigured
 
@@ -201,11 +202,10 @@ def test_fix_deletion_contrib_sites_models_get_current_site():
         SITE_ID = 1
 
     from django.contrib.sites.models import get_current_site
-
-    with pytest.raises(ImproperlyConfigured):  # DCP tests have no DB access for now
-        assert get_current_site(request)
+    assert get_current_site(request)
 
 
+@pytest.mark.django_db
 def test_fix_deletion_core_cache_get_cache():
     from django.core.cache import get_cache, caches, DEFAULT_CACHE_ALIAS, InvalidCacheBackendError, close_caches
 

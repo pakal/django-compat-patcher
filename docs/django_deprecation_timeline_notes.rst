@@ -190,7 +190,7 @@ MISSING ENTRY IN OFFICIAL DOCS:
 - The enclosure keyword argument to SyndicationFeed.add_item() will be removed.
 - The django.template.loader.LoaderOrigin and django.template.base.StringOrigin aliases for django.template.base.Origin will be removed.
 - The makemigrations --exit option will be removed.
-- Support for direct assignment to a reverse foreign key or many-to-many relation will be removed.
+- Support for direct assignment to a reverse foreign key or many-to-many relation will be removed.  :kind:`BEHAVIOUR` [FIXED]
 - The get_srid() and set_srid() methods of django.contrib.gis.geos.GEOSGeometry will be removed.
 - The get_x(), set_x(), get_y(), set_y(), get_z(), and set_z() methods of django.contrib.gis.geos.Point will be removed.
 - The get_coords() and set_coords() methods of django.contrib.gis.geos.Point will be removed.

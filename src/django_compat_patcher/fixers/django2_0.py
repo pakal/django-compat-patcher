@@ -285,3 +285,31 @@ def fix_behaviour_contrib_auth_user_is_anonymous_is_authenticated_callability(ut
     utils.inject_attribute(AnonymousUser, "is_anonymous", is_anonymous_for_AnonymousUser)
     utils.inject_attribute(AnonymousUser, "is_authenticated", is_authenticated_for_AnonymousUser)
 
+
+@django1_20_bc_fixer()
+def fix_behaviour_db_models_fields_related_descriptors_ReverseManyToOneDescriptor_setter(utils):
+    """
+    Restore support for direct assignment to the reverse side of a related set, in many-to-one and many-to-many relationships.
+    """
+    from django.db.models.fields.related_descriptors import ReverseManyToOneDescriptor
+
+    def __set__(self, instance, value):
+        """
+        Set the related objects through the reverse relation.
+
+        With the example above, when setting ``parent.children = children``:
+
+        - ``self`` is the descriptor managing the ``children`` attribute
+        - ``instance`` is the ``parent`` instance
+        - ``value`` is the ``children`` sequence on the right of the equal sign
+        """
+        utils.emit_warning(
+            'Direct assignment to the %s is deprecated due to the implicit '
+            'save() that happens. Use %s.set() instead.' % self._get_set_deprecation_msg_params(),
+            RemovedInDjango20Warning, stacklevel=2,
+        )
+        manager = self.__get__(instance)
+        manager.set(value)
+        print(">>>>>>>>> WE HAVE SET MANAGER TO", value)
+
+    ReverseManyToOneDescriptor.__set__ = __set__
