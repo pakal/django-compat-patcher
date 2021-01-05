@@ -1,12 +1,22 @@
 
 
+Version 0.9
+==================
+
+* add testing for Python3.9 and Django3.1
+* add lots of trivial fixers for Django3.1 compatibility (mostly moved/deleted utilities)
+* add "unsafe" (disabled by default) fixers for removed postgres utils
+* add forward-compatibility fixer for signature "setup_test_environment(debug=None)" of Django1.11, to please pytest-django
+* add Django2.0 fixer to reallow direct assignment to reverse side of a related set
+
+
 Version 0.8
 ==================
 
 * add lots of trivial fixers for Django3.0 compatibility
 * add fixer to preserve callability of user.is_authenticated and user.is_anonymous in Django>=2.0
 * add fixer for get_cache() removable in Django>=1.9
-* add fixer to preserve optparse support in django>=1.0
+* add "unsafe" (disabled by default) fixer to preserve optparse support in django>=1.0
 * update test coverage to python3.8 and Django3.0
 * allow passing DCP settings as ENV variables
 * add instructions on how to unintrusively patch Django via python-main-wrapper
