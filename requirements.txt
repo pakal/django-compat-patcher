@@ -2,4 +2,4 @@
 
 # External ports of contrib packages removed from django
 # Stored here because of conflicts with some django versions (see tox.ini)
-django-contrib-comments==1.9.2
+django-contrib-comments<2
