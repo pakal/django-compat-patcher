@@ -12,3 +12,5 @@ git+https://github.com/arteria/django-compat@597bd81a635dec7fdfcccf09b5c95df6361
 tox==3.20.1
 check-manifest>=0.40
 
+# Necessary to test postgres utils
+psycopg2>=2.8
