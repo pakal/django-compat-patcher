@@ -310,7 +310,7 @@ def fix_deletion_core_context_processors(utils):
 
 @django1_10_bc_fixer()
 def fix_behaviour_core_management_parser_optparse(utils):
-    """Preserve the support for old optparse instead of argparse parser, in management commands.
+    """[UNSAFE] Preserve the support for old optparse instead of argparse parser, in management commands.
 
     Beware, Bash shell autocompletion might fail if some management commands use Optparse!
     """
