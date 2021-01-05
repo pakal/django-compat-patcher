@@ -12,6 +12,28 @@ django1_11_bc_fixer = partial(
 )
 
 
+@register_django_compatibility_fixer(
+    fixer_reference_version="1.11", fixer_applied_upto_version="1.11"
+)
+def fix_incoming_test_utils_setup_test_environment_signature_change(utils):
+    """
+    Set a forward compatibility wrapper for setup_test_environment() which takes a "debug" argument later.
+    """
+    import inspect
+    from django.test import utils as django_utils
+
+    original_setup_test_environment = django_utils.setup_test_environment
+
+    # Sanity check
+    argspec = inspect.getargspec(original_setup_test_environment)
+    assert not argspec.args, argspec
+
+    def setup_test_environment(debug=None):
+        return original_setup_test_environment()  # No params
+
+    utils.inject_callable(django_utils, "setup_test_environment", setup_test_environment)
+
+
 @django1_11_bc_fixer()
 def fix_behaviour_widget_build_attrs(utils):
     """
@@ -36,21 +58,3 @@ def fix_behaviour_widget_build_attrs(utils):
         return attrs
 
     utils.inject_callable(Widget, "build_attrs", build_attrs)
-
-
-""" CHANGED UTILITY:
-
-def build_attrs(self, extra_attrs=None, **kwargs):
-    "Helper function for building an attribute dictionary."
-    attrs = dict(self.attrs, **kwargs)
-    if extra_attrs:
-        attrs.update(extra_attrs)
-    return attrs
-
-def build_attrs(self, base_attrs, extra_attrs=None):
-    "Helper function for building an attribute dictionary."
-    attrs = base_attrs.copy()
-    if extra_attrs is not None:
-        attrs.update(extra_attrs)
-    return attrs
-"""

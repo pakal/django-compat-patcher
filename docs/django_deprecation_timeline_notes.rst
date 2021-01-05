@@ -27,7 +27,7 @@ The compatibility imports of Context, ContextPopException, and RequestContext in
 The compatibility import of django.contrib.admin.helpers.ACTION_CHECKBOX_NAME in django.contrib.admin is removed.  :kind:`DELETION` [FIXED]
 The STATIC_URL and MEDIA_URL settings set to relative paths are now prefixed by the server-provided value of SCRIPT_NAME (or / if not set). This change should not affect settings set to valid URLs or absolute paths.
 ConditionalGetMiddleware no longer adds the ETag header to responses with an empty content.
-django.utils.decorators.classproperty() decorator is made public and moved to django.utils.functional.classproperty().
+django.utils.decorators.classproperty() decorator is made public and moved to django.utils.functional.classproperty().  :kind:`DELETION` [FIXED]
 floatformat template filter now outputs (positive) 0 for negative numbers which round to zero.
 Meta.ordering and Meta.unique_together options on models in django.contrib modules that were formerly tuples are now lists.
 The admin calendar widget now handles two-digit years according to the Open Group Specification, i.e. values between 69 and 99 are mapped to the previous century, and values between 0 and 68 are mapped to the current century.

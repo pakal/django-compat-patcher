@@ -1,5 +1,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
+import pytest
+
 import _test_utilities
 
 
@@ -20,3 +22,10 @@ def test_fix_behaviour_widget_build_attrs():
     else:
         attrs = select.build_attrs({"this": "no"})  # new behavior
         assert attrs == {"this": "no"}  # no self.attrs added
+
+
+def test_fix_incoming_test_utils_setup_test_environment_signature_change():
+    from django.test.utils import setup_test_environment
+
+    with pytest.raises(RuntimeError, match="already called"):
+        setup_test_environment(debug=True)
