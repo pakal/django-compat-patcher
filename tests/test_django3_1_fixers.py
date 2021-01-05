@@ -82,7 +82,7 @@ def test_fix_deletion_views_debug_ExceptionReporterFilter():
     assert filter.get_post_parameters(None) == {}
 
 
-def test_fix_deletion_contrib_postgres_forms_InvalidJSONInput_JSONString():
+def test_fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString():
 
     # We expect psycopg2 to be installed here
 
@@ -106,3 +106,17 @@ def test_fix_deletion_contrib_postgres_forms_InvalidJSONInput_JSONString():
         assert _JSONString is JSONString
 
     # This fixer is UNSAFE since it requires psycopg2
+    fixer_id = "fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString"
+    assert django_patching_registry.get_fixer_by_id(fixer_id)
+    assert fixer_id in default_settings.DCP_EXCLUDE_FIXER_IDS
+
+
+def test_fix_deletion_contrib_postgres_fields_jsonb_JsonAdapter():
+
+    from django.contrib.postgres.fields.jsonb import JsonAdapter
+    assert JsonAdapter.dumps  # Hard to test here...
+
+    # This fixer is UNSAFE since it requires psycopg2
+    fixer_id = "fix_deletion_contrib_postgres_fields_jsonb_JsonAdapter"
+    assert django_patching_registry.get_fixer_by_id(fixer_id)
+    assert fixer_id in default_settings.DCP_EXCLUDE_FIXER_IDS

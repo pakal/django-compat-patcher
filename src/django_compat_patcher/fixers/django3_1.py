@@ -137,10 +137,10 @@ def fix_deletion_views_debug_ExceptionReporterFilter(utils):
     utils.inject_class(debug_module, "ExceptionReporterFilter", ExceptionReporterFilter)
 
 @django1_31_bc_fixer()
-def fix_deletion_contrib_postgres_forms_InvalidJSONInput_JSONString(utils):
+def fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString(utils):
     """[UNSAFE] Preserve undocumented InvalidJSONInput and JSONString classes in django.contrib.postgres.forms.jsonb
 
-    Requires psycopg2 or similar Postgres backend to be installed.
+    Requires psycopg2 to be installed.
     """
 
     from django.contrib.postgres.forms import jsonb
@@ -149,3 +149,31 @@ def fix_deletion_contrib_postgres_forms_InvalidJSONInput_JSONString(utils):
     utils.inject_class(jsonb, "InvalidJSONInput", InvalidJSONInput)
     utils.inject_class(jsonb, "JSONString", JSONString)
     # We do not alter __all__ here, these were private utilities!
+
+
+@django1_31_bc_fixer()
+def fix_deletion_contrib_postgres_fields_jsonb_JsonAdapter(utils):
+    """[UNSAFE] Preserve undocumented JsonAdapter class in django.contrib.postgres.fields.jsonb
+
+    Requires psycopg2 to be installed.
+    """
+    from django.contrib.postgres.fields import jsonb
+
+    import json
+    from psycopg2.extras import Json
+
+    class JsonAdapter(Json):
+        """
+        Customized psycopg2.extras.Json to allow for a custom encoder.
+        """
+
+        def __init__(self, adapted, dumps=None, encoder=None):
+            self.encoder = encoder
+            super().__init__(adapted, dumps=dumps)
+
+        def dumps(self, obj):
+            options = {'cls': self.encoder} if self.encoder else {}
+            return json.dumps(obj, **options)
+
+    utils.inject_class(jsonb, "JsonAdapter", JsonAdapter)
+    # We do not alter __all__ here, it was a private utility!
