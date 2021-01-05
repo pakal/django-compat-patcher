@@ -33,7 +33,7 @@ Meta.ordering and Meta.unique_together options on models in django.contrib modul
 The admin calendar widget now handles two-digit years according to the Open Group Specification, i.e. values between 69 and 99 are mapped to the previous century, and values between 0 and 68 are mapped to the current century.
 Date-only formats are removed from the default list for DATETIME_INPUT_FORMATS.
 The FileInput widget no longer renders with the required HTML attribute when initial data exists.
-The undocumented django.views.debug.ExceptionReporterFilter class is removed. As per the Custom error reports documentation, classes to be used with DEFAULT_EXCEPTION_REPORTER_FILTER need to inherit from django.views.debug.SafeExceptionReporterFilter.
+The undocumented django.views.debug.ExceptionReporterFilter class is removed. As per the Custom error reports documentation, classes to be used with DEFAULT_EXCEPTION_REPORTER_FILTER need to inherit from django.views.debug.SafeExceptionReporterFilter.  :kind:`DELETION` [FIXED]
 The cache timeout set by cache_page() decorator now takes precedence over the max-age directive from the Cache-Control header.
 Providing a non-local remote field in the ForeignKey.to_field argument now raises FieldError.
 SECURE_REFERRER_POLICY now defaults to 'same-origin'. See the What’s New Security section above for more details.

@@ -109,3 +109,29 @@ def fix_deletion_contrib_admin_ACTION_CHECKBOX_NAME(utils):
 
     utils.inject_attribute(admin, "ACTION_CHECKBOX_NAME", ACTION_CHECKBOX_NAME)
     admin.__all__.append("ACTION_CHECKBOX_NAME")
+
+
+@django1_31_bc_fixer()
+def fix_deletion_views_debug_ExceptionReporterFilter(utils):
+    """
+    Preserve undocumented ExceptionReporterFilter class
+    """
+    from django.views import debug as debug_module
+
+    class ExceptionReporterFilter:
+        """
+        Base for all exception reporter filter classes. All overridable hooks
+        contain lenient default behaviors.
+        """
+
+        def get_post_parameters(self, request):
+            if request is None:
+                return {}
+            else:
+                return request.POST
+
+        def get_traceback_frame_variables(self, request, tb_frame):
+            return list(tb_frame.f_locals.items())
+
+    # Beware, it's not the parent of SafeExceptionReporterFilter anymore, but it shouldn't be a problem
+    utils.inject_class(debug_module, "ExceptionReporterFilter", ExceptionReporterFilter)

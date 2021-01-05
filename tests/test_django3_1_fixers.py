@@ -71,3 +71,9 @@ def test_fix_deletion_contrib_admin_ACTION_CHECKBOX_NAME():
 
     import django.contrib.admin
     assert "ACTION_CHECKBOX_NAME" in django.contrib.admin.__all__
+
+
+def test_fix_deletion_views_debug_ExceptionReporterFilter():
+    from django.views.debug import ExceptionReporterFilter
+    filter = ExceptionReporterFilter()
+    assert filter.get_post_parameters(None) == {}
