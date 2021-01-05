@@ -135,3 +135,17 @@ def fix_deletion_views_debug_ExceptionReporterFilter(utils):
 
     # Beware, it's not the parent of SafeExceptionReporterFilter anymore, but it shouldn't be a problem
     utils.inject_class(debug_module, "ExceptionReporterFilter", ExceptionReporterFilter)
+
+@django1_31_bc_fixer()
+def fix_deletion_contrib_postgres_forms_InvalidJSONInput_JSONString(utils):
+    """[UNSAFE] Preserve undocumented InvalidJSONInput and JSONString classes in django.contrib.postgres.forms.jsonb
+
+    Requires psycopg2 or similar Postgres backend to be installed.
+    """
+
+    from django.contrib.postgres.forms import jsonb
+    from django.forms.fields import InvalidJSONInput, JSONString
+
+    utils.inject_class(jsonb, "InvalidJSONInput", InvalidJSONInput)
+    utils.inject_class(jsonb, "JSONString", JSONString)
+    # We do not alter __all__ here, these were private utilities!

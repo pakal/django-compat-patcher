@@ -3,6 +3,9 @@ import pytest
 
 import _test_utilities
 
+from django_compat_patcher import default_settings
+from django_compat_patcher.registry import django_patching_registry
+
 
 def test_fix_deletion_db_models_submodules_EmptyResultSet():
     from django.db.models.query import EmptyResultSet as EmptyResultSet1
@@ -77,3 +80,29 @@ def test_fix_deletion_views_debug_ExceptionReporterFilter():
     from django.views.debug import ExceptionReporterFilter
     filter = ExceptionReporterFilter()
     assert filter.get_post_parameters(None) == {}
+
+
+def test_fix_deletion_contrib_postgres_forms_InvalidJSONInput_JSONString():
+
+    # We expect psycopg2 to be installed here
+
+    # These upper level imports NEVER existed!
+    with pytest.raises(ImportError):
+        from django.contrib.postgres.forms import InvalidJSONInput
+    with pytest.raises(ImportError):
+        from django.contrib.postgres.forms import JSONString
+
+    from django.contrib.postgres.forms.jsonb import InvalidJSONInput, JSONString
+
+    assert InvalidJSONInput("hello")
+    assert JSONString("something")
+
+    try:
+        from django.forms.fields import InvalidJSONInput as _InvalidJSONInput, JSONString as _JSONString
+    except ImportError:
+        pass  # It's OK, these do not exist yet
+    else:
+        assert _InvalidJSONInput is InvalidJSONInput
+        assert _JSONString is JSONString
+
+    # This fixer is UNSAFE since it requires psycopg2
