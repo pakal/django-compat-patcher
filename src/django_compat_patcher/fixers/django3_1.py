@@ -97,3 +97,15 @@ def fix_deletion_utils_decorators_classproperty(utils):
     from django.utils.functional import classproperty
     from django.utils import decorators
     utils.inject_class(decorators, "classproperty", classproperty)
+
+
+@django1_31_bc_fixer()
+def fix_deletion_contrib_admin_ACTION_CHECKBOX_NAME(utils):
+    """
+    Preserve import of ACTION_CHECKBOX_NAME in django.contrib.admin
+    """
+    from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
+    from django.contrib import admin
+
+    utils.inject_attribute(admin, "ACTION_CHECKBOX_NAME", ACTION_CHECKBOX_NAME)
+    admin.__all__.append("ACTION_CHECKBOX_NAME")

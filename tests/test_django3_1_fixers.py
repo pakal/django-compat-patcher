@@ -62,3 +62,12 @@ def test_fix_deletion_utils_decorators_classproperty():
 
     assert MyClass.myfunc == 43
     assert MyClass().myfunc == 43
+
+
+def test_fix_deletion_contrib_admin_ACTION_CHECKBOX_NAME():
+    from django.contrib.admin import ACTION_CHECKBOX_NAME, autodiscover
+    del autodiscover  # Proper module is targeted
+    assert ACTION_CHECKBOX_NAME == "_selected_action"
+
+    import django.contrib.admin
+    assert "ACTION_CHECKBOX_NAME" in django.contrib.admin.__all__
