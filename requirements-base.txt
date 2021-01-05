@@ -1,12 +1,14 @@
-compat-patcher-core
-six
+compat-patcher-core==1.1
+six==1.15.0
 
-## FOR TESTING AND BUILDING ##
+## DEPENDENCIES FOR TESTING AND BUILDING ##
 
-pytest
-pytest-cov
-git+https://github.com/arteria/django-compat
+pytest>=4.6.11,<7
+pytest-django>=3.10<4
+pytest-cov>=2
 
-tox
-check-manifest
+git+https://github.com/arteria/django-compat@597bd81a635dec7fdfcccf09b5c95df63615dbf2
+
+tox==3.20.1
+check-manifest>=0.40
 
