@@ -40,12 +40,12 @@ SECURE_REFERRER_POLICY now defaults to 'same-origin'. See the What’s New Secur
 check management command now runs the database system checks only for database aliases specified using check --database option.
 migrate management command now runs the database system checks only for a database to migrate.
 The admin CSS classes row1 and row2 are removed in favor of :nth-child(odd) and :nth-child(even) pseudo-classes.
-The make_password() function now requires its argument to be a string or bytes. Other types should be explicitly cast to one of these.
+The make_password() function now requires its argument to be a string or bytes. Other types should be explicitly cast to one of these.  :kind:`BEHAVIOUR` [WONTFIX]
 The undocumented version parameter to the AsKML function is removed.
 JSON and YAML serializers, used by dumpdata, now dump all data with Unicode by default. If you need the previous behavior, pass ensure_ascii=True to JSON serializer, or allow_unicode=False to YAML serializer.
 The auto-reloader no longer monitors changes in built-in Django translation files.
 The minimum supported version of mysqlclient is increased from 1.3.13 to 1.4.0.
-The undocumented django.contrib.postgres.forms.InvalidJSONInput and django.contrib.postgres.forms.JSONString are moved to django.forms.fields.
+The undocumented django.contrib.postgres.forms.InvalidJSONInput and django.contrib.postgres.forms.JSONString are moved to django.forms.fields.  :kind:`DELETION` [FIXED]
 The undocumented django.contrib.postgres.fields.jsonb.JsonAdapter class is removed.
 The {% localize off %} tag and unlocalize filter no longer respect DECIMAL_SEPARATOR setting.
 The minimum supported version of asgiref is increased from 3.2 to 3.2.10.
