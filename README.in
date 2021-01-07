@@ -26,7 +26,7 @@ Django-compat-patcher is currently tested on python2.7/3.4/3.5/3.6/3.7/3.8, with
 First add :code:`django-compat-patcher` to your project requirements, or install it directly with `pip install django-compat-patcher`.
 
 Activation method 1 - with code
----------------------------------
+*********************************
 
 You can activate patching with::
     
@@ -47,7 +47,7 @@ Despite DCP patching, you might encounter errors raised by the Django check fram
     (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
 
 Activation method 2 - with launcher
---------------------------------------
+*************************************
 
 You may force the patching of Django at python startup using https://pypi.org/project/main-wrapper/::
 
