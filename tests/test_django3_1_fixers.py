@@ -82,6 +82,10 @@ def test_fix_deletion_views_debug_ExceptionReporterFilter():
     assert filter.get_post_parameters(None) == {}
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (1, 11),
+    reason="requires posgres forms jsonb module",
+)
 def test_fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString():
 
     # We expect psycopg2 to be installed here
@@ -111,6 +115,10 @@ def test_fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString()
     assert fixer_id in default_settings.DCP_EXCLUDE_FIXER_IDS
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (1, 11),
+    reason="requires posgres fields jsonb module",
+)
 def test_fix_deletion_contrib_postgres_fields_jsonb_JsonAdapter():
 
     from django.contrib.postgres.fields.jsonb import JsonAdapter
