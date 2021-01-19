@@ -133,3 +133,17 @@ def test_fix_deletion_contrib_staticfiles_templatetags_and_admin_static():
     tpl = Template("{% load staticfiles %}Here is: {% static \"myotherfile.jpg\" %}")
     data = tpl.render(Context())
     assert data == "Here is: /static/myotherfile.jpg"
+
+
+@pytest.mark.django_db
+def test_fix_behaviour_db_models_query_QuerySet_earliest_latest():
+    from test_project.models import SimpleModel
+
+    SimpleModel.objects.create(name="Max", age=10, is_active=True)
+    SimpleModel.objects.create(name="Sandy", age=26, is_active=True)
+
+    assert SimpleModel.objects.earliest("age").name == "Max"
+    assert SimpleModel.objects.latest("age").name == "Sandy"
+
+    assert SimpleModel.objects.earliest(field_name="age").name == "Max"
+    assert SimpleModel.objects.latest(field_name="age").name == "Sandy"

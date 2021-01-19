@@ -264,3 +264,40 @@ def fix_deletion_contrib_staticfiles_templatetags_and_admin_static(utils):
         return libraries
 
     utils.inject_callable(django_templates, "get_installed_libraries", get_installed_libraries)
+
+
+@django1_30_bc_fixer()
+def fix_behaviour_db_models_query_QuerySet_earliest_latest(utils):
+    """Preserve the field_name keyword argument to QuerySet.earliest() and latest()"""
+
+    from django.db.models.query import QuerySet
+
+    _original_earliest = QuerySet._earliest
+
+    def _earliest(self, *fields, field_name=None, **kwargs):
+        """
+        Return the earliest object according to fields (if given) or by the
+        model's Meta.get_latest_by.
+        """
+        if fields and field_name is not None:
+            raise ValueError('Cannot use both positional arguments and the field_name keyword argument.')
+
+        if field_name is not None:
+            warnings.warn(
+                'The field_name keyword argument to earliest() and latest() '
+                'is deprecated in favor of passing positional arguments.',
+                RemovedInDjango30Warning,
+            )
+            fields = (field_name,)
+
+        return _original_earliest(self, *fields, **kwargs)
+
+    def earliest(self, *fields, field_name=None, **kwargs):
+        return self._earliest(*fields, field_name=field_name, **kwargs)
+
+    def latest(self, *fields, field_name=None, **kwargs):
+        return self.reverse()._earliest(*fields, field_name=field_name, **kwargs)
+
+    utils.inject_callable(QuerySet, "_earliest", _earliest)  # Used by all
+    utils.inject_callable(QuerySet, "earliest", earliest)
+    utils.inject_callable(QuerySet, "latest", latest)
