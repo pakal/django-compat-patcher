@@ -12,7 +12,6 @@ django1_31_bc_fixer = partial(
     fixer_applied_from_version="3.1",
 )
 
-
 @django1_31_bc_fixer()
 def fix_deletion_db_models_submodules_EmptyResultSet(utils):
     """Preserve compatibility imports of django.core.exceptions.EmptyResultSet in

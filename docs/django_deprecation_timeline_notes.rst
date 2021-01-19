@@ -93,14 +93,14 @@ Features removed in 3.0:
 
 - The django.db.backends.postgresql_psycopg2 module is removed.
 - django.shortcuts.render_to_response() is removed.  :kind:`DELETION` [FIXED]
-- The DEFAULT_CONTENT_TYPE setting is removed.
-- HttpRequest.xreadlines() is removed.
+- The DEFAULT_CONTENT_TYPE setting is removed.  [WONTFIX?]
+- HttpRequest.xreadlines() is removed.  :kind:`DELETION` [FIXED]
 - Support for the context argument of Field.from_db_value() and Expression.convert_value() is removed.
 - The field_name keyword argument of QuerySet.earliest() and latest() is removed.
 - The ForceRHR GIS function is removed.
-- django.utils.http.cookie_date() is removed.
-- The staticfiles and admin_static template tag libraries are removed.
-- django.contrib.staticfiles.templatetags.staticfiles.static() is removed.
+- django.utils.http.cookie_date() is removed.   :kind:`DELETION` [FIXED]
+- The staticfiles and admin_static template tag libraries are removed.    :kind:`DELETION` [FIXED]
+- django.contrib.staticfiles.templatetags.staticfiles.static() is removed.    :kind:`DELETION` [FIXED]
 
 
 2.2
