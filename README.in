@@ -46,6 +46,12 @@ Despite DCP patching, you might encounter errors raised by the Django check fram
     (fields.E900) IPAddressField has been removed except for support in historical migrations. HINT: Use GenericIPAddressField instead.
     (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
 
+**Note for Pytest-Django users**
+
+Pytest-Django triggers `django.setup()` early during test suite execution, so to place your `django_compat_patcher.patch()` before,
+you might have to use a `pytest plugin as explained here <https://pytest-django.readthedocs.io/en/latest/configuring_django.html?highlight=plugin#changing-your-app-before-django-gets-set-up>`_. Use plugin `pytest-pythonpath` if your plugin is not at repository root.
+
+
 Activation method 2 - with launcher
 *************************************
 
