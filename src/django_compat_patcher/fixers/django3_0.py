@@ -210,3 +210,30 @@ def fix_deletion_http_request_HttpRequest_xreadlines(utils):
         for line in self:
             yield line
     utils.inject_callable(HttpRequest, "xreadlines", xreadlines)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_utils_http_cookie_date(utils):
+    """Preserve django. utils.http.cookie_date(), superseded by http_date()."""
+    from django.utils import http
+
+    def cookie_date(epoch_seconds=None):
+        """
+        Format the time to ensure compatibility with Netscape's cookie standard.
+
+        `epoch_seconds` is a floating point number expressed in seconds since the
+        epoch, in UTC - such as that outputted by time.time(). If set to None, it
+        defaults to the current time.
+
+        Output a string in the format 'Wdy, DD-Mon-YYYY HH:MM:SS GMT'.
+        """
+        from email.utils import formatdate
+        warnings.warn(
+            'cookie_date() is deprecated in favor of http_date(), which follows '
+            'the format of the latest RFC.',
+            RemovedInDjango30Warning, stacklevel=2,
+        )
+        rfcdate = formatdate(epoch_seconds)
+        return '%s-%s-%s GMT' % (rfcdate[:7], rfcdate[8:11], rfcdate[12:25])
+
+    utils.inject_callable(http, "cookie_date", cookie_date)

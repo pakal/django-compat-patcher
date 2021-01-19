@@ -116,3 +116,8 @@ def test_fix_deletion_http_request_HttpRequest_xreadlines():
 
     result = [line for line in request.xreadlines()]
     assert result == [b'hello\n', b'there\n']
+
+
+def test_fix_deletion_utils_http_cookie_date():
+    from django.utils.http import cookie_date
+    assert cookie_date(1611067745) == 'Tue, 19-Jan-2021 14:49:05 GMT'
