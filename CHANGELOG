@@ -1,4 +1,8 @@
 
+Version 0.10
+==================
+* add more fixers for Django 3.0 and 3.1, especially old staticfiles tags
+
 
 Version 0.9
 ==================
