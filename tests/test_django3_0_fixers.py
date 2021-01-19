@@ -18,6 +18,10 @@ def test_fix_deletion_utils_six():
     assert isinstance(six3.PY2, bool)
     assert six3 is six2
 
+    # Old versions of compat-patcher-core crashed due to wrong module names set by six._importer
+    from django.utils.six.moves.urllib.parse import urlencode
+    assert urlencode(dict(name="hêllo")) == "name=h%C3%AAllo"
+
 
 def test_fix_deletion_utils_upath_npath_abspathu():
     from os.path import abspath
