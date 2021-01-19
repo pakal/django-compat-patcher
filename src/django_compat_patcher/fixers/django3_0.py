@@ -274,11 +274,14 @@ def fix_behaviour_db_models_query_QuerySet_earliest_latest(utils):
 
     _original_earliest = QuerySet._earliest
 
-    def _earliest(self, *fields, field_name=None, **kwargs):
+    def _earliest(self, *fields, **kwargs):
         """
         Return the earliest object according to fields (if given) or by the
         model's Meta.get_latest_by.
         """
+
+        field_name = kwargs.pop("field_name", None)
+
         if fields and field_name is not None:
             raise ValueError('Cannot use both positional arguments and the field_name keyword argument.')
 
@@ -292,11 +295,11 @@ def fix_behaviour_db_models_query_QuerySet_earliest_latest(utils):
 
         return _original_earliest(self, *fields, **kwargs)
 
-    def earliest(self, *fields, field_name=None, **kwargs):
-        return self._earliest(*fields, field_name=field_name, **kwargs)
+    def earliest(self, *fields, **kwargs):
+        return self._earliest(*fields, **kwargs)
 
-    def latest(self, *fields, field_name=None, **kwargs):
-        return self.reverse()._earliest(*fields, field_name=field_name, **kwargs)
+    def latest(self, *fields, **kwargs):
+        return self.reverse()._earliest(*fields, **kwargs)
 
     utils.inject_callable(QuerySet, "_earliest", _earliest)  # Used by all
     utils.inject_callable(QuerySet, "earliest", earliest)
