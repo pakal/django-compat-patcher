@@ -1,4 +1,5 @@
 import sys
+from io import BytesIO
 
 import six
 import pytest
@@ -106,3 +107,12 @@ def test_fix_deletion_shortcuts_render_to_response():
     assert res.status_code == 201
     assert six.b("ThiIsATest") in res.content
 
+
+def test_fix_deletion_http_request_HttpRequest_xreadlines():
+    from django.http.request import HttpRequest
+
+    request = HttpRequest()
+    request._stream = BytesIO(b"hello\nthere\n")
+
+    result = [line for line in request.xreadlines()]
+    assert result == [b'hello\n', b'there\n']

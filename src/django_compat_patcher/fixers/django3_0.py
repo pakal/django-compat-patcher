@@ -20,7 +20,6 @@ def fix_deletion_utils_six(utils):
     import six
     utils.inject_import_alias(alias_name="django.utils.six", real_name="six")
 
-    import sys, six
     from django.utils import encoding
     if not hasattr(encoding, "six"):
         utils.inject_attribute(encoding, "six", six)
@@ -197,3 +196,17 @@ def fix_deletion_shortcuts_render_to_response(utils):
         return HttpResponse(content, content_type, status)
 
     utils.inject_callable(shortcuts, "render_to_response", render_to_response)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_http_request_HttpRequest_xreadlines(utils):
+    """Preserve HttpRequest.xreadlines(), replaced by iteration on request object."""
+    from django.http import HttpRequest
+    def xreadlines(self):
+        warnings.warn(
+            'HttpRequest.xreadlines() is deprecated in favor of iterating the '
+            'request.', RemovedInDjango30Warning, stacklevel=2,
+        )
+        for line in self:
+            yield line
+    utils.inject_callable(HttpRequest, "xreadlines", xreadlines)
