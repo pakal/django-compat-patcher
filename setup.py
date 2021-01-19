@@ -50,7 +50,7 @@ setup(
     long_description=read("README.rst"),
     package_dir={"": "src"},
     packages=packages,
-    install_requires=['compat-patcher-core',
+    install_requires=['compat-patcher-core>=1.2',
                       'six',
                       'Django<2;python_version<"3.0"',
                       'Django;python_version>="3.0"'],
