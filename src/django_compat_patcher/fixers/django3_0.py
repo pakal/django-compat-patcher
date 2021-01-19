@@ -214,7 +214,7 @@ def fix_deletion_http_request_HttpRequest_xreadlines(utils):
 
 @django1_30_bc_fixer()
 def fix_deletion_utils_http_cookie_date(utils):
-    """Preserve django. utils.http.cookie_date(), superseded by http_date()."""
+    """Preserve django.utils.http.cookie_date(), superseded by http_date()."""
     from django.utils import http
 
     def cookie_date(epoch_seconds=None):
@@ -237,3 +237,30 @@ def fix_deletion_utils_http_cookie_date(utils):
         return '%s-%s-%s GMT' % (rfcdate[:7], rfcdate[8:11], rfcdate[12:25])
 
     utils.inject_callable(http, "cookie_date", cookie_date)
+
+
+@django1_30_bc_fixer()
+def fix_deletion_contrib_staticfiles_templatetags_and_admin_static(utils):
+    """Preserve staticfiles and admin_static template tag libraries."""
+
+    utils.inject_import_alias(
+        "django.contrib.admin.templatetags.admin_static",
+        real_name="django_compat_patcher.django_legacy.django3_0.contrib__admin__templatetags__admin_static")
+    utils.inject_import_alias(
+        "django.contrib.staticfiles.templatetags",
+        real_name="django_compat_patcher.django_legacy.django3_0.contrib__staticfiles__templatetags__staticfiles")
+
+    from django.template.backends import django as django_templates
+
+    _old_get_installed_libraries = django_templates.get_installed_libraries
+
+    # Original uses pkgutil.walk_packages() so it won't see our injected template
+    def get_installed_libraries(*args, **kwargs):
+        libraries = _old_get_installed_libraries(*args, **kwargs)
+        libraries.update({
+            "admin_static": "django.contrib.admin.templatetags.admin_static",
+            "staticfiles": "django.contrib.staticfiles.templatetags.staticfiles",
+        })
+        return libraries
+
+    utils.inject_callable(django_templates, "get_installed_libraries", get_installed_libraries)

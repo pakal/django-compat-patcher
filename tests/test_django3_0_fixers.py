@@ -121,3 +121,15 @@ def test_fix_deletion_http_request_HttpRequest_xreadlines():
 def test_fix_deletion_utils_http_cookie_date():
     from django.utils.http import cookie_date
     assert cookie_date(1611067745) == 'Tue, 19-Jan-2021 14:49:05 GMT'
+
+
+def test_fix_deletion_contrib_staticfiles_templatetags_and_admin_static():
+    from django.template import Template, Context
+
+    tpl = Template("{% load admin_static %}Here is: {% static \"sample_file.png\" %}")
+    data = tpl.render(Context())
+    assert data == "Here is: /static/sample_file.png"
+
+    tpl = Template("{% load staticfiles %}Here is: {% static \"myotherfile.jpg\" %}")
+    data = tpl.render(Context())
+    assert data == "Here is: /static/myotherfile.jpg"
