@@ -2,6 +2,10 @@
 .. NOTE: only edit README.in, and use generate_readme.py to enrich it with the table of fixers
 
 
+.. image:: https://travis-ci.com/pakal/django-compat-patcher.svg?branch=master
+    :target: https://travis-ci.com/pakal/django-compat-patcher
+
+
 =====================
 django-compat-patcher
 =====================
