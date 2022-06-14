@@ -61,7 +61,7 @@ The PASSWORD_RESET_TIMEOUT_DAYS setting is removed.
 The isnull lookup no longer allows using non-boolean values as the right-hand side.
 The django.db.models.query_utils.InvalidQuery exception class is removed.  :kind:`DELETION` [FIXED]
 The django-admin.py entry point is removed.
-The HttpRequest.is_ajax() method is removed.
+The HttpRequest.is_ajax() method is removed.  :kind:`DELETION` [FIXED]
 Support for the pre-Django 3.1 encoding format of cookies values used by django.contrib.messages.storage.cookie.CookieStorage is removed.
 Support for the pre-Django 3.1 password reset tokens in the admin site (that use the SHA-1 hashing algorithm) is removed.
 Support for the pre-Django 3.1 encoding format of sessions is removed.

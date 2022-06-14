@@ -285,3 +285,20 @@ def fix_deletion_db_models_query_utils_InvalidQuery(utils):
 
     utils.inject_class(query_utils, "FieldDoesNotExist", FieldDoesNotExist)  # Import was removed
     utils.inject_class(query_utils, "InvalidQuery", InvalidQuery)
+
+
+@django1_40_bc_fixer()
+def fix_deletion_http_request_HttpRequest_is_ajax(utils):
+    """Preserve the HttpRequest.is_ajax() method"""
+    from django.http.request import HttpRequest
+
+    def is_ajax(self):
+        warnings.warn(
+            'request.is_ajax() is deprecated. See Django 3.1 release notes '
+            'for more details about this deprecation.',
+            RemovedInDjango40Warning,
+            stacklevel=2,
+        )
+        return self.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+    utils.inject_callable(HttpRequest, "is_ajax", is_ajax)

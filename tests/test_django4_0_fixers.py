@@ -102,3 +102,11 @@ def test_fix_deletion_db_models_query_utils_InvalidQuery():
 
     for exception in (FieldError, FieldDoesNotExist, InvalidQuery):
         assert issubclass(exception, InvalidQuery)
+
+
+def test_fix_deletion_http_request_HttpRequest_is_ajax():
+    from django.http import HttpRequest
+    request = HttpRequest()
+    assert not request.is_ajax()
+    request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+    assert request.is_ajax()
