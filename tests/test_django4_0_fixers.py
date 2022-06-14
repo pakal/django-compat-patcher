@@ -110,3 +110,9 @@ def test_fix_deletion_http_request_HttpRequest_is_ajax():
     assert not request.is_ajax()
     request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
     assert request.is_ajax()
+
+
+def test_fix_behaviour_utils_crypto_get_random_string_length():
+    from django.utils.crypto import get_random_string
+    assert len(get_random_string()) == 12  # Default length
+    assert get_random_string(allowed_chars="f") ==  "f" * 12

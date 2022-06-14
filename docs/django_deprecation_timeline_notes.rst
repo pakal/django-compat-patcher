@@ -68,17 +68,17 @@ Support for the pre-Django 3.1 encoding format of sessions is removed.
 Support for the pre-Django 3.1 django.core.signing.Signer signatures (encoded with the SHA-1 algorithm) is removed.
 Support for the pre-Django 3.1 django.core.signing.dumps() signatures (encoded with the SHA-1 algorithm) in django.core.signing.loads() is removed.
 Support for the pre-Django 3.1 user sessions (that use the SHA-1 algorithm) is removed.
-The get_response argument for django.utils.deprecation.MiddlewareMixin.__init__() is required and doesn’t accept None.
+The get_response argument for django.utils.deprecation.MiddlewareMixin.__init__() is required and doesn’t accept None.  :kind:`BEHAVIOUR` ???
 The providing_args argument for django.dispatch.Signal is removed.  :kind:`BEHAVIOUR` [FIXED]
-The length argument for django.utils.crypto.get_random_string() is required.
-The list message for ModelMultipleChoiceField is removed.
+The length argument for django.utils.crypto.get_random_string() is required.  :kind:`BEHAVIOUR` [FIXED]
+The list message for ModelMultipleChoiceField is removed.  :kind:`BEHAVIOUR` ???
 Support for passing raw column aliases to QuerySet.order_by() is removed.
-The NullBooleanField model field is removed, except for support in historical migrations.
+The NullBooleanField model field is removed, except for support in historical migrations.   :kind:`DELETION` ???
 django.conf.urls.url() is removed.  :kind:`DELETION` [FIXED]
-The django.contrib.postgres.fields.JSONField model field is removed, except for support in historical migrations.
-django.contrib.postgres.fields.jsonb.KeyTransform and django.contrib.postgres.fields.jsonb.KeyTextTransform are removed.
-django.contrib.postgres.forms.JSONField is removed.
-The {% ifequal %} and {% ifnotequal %} template tags are removed.
+The django.contrib.postgres.fields.JSONField model field is removed, except for support in historical migrations.  :kind:`DELETION` ???
+django.contrib.postgres.fields.jsonb.KeyTransform and django.contrib.postgres.fields.jsonb.KeyTextTransform are removed.  :kind:`DELETION` ???
+django.contrib.postgres.forms.JSONField is removed.  :kind:`DELETION` ???
+The {% ifequal %} and {% ifnotequal %} template tags are removed.  :kind:`DELETION` ???
 The DEFAULT_HASHING_ALGORITHM transitional setting is removed.
 
 

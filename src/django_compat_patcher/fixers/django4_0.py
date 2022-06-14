@@ -30,6 +30,7 @@ def fix_deletion_conf_urls_url(utils):
 
     from django.conf import urls
     utils.inject_callable(urls, "url", url)
+    urls.__all__.append("url")
 
 
 @django1_40_bc_fixer()
@@ -302,3 +303,17 @@ def fix_deletion_http_request_HttpRequest_is_ajax(utils):
         return self.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
     utils.inject_callable(HttpRequest, "is_ajax", is_ajax)
+
+
+@django1_40_bc_fixer()
+def fix_behaviour_utils_crypto_get_random_string_length(utils):
+    """Allow get_random_string() call without length argument (defaults to length=12)"""
+    from django.utils import crypto
+    original_get_random_string = crypto.get_random_string
+
+    NOT_PROVIDED = object()
+    def get_random_string(length=NOT_PROVIDED, *args, **kwargs):
+        length = length if length is not NOT_PROVIDED else 12
+        return original_get_random_string(length, *args, **kwargs)
+
+    utils.inject_callable(crypto, "get_random_string", get_random_string)
