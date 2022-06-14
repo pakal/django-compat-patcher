@@ -14,6 +14,59 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
     <style> .kind {color: blue} </style>
 
 
+
+3.2
+----
+
+**Miscellaneous**
+
+Django now supports non-pytz time zones, such as Python 3.9+’s zoneinfo module and its backport.
+
+The undocumented SpatiaLiteOperations.proj4_version() method is renamed to proj_version().
+
+slugify() now removes leading and trailing dashes and underscores.
+
+The intcomma and intword template filters no longer depend on the USE_L10N setting.
+
+Support for argon2-cffi < 19.1.0 is removed.
+
+The cache keys no longer includes the language when internationalization is disabled (USE_I18N = False) and localization is enabled (USE_L10N = True). After upgrading to Django 3.2 in such configurations, the first request to any previously cached value will be a cache miss.
+
+ForeignKey.validate() now uses _base_manager rather than _default_manager to check that related instances exist.
+
+When an application defines an AppConfig subclass in an apps.py submodule, Django now uses this configuration automatically, even if it isn’t enabled with default_app_config. Set default = False in the AppConfig subclass if you need to prevent this behavior. See What’s new in Django 3.2 for more details.
+
+Instantiating an abstract model now raises TypeError.
+
+Keyword arguments to setup_databases() are now keyword-only.
+
+The undocumented django.utils.http.limited_parse_qsl() function is removed. Please use urllib.parse.parse_qsl() instead.
+
+django.test.utils.TestContextDecorator now uses addCleanup() so that cleanups registered in the setUp() method are called before TestContextDecorator.disable().
+
+SessionMiddleware now raises a SessionInterrupted exception instead of SuspiciousOperation when a session is destroyed in a concurrent request.
+
+The django.db.models.Field equality operator now correctly distinguishes inherited field instances across models. Additionally, the ordering of such fields is now defined.
+
+The undocumented django.core.files.locks.lock() function now returns False if the file cannot be locked, instead of raising BlockingIOError.
+
+The password reset mechanism now invalidates tokens when the user email is changed.
+
+makemessages command no longer processes invalid locales specified using makemessages --locale option, when they contain hyphens ('-').
+
+The django.contrib.auth.forms.ReadOnlyPasswordHashField form field is now disabled by default. Therefore UserChangeForm.clean_password() is no longer required to return the initial value.
+
+The cache.get_many(), get_or_set(), has_key(), incr(), decr(), incr_version(), and decr_version() cache operations now correctly handle None stored in the cache, in the same way as any other value, instead of behaving as though the key didn’t exist.
+
+Due to a python-memcached limitation, the previous behavior is kept for the deprecated MemcachedCache backend.
+
+The minimum supported version of SQLite is increased from 3.8.3 to 3.9.0.
+
+CookieStorage now stores messages in the RFC 6265 compliant format. Support for cookies that use the old format remains until Django 4.1.
+
+The minimum supported version of asgiref is increased from 3.2.10 to 3.3.2.
+
+
 3.1
 ----
 
