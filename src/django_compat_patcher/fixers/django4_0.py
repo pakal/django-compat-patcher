@@ -182,3 +182,25 @@ def fix_deletion_utils_translation_ugettext_utilities(utils):
     utils.inject_callable(translation, "ugettext", ugettext)
     utils.inject_callable(translation, "ungettext", ungettext)
     utils.inject_callable(translation, "ugettext_lazy", ugettext_lazy)
+
+
+@django1_40_bc_fixer()
+def fix_behaviour_dispatch_dispatcher_Signal_providing_args(utils):
+    """Keep accepting the `providing_args` init argument of Signal instances."""
+
+    from django.dispatch.dispatcher import Signal
+
+    original_signal_init = Signal.__init__
+
+    def __patched_Signal__init__(self, providing_args=None, use_caching=False):
+        if providing_args is not None:
+            warnings.warn(
+                'The providing_args argument is deprecated. As it is purely '
+                'documentational, it has no replacement. If you rely on this '
+                'argument as documentation, you can move the text to a code '
+                'comment or docstring.',
+                RemovedInDjango40Warning, stacklevel=2,
+            )
+        original_signal_init(self, use_caching=use_caching)
+
+    utils.inject_callable(Signal, "__init__", __patched_Signal__init__)

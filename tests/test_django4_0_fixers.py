@@ -60,3 +60,10 @@ def test_fix_deletion_utils_translation_ugettext_utilities():
     assert ugettext("weirdstuff2") == "weirdstuff2"
     assert ungettext("%d weirdstaf", "%d weirdstifs", 0) % 0 == "0 weirdstaf"
     assert ungettext_lazy("%d weirdstaf", "%d weirdstifs", 0) == ngettext_lazy("%d weirdstaf", "%d weirdstifs", 0)
+
+
+def test_fix_behaviour_dispatch_dispatcher_Signal_providing_args():
+    from django.dispatch import Signal
+    instance = Signal(providing_args=['arg1', 'arg2'], use_caching=True)
+    assert instance.use_caching
+
