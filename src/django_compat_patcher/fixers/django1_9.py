@@ -242,6 +242,35 @@ def fix_deletion_core_management_base_AppCommand_handle_app(utils):
 @django1_9_bc_fixer()
 def fix_deletion_core_cache_get_cache(utils):
     """Preserve django.core.cache.get_cache() utility, superseded by django.core.cache.caches"""
+
+    from django.conf import settings
+    from django.core.cache.backends.base import InvalidCacheBackendError
+    from django.utils.module_loading import import_string
+
+    def _create_cache(backend, **kwargs):
+        try:
+            # Try to get the CACHES entry for the given backend name first
+            try:
+                conf = settings.CACHES[backend]
+            except KeyError:
+                try:
+                    # Trying to import the given backend, in case it's a dotted path
+                    import_string(backend)
+                except ImportError as e:
+                    raise InvalidCacheBackendError("Could not find backend '%s': %s" % (
+                        backend, e))
+                location = kwargs.pop('LOCATION', '')
+                params = kwargs
+            else:
+                params = {**conf, **kwargs}
+                backend = params.pop('BACKEND')
+                location = params.pop('LOCATION', '')
+            backend_cls = import_string(backend)
+        except ImportError as e:
+            raise InvalidCacheBackendError(
+                "Could not find backend '%s': %s" % (backend, e))
+        return backend_cls(location, params)
+
     def get_cache(backend, **kwargs):
         """
         Function to create a cache backend dynamically. This is flexible by design
@@ -262,7 +291,6 @@ def fix_deletion_core_cache_get_cache(utils):
         warnings.warn("'get_cache' is deprecated in favor of 'caches'.",
                       RemovedInDjango19Warning, stacklevel=2)
         from django.core import signals
-        from django.core.cache import _create_cache
         cache = _create_cache(backend, **kwargs)
         # Some caches -- python-memcached in particular -- need to do a cleanup at the
         # end of a request cycle. If not implemented in a particular backend
