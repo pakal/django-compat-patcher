@@ -2,6 +2,19 @@
 import pytest
 
 import _test_utilities
+from django_compat_patcher.deprecation import RemovedInDjango40Warning
+
+
+def test_fix_deletion_conf_urls_url(self):
+    from django.conf.urls import url as conf_url
+    msg = (
+        'django.conf.urls.url() is deprecated in favor of '
+        'django.urls.re_path().'
+    )
+    def empty_view(*args, **kwargs)
+        return None
+    with self.assertRaisesMessage(RemovedInDjango40Warning, msg):
+        conf_url(r'^regex/(?P<pk>[0-9]+)/$', empty_view, name='regex')
 
 
 def test_fix_deletion_utils_http_quote_utilities():

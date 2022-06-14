@@ -12,6 +12,26 @@ django1_40_bc_fixer = partial(
     fixer_applied_from_version="4.0",
 )
 
+
+@django1_40_bc_fixer()
+def fix_deletion_conf_urls_url(utils):
+    """Preserve django.conf.urls.url() as an alias to django.urls.re_path()"""
+
+    from django.urls import re_path
+
+    def url(regex, view, kwargs=None, name=None):
+        warnings.warn(
+            'django.conf.urls.url() is deprecated in favor of '
+            'django.urls.re_path().',
+            RemovedInDjango40Warning,
+            stacklevel=2,
+        )
+        return re_path(regex, view, kwargs, name)
+
+    from django.conf import urls
+    utils.inject_callable(urls, "url", url)
+
+
 @django1_40_bc_fixer()
 def fix_deletion_utils_http_quote_utilities(utils):
     """Preserve aliases of urrlib methods (quote, quote_plus, unquote, unquote_plus) in
@@ -33,7 +53,6 @@ def fix_deletion_utils_http_quote_utilities(utils):
         )
         return quote(url, safe)
 
-
     @keep_lazy_text
     def urlquote_plus(url, safe=''):
         """
@@ -47,7 +66,6 @@ def fix_deletion_utils_http_quote_utilities(utils):
         )
         return quote_plus(url, safe)
 
-
     @keep_lazy_text
     def urlunquote(quoted_url):
         """
@@ -60,7 +78,6 @@ def fix_deletion_utils_http_quote_utilities(utils):
             RemovedInDjango40Warning, stacklevel=2,
         )
         return unquote(quoted_url)
-
 
     @keep_lazy_text
     def urlunquote_plus(quoted_url):
