@@ -91,3 +91,14 @@ def test_fix_behaviour_dispatch_dispatcher_Signal_providing_args():
     instance = Signal(providing_args=['arg1', 'arg2'], use_caching=True)
     assert instance.use_caching
 
+
+def test_fix_deletion_db_models_query_utils_InvalidQuery():
+    from django.db.models.query_utils import InvalidQuery, FieldError, FieldDoesNotExist
+
+    assert isinstance(InvalidQuery(), InvalidQuery)
+
+    for exception in (FieldError, FieldDoesNotExist):
+        assert isinstance(exception(), InvalidQuery)
+
+    for exception in (FieldError, FieldDoesNotExist, InvalidQuery):
+        assert issubclass(exception, InvalidQuery)

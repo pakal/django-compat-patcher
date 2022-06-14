@@ -251,3 +251,37 @@ def fix_behaviour_dispatch_dispatcher_Signal_providing_args(utils):
         original_signal_init(self, use_caching=use_caching)
 
     utils.inject_callable(Signal, "__init__", __patched_Signal__init__)
+
+
+@django1_40_bc_fixer()
+def fix_deletion_db_models_query_utils_InvalidQuery(utils):
+    """Preserve the django.db.models.query_utils.InvalidQuery exception class"""
+    from django.core.exceptions import FieldDoesNotExist, FieldError
+    from django.db.models import query_utils
+
+    class InvalidQueryType(type):
+        @property
+        def _subclasses(self):
+            return (FieldDoesNotExist, FieldError)
+
+        def __warn(self):
+            warnings.warn(
+                'The InvalidQuery exception class is deprecated. Use '
+                'FieldDoesNotExist or FieldError instead.',
+                category=RemovedInDjango40Warning,
+                stacklevel=4,
+            )
+
+        def __instancecheck__(self, instance):
+            self.__warn()
+            return isinstance(instance, self._subclasses) or super().__instancecheck__(instance)
+
+        def __subclasscheck__(self, subclass):
+            self.__warn()
+            return issubclass(subclass, self._subclasses) or super().__subclasscheck__(subclass)
+
+    class InvalidQuery(Exception, metaclass=InvalidQueryType):
+        pass
+
+    utils.inject_class(query_utils, "FieldDoesNotExist", FieldDoesNotExist)  # Import was removed
+    utils.inject_class(query_utils, "InvalidQuery", InvalidQuery)

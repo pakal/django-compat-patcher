@@ -59,7 +59,7 @@ django.utils.http.is_safe_url() is removed.  :kind:`DELETION` [FIXED]
 See Features deprecated in 3.1 for details on these changes, including how to remove usage of these features.
 The PASSWORD_RESET_TIMEOUT_DAYS setting is removed.
 The isnull lookup no longer allows using non-boolean values as the right-hand side.
-The django.db.models.query_utils.InvalidQuery exception class is removed.
+The django.db.models.query_utils.InvalidQuery exception class is removed.  :kind:`DELETION` [FIXED]
 The django-admin.py entry point is removed.
 The HttpRequest.is_ajax() method is removed.
 Support for the pre-Django 3.1 encoding format of cookies values used by django.contrib.messages.storage.cookie.CookieStorage is removed.
