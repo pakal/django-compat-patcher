@@ -33,6 +33,30 @@ def fix_deletion_conf_urls_url(utils):
 
 
 @django1_40_bc_fixer()
+def fix_deletion_utils_encoding_smart_force_text(utils):
+    """Preserve django.utils.encoding.force_text() and smart_text() as aliases for force_str() and smart_str()"""
+
+    from django.utils import encoding as encoding_module
+
+    def smart_text(s, encoding='utf-8', strings_only=False, errors='strict'):
+        warnings.warn(
+            'smart_text() is deprecated in favor of smart_str().',
+            RemovedInDjango40Warning, stacklevel=2,
+        )
+        return encoding_module.smart_str(s, encoding, strings_only, errors)
+
+    def force_text(s, encoding='utf-8', strings_only=False, errors='strict'):
+        warnings.warn(
+            'force_text() is deprecated in favor of force_str().',
+            RemovedInDjango40Warning, stacklevel=2,
+        )
+        return encoding_module.force_str(s, encoding, strings_only, errors)
+
+    utils.inject_callable(encoding_module, "smart_text", smart_text)
+    utils.inject_callable(encoding_module, "force_text", force_text)
+
+
+@django1_40_bc_fixer()
 def fix_deletion_utils_http_quote_utilities(utils):
     """Preserve aliases of urrlib methods (quote, quote_plus, unquote, unquote_plus) in
      django.utils.http
