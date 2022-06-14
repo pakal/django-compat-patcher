@@ -52,3 +52,11 @@ def test_fix_deletion_utils_http_quote_utilities():
     assert urlunquote_plus('Paris+%26+Orl%C3%A9ans') == 'Paris & Orl\xe9ans'
     assert urlunquote_plus('Paris+&+Orl%C3%A9ans') == 'Paris & Orl\xe9ans'
 
+
+def test_fix_deletion_utils_translation_ugettext_utilities():
+    from django.utils.translation import ugettext_noop, ugettext, ungettext, ungettext_lazy, ngettext_lazy
+
+    assert ugettext_noop("weirdstuff") == "weirdstuff"
+    assert ugettext("weirdstuff2") == "weirdstuff2"
+    assert ungettext("%d weirdstaf", "%d weirdstifs", 0) % 0 == "0 weirdstaf"
+    assert ungettext_lazy("%d weirdstaf", "%d weirdstifs", 0) == ngettext_lazy("%d weirdstaf", "%d weirdstifs", 0)
