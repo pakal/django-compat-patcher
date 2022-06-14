@@ -59,6 +59,26 @@ def test_fix_deletion_utils_translation_ugettext_utilities():
     assert ungettext_lazy("%d weirdstaf", "%d weirdstifs", 0) == ngettext_lazy("%d weirdstaf", "%d weirdstifs", 0)
 
 
+def test_fix_deletion_utils_text_unescape_entities():
+    from django.utils.functional import lazystr
+    from django.utils import text as text_module
+
+    items = [
+        ('', ''),
+        ('foo', 'foo'),
+        ('&amp;', '&'),
+        ('&am;', '&am;'),
+        ('&#x26;', '&'),
+        ('&#xk;', '&#xk;'),
+        ('&#38;', '&'),
+        ('foo &amp; bar', 'foo & bar'),
+        ('foo & bar', 'foo & bar'),
+    ]
+    for value, output in items:
+        assert text_module.unescape_entities(value) == output
+        assert text_module.unescape_entities(lazystr(value)) == output
+
+
 def test_fix_deletion_utils_http_is_safe_url():
     from django.utils.http import is_safe_url
     assert is_safe_url('https://example.com', allowed_hosts={'example.com'}, require_https=True)

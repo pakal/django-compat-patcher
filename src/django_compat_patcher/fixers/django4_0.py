@@ -198,6 +198,24 @@ def fix_deletion_utils_translation_ugettext_utilities(utils):
 
 
 @django1_40_bc_fixer()
+def fix_deletion_utils_text_unescape_entities(utils):
+    """Preserve django.utils.text.unescape_entities() as an alias of html.unescape()"""
+    from django.utils.functional import keep_lazy_text
+    from django.utils import text as text_module
+
+    @keep_lazy_text
+    def unescape_entities(text):
+        warnings.warn(
+            'django.utils.text.unescape_entities() is deprecated in favor of '
+            'html.unescape().',
+            RemovedInDjango40Warning, stacklevel=2,
+        )
+        return text_module._entity_re.sub(text_module._replace_entity, str(text))
+
+    utils.inject_callable(text_module, "unescape_entities", unescape_entities)
+
+
+@django1_40_bc_fixer()
 def fix_deletion_utils_http_is_safe_url(utils):
     """Preserve django.utils.http.is_safe_url() as an alias to url_has_allowed_host_and_scheme()"""
     from django.utils import http
