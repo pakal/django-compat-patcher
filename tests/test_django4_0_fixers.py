@@ -8,14 +8,9 @@ from django_compat_patcher.deprecation import RemovedInDjango40Warning
 def test_fix_deletion_conf_urls_url():
     import re
     from django.conf.urls import url as conf_url
-    msg = re.escape(
-        'django.conf.urls.url() is deprecated in favor of '
-        'django.urls.re_path().'
-    )
     def empty_view(*args, **kwargs):
         return None
-    with pytest.raises(RemovedInDjango40Warning, match=msg):
-        conf_url(r'^regex/(?P<pk>[0-9]+)/$', empty_view, name='regex')
+    assert conf_url(r'^regex/(?P<pk>[0-9]+)/$', empty_view, name='regex')
 
 
 def test_fix_deletion_utils_encoding_smart_force_text():
@@ -54,12 +49,21 @@ def test_fix_deletion_utils_http_quote_utilities():
 
 
 def test_fix_deletion_utils_translation_ugettext_utilities():
-    from django.utils.translation import ugettext_noop, ugettext, ungettext, ungettext_lazy, ngettext_lazy
+    from django.utils.translation import (ugettext_noop, ugettext, ugettext_lazy,
+                                          ungettext, ungettext_lazy, gettext_lazy, ngettext_lazy)
 
     assert ugettext_noop("weirdstuff") == "weirdstuff"
     assert ugettext("weirdstuff2") == "weirdstuff2"
-    assert ungettext("%d weirdstaf", "%d weirdstifs", 0) % 0 == "0 weirdstaf"
+    assert ungettext("%d weirdstaf", "%d weirdstifs", 0) % 0 == "0 weirdstifs"  # Zero is plural in English
+    assert ugettext_lazy("weirdstuff3") == gettext_lazy("weirdstuff3")
     assert ungettext_lazy("%d weirdstaf", "%d weirdstifs", 0) == ngettext_lazy("%d weirdstaf", "%d weirdstifs", 0)
+
+
+def test_fix_deletion_utils_http_is_safe_url():
+    from django.utils.http import is_safe_url
+    assert is_safe_url('https://example.com', allowed_hosts={'example.com'}, require_https=True)
+    assert not is_safe_url('http://example.com', allowed_hosts={'example.com'}, require_https=True)
+    assert not is_safe_url('https://badexample.com', allowed_hosts={'example.com'}, require_https=True)
 
 
 def test_fix_behaviour_dispatch_dispatcher_Signal_providing_args():

@@ -178,10 +178,39 @@ def fix_deletion_utils_translation_ugettext_utilities(utils):
         )
         return translation.gettext_lazy(message)
 
+    def ungettext_lazy(singular, plural, number=None):
+        """
+        A legacy compatibility wrapper for Unicode handling on Python 2.
+        An alias of ungettext_lazy() since Django 2.0.
+        """
+        warnings.warn(
+            'django.utils.translation.ungettext_lazy() is deprecated in favor of '
+            'django.utils.translation.ngettext_lazy().',
+            RemovedInDjango40Warning, stacklevel=2,
+        )
+        return translation.ngettext_lazy(singular, plural, number)
+
     utils.inject_callable(translation, "ugettext_noop", ugettext_noop)
     utils.inject_callable(translation, "ugettext", ugettext)
     utils.inject_callable(translation, "ungettext", ungettext)
     utils.inject_callable(translation, "ugettext_lazy", ugettext_lazy)
+    utils.inject_callable(translation, "ungettext_lazy", ungettext_lazy)
+
+
+@django1_40_bc_fixer()
+def fix_deletion_utils_http_is_safe_url(utils):
+    """Preserve django.utils.http.is_safe_url() as an alias to url_has_allowed_host_and_scheme()"""
+    from django.utils import http
+
+    def is_safe_url(url, allowed_hosts, require_https=False):
+        warnings.warn(
+            'django.utils.http.is_safe_url() is deprecated in favor of '
+            'url_has_allowed_host_and_scheme().',
+            RemovedInDjango40Warning, stacklevel=2,
+        )
+        return http.url_has_allowed_host_and_scheme(url, allowed_hosts, require_https)
+
+    utils.inject_callable(http, "is_safe_url", is_safe_url)
 
 
 @django1_40_bc_fixer()
