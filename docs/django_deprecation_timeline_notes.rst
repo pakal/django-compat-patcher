@@ -48,13 +48,13 @@ The minimum supported version of asgiref is increased from 3.3.2 to 3.4.1.
 These features have reached the end of their deprecation cycle and are removed in Django 4.0.
 
 See Features deprecated in 3.0 for details on these changes, including how to remove usage of these features.
-django.utils.http.urlquote(), urlquote_plus(), urlunquote(), and urlunquote_plus() are removed.
-django.utils.encoding.force_text() and smart_text() are removed.
-django.utils.translation.ugettext(), ugettext_lazy(), ugettext_noop(), ungettext(), and ungettext_lazy() are removed.
+django.utils.http.urlquote(), urlquote_plus(), urlunquote(), and urlunquote_plus() are removed.  :kind:`DELETION` [FIXED]
+django.utils.encoding.force_text() and smart_text() are removed.  :kind:`DELETION` [FIXED]
+django.utils.translation.ugettext(), ugettext_lazy(), ugettext_noop(), ungettext(), and ungettext_lazy() are removed.  :kind:`DELETION` [FIXED]
 django.views.i18n.set_language() doesn’t set the user language in request.session (key _language).
 alias=None is required in the signature of django.db.models.Expression.get_group_by_cols() subclasses.
-django.utils.text.unescape_entities() is removed.
-django.utils.http.is_safe_url() is removed.
+django.utils.text.unescape_entities() is removed.  :kind:`DELETION` [FIXED]
+django.utils.http.is_safe_url() is removed.  :kind:`DELETION` [FIXED]
 
 See Features deprecated in 3.1 for details on these changes, including how to remove usage of these features.
 The PASSWORD_RESET_TIMEOUT_DAYS setting is removed.
@@ -69,12 +69,12 @@ Support for the pre-Django 3.1 django.core.signing.Signer signatures (encoded wi
 Support for the pre-Django 3.1 django.core.signing.dumps() signatures (encoded with the SHA-1 algorithm) in django.core.signing.loads() is removed.
 Support for the pre-Django 3.1 user sessions (that use the SHA-1 algorithm) is removed.
 The get_response argument for django.utils.deprecation.MiddlewareMixin.__init__() is required and doesn’t accept None.
-The providing_args argument for django.dispatch.Signal is removed.
+The providing_args argument for django.dispatch.Signal is removed.  :kind:`BEHAVIOUR` [FIXED]
 The length argument for django.utils.crypto.get_random_string() is required.
 The list message for ModelMultipleChoiceField is removed.
 Support for passing raw column aliases to QuerySet.order_by() is removed.
 The NullBooleanField model field is removed, except for support in historical migrations.
-django.conf.urls.url() is removed.
+django.conf.urls.url() is removed.  :kind:`DELETION` [FIXED]
 The django.contrib.postgres.fields.JSONField model field is removed, except for support in historical migrations.
 django.contrib.postgres.fields.jsonb.KeyTransform and django.contrib.postgres.fields.jsonb.KeyTextTransform are removed.
 django.contrib.postgres.forms.JSONField is removed.
