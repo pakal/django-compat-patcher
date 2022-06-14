@@ -15,6 +15,73 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 
 
 
+4.0
+----
+
+DeleteView now uses FormMixin to handle POST requests. As a consequence, any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
+
+Support for cx_Oracle < 7.0 is removed.
+To allow serving a Django site on a subpath without changing the value of STATIC_URL, the leading slash is removed from that setting (now 'static/') in the default startproject template.
+The AdminSite method for the admin index view is no longer decorated with never_cache when accessed directly, rather than via the recommended AdminSite.urls property, or AdminSite.get_urls() method.
+Unsupported operations on a sliced queryset now raise TypeError instead of AssertionError.
+The undocumented django.test.runner.reorder_suite() function is renamed to reorder_tests(). It now accepts an iterable of tests rather than a test suite, and returns an iterator of tests.
+Calling FileSystemStorage.delete() with an empty name now raises ValueError instead of AssertionError.
+Calling EmailMultiAlternatives.attach_alternative() or EmailMessage.attach() with an invalid content or mimetype arguments now raise ValueError instead of AssertionError.
+assertHTMLEqual() no longer considers a non-boolean attribute without a value equal to an attribute with the same name and value.
+Tests that fail to load, for example due to syntax errors, now always match when using test --tag.
+The undocumented django.contrib.admin.utils.lookup_needs_distinct() function is renamed to lookup_spawns_duplicates().
+The undocumented HttpRequest.get_raw_uri() method is removed. The HttpRequest.build_absolute_uri() method may be a suitable alternative.
+The object argument of undocumented ModelAdmin.log_addition(), log_change(), and log_deletion() methods is renamed to obj.
+RssFeed, Atom1Feed, and their subclasses now emit elements with no content as self-closing tags.
+NodeList.render() no longer casts the output of render() method for individual nodes to a string. Node.render() should always return a string as documented.
+The where_class property of django.db.models.sql.query.Query and the where_class argument to the private get_extra_restriction() method of ForeignObject and ForeignObjectRel are removed. If needed, initialize django.db.models.sql.where.WhereNode instead.
+The filter_clause argument of the undocumented Query.add_filter() method is replaced by two positional arguments filter_lhs and filter_rhs.
+CsrfViewMiddleware now uses request.META['CSRF_COOKIE_NEEDS_UPDATE'] in place of request.META['CSRF_COOKIE_USED'], request.csrf_cookie_needs_reset, and response.csrf_cookie_set to track whether the CSRF cookie should be sent. This is an undocumented, private API.
+The undocumented TRANSLATOR_COMMENT_MARK constant is moved from django.template.base to django.utils.translation.template.
+The real_apps argument of the undocumented django.db.migrations.state.ProjectState.__init__() method must now be a set if provided.
+RadioSelect and CheckboxSelectMultiple widgets are now rendered in <div> tags so they are announced more concisely by screen readers. If you need the previous behavior, override the widget template with the appropriate template from Django 3.2.
+The floatformat template filter no longer depends on the USE_L10N setting and always returns localized output. Use the u suffix to disable localization.
+The default value of the USE_L10N setting is changed to True. See the Localization section above for more details.
+As part of the move to zoneinfo, django.utils.timezone.utc is changed to alias datetime.timezone.utc.
+The minimum supported version of asgiref is increased from 3.3.2 to 3.4.1.
+
+These features have reached the end of their deprecation cycle and are removed in Django 4.0.
+
+See Features deprecated in 3.0 for details on these changes, including how to remove usage of these features.
+django.utils.http.urlquote(), urlquote_plus(), urlunquote(), and urlunquote_plus() are removed.
+django.utils.encoding.force_text() and smart_text() are removed.
+django.utils.translation.ugettext(), ugettext_lazy(), ugettext_noop(), ungettext(), and ungettext_lazy() are removed.
+django.views.i18n.set_language() doesn’t set the user language in request.session (key _language).
+alias=None is required in the signature of django.db.models.Expression.get_group_by_cols() subclasses.
+django.utils.text.unescape_entities() is removed.
+django.utils.http.is_safe_url() is removed.
+
+See Features deprecated in 3.1 for details on these changes, including how to remove usage of these features.
+The PASSWORD_RESET_TIMEOUT_DAYS setting is removed.
+The isnull lookup no longer allows using non-boolean values as the right-hand side.
+The django.db.models.query_utils.InvalidQuery exception class is removed.
+The django-admin.py entry point is removed.
+The HttpRequest.is_ajax() method is removed.
+Support for the pre-Django 3.1 encoding format of cookies values used by django.contrib.messages.storage.cookie.CookieStorage is removed.
+Support for the pre-Django 3.1 password reset tokens in the admin site (that use the SHA-1 hashing algorithm) is removed.
+Support for the pre-Django 3.1 encoding format of sessions is removed.
+Support for the pre-Django 3.1 django.core.signing.Signer signatures (encoded with the SHA-1 algorithm) is removed.
+Support for the pre-Django 3.1 django.core.signing.dumps() signatures (encoded with the SHA-1 algorithm) in django.core.signing.loads() is removed.
+Support for the pre-Django 3.1 user sessions (that use the SHA-1 algorithm) is removed.
+The get_response argument for django.utils.deprecation.MiddlewareMixin.__init__() is required and doesn’t accept None.
+The providing_args argument for django.dispatch.Signal is removed.
+The length argument for django.utils.crypto.get_random_string() is required.
+The list message for ModelMultipleChoiceField is removed.
+Support for passing raw column aliases to QuerySet.order_by() is removed.
+The NullBooleanField model field is removed, except for support in historical migrations.
+django.conf.urls.url() is removed.
+The django.contrib.postgres.fields.JSONField model field is removed, except for support in historical migrations.
+django.contrib.postgres.fields.jsonb.KeyTransform and django.contrib.postgres.fields.jsonb.KeyTextTransform are removed.
+django.contrib.postgres.forms.JSONField is removed.
+The {% ifequal %} and {% ifnotequal %} template tags are removed.
+The DEFAULT_HASHING_ALGORITHM transitional setting is removed.
+
+
 3.2
 ----
 
