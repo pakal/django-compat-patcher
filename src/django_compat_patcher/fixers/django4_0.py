@@ -322,7 +322,7 @@ def fix_behaviour_utils_crypto_get_random_string_length(utils):
 @django1_40_bc_fixer()
 def fix_deletion_contrib_postgres_forms_jsonb(utils):
     """
-    Preserve django.contrib.postgres.forms.JSONField and its jsonb source module
+    [UNSAFE] Preserve django.contrib.postgres.forms.JSONField and its jsonb source module
     """
     import django.utils
     from django_compat_patcher.django_legacy.django4_0 import contrib__postgres__forms__jsonb
@@ -338,7 +338,7 @@ def fix_deletion_contrib_postgres_forms_jsonb(utils):
 
 @django1_40_bc_fixer()
 def fix_deletion_contrib_postgres_fields_jsonb(utils):
-    """Preserve django.contrib.postgres.fields.jsonb.KeyTransform/KeyTextTransform as aliases
+    """[UNSAFE] Preserve django.contrib.postgres.fields.jsonb.KeyTransform/KeyTextTransform as aliases
     to django.db.models.fields.json objects"""
     from django.db.models.fields.json import (
         KeyTextTransform as BuiltinKeyTextTransform,

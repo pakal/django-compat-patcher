@@ -12,5 +12,5 @@ git+https://github.com/arteria/django-compat@597bd81a635dec7fdfcccf09b5c95df6361
 tox>=3.10
 check-manifest>=0.40
 
-# Necessary to test postgres utils
+# Necessary to test postgres utils, disable this to ensure all is OK with default DCP_EXCLUDE_FIXER_IDS
 psycopg2>=2.8
