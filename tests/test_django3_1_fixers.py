@@ -84,7 +84,7 @@ def test_fix_deletion_views_debug_ExceptionReporterFilter():
 
 @pytest.mark.skipif(
     _test_utilities.DJANGO_VERSION_TUPLE < (1, 11),
-    reason="requires posgres forms jsonb module",
+    reason="requires postgres.forms.jsonb module",
 )
 def test_fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString():
 
@@ -117,7 +117,7 @@ def test_fix_deletion_contrib_postgres_forms_jsonb_InvalidJSONInput_JSONString()
 
 @pytest.mark.skipif(
     _test_utilities.DJANGO_VERSION_TUPLE < (1, 11),
-    reason="requires posgres fields jsonb module",
+    reason="requires postgres.fields.jsonb module",
 )
 def test_fix_deletion_contrib_postgres_fields_jsonb_JsonAdapter():
 

@@ -77,7 +77,7 @@ The NullBooleanField model field is removed, except for support in historical mi
 django.conf.urls.url() is removed.  :kind:`DELETION` [FIXED]
 The django.contrib.postgres.fields.JSONField model field is removed, except for support in historical migrations.  :kind:`DELETION` ???
 django.contrib.postgres.fields.jsonb.KeyTransform and django.contrib.postgres.fields.jsonb.KeyTextTransform are removed.  :kind:`DELETION` ???
-django.contrib.postgres.forms.JSONField is removed.  :kind:`DELETION` ???
+django.contrib.postgres.forms.JSONField is removed.  :kind:`DELETION` [FIXED]
 The {% ifequal %} and {% ifnotequal %} template tags are removed.  :kind:`DELETION` ???
 The DEFAULT_HASHING_ALGORITHM transitional setting is removed.
 
