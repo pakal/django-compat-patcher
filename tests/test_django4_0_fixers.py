@@ -133,6 +133,13 @@ def test_fix_deletion_contrib_postgres_fields_jsonb():
     assert KeyTextTransform('foo', 'bar')
 
 
+def test_fix_deletion_template_defaulttags_ifequal_ifnotequal():
+    from compat import render_to_string
+
+    rendered = render_to_string("core_tags/test_defaulttags_ifequal_ifnotequal.html")
+    assert rendered.strip() == "ifequalgood\nifnotequalgood"
+
+
 # Standalone test, unrelated to fixers
 @pytest.mark.django_db
 def test_NullBooleanField_still_operational():
@@ -162,7 +169,4 @@ def test_postgres_JSONField_still_operational():
 
     record = SimpleModel.objects.first()
     assert record.misc_postgres_json == dict(a="33")
-
-
-
 
