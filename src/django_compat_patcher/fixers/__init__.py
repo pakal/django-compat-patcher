@@ -12,5 +12,6 @@ from . import (
     django2_2,
     django3_0,
     django3_1,
+    django3_2,
     django4_0,
 )
