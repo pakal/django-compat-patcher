@@ -56,8 +56,9 @@ def fix_incoming_urls_submodule(utils):
     Put a forward compatibility import path for django.urls, which replaces django.core.urlresolvers
     """
     from django.core import urlresolvers
-
+    import django
     utils.inject_module("django.urls", urlresolvers)
+    utils.inject_attribute(django, "urls", urlresolvers)
 
 
 @django1_10_bc_fixer()

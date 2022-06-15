@@ -77,7 +77,10 @@ def fix_deletion_utils_decorators_available_attrs(utils):
 def fix_deletion_utils_lru_cache_lru_cache(utils):
     """Preserve django.utils.lru_cache.lru_cache(), alias of functools.lru_cache(), and its containing module."""
     from ..django_legacy.django3_0 import lru_cache as django_lru_cache_module
+    import django.utils
+
     utils.inject_module("django.utils.lru_cache", django_lru_cache_module)
+    utils.inject_attribute(django.utils, "lru_cache", django_lru_cache_module)
 
 
 @django1_30_bc_fixer()

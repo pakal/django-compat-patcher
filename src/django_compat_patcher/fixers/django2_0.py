@@ -51,8 +51,10 @@ def fix_deletion_core_urlresolvers(utils):
     Preserve django.core.urlresolvers module, now replaced by django.urls.
     """
     from django import urls
+    import django.core
 
     utils.inject_module("django.core.urlresolvers", urls)
+    utils.inject_attribute(django.core, "urlresolvers", urls)
 
 
 @django1_20_bc_fixer()
