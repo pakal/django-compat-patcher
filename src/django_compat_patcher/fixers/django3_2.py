@@ -20,6 +20,6 @@ def fix_deletion_http_response_HttpResponseBase_private_headers(utils):
 
     @property
     def _headers(self):
-        return self.headers
+        return self.headers._store  # Maps lower_case to (normal_case, value)
 
     utils.inject_attribute(HttpResponseBase, "_headers", _headers)
