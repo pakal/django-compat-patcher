@@ -1,4 +1,4 @@
-compat-patcher-core>=1.2
+compat-patcher-core>=2.1
 six==1.15.0
 
 ## DEPENDENCIES FOR TESTING AND BUILDING ##
