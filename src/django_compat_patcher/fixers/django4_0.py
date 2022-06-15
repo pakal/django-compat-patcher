@@ -454,3 +454,24 @@ def fix_deletion_template_defaulttags_ifequal_ifnotequal(utils):
     utils.inject_callable(defaulttags, "do_ifequal", do_ifequal)
     utils.inject_callable(defaulttags, "ifequal", ifequal)
     utils.inject_callable(defaulttags, "ifnotequal", ifnotequal)
+
+
+@django1_40_bc_fixer()
+def fix_deletion_forms_models_ModelMultipleChoiceField_error_messages_list_entry(utils):
+    """Preserve "list" error message for ModelMultipleChoiceField, replaced by "invalid_list"
+    """
+
+    from django.forms.models import ModelMultipleChoiceField
+    original_ModelMultipleChoiceField_init = ModelMultipleChoiceField.__init__
+
+    def __patched_ModelMultipleChoiceField__init__(self, *args, **kwargs):
+        original_ModelMultipleChoiceField_init(self, *args, **kwargs)
+        if self.error_messages.get('list') is not None:
+            warnings.warn(
+                "The 'list' error message key is deprecated in favor of "
+                "'invalid_list'.",
+                RemovedInDjango40Warning, stacklevel=2,
+            )
+            self.error_messages['invalid_list'] = self.error_messages['list']
+
+    utils.inject_callable(ModelMultipleChoiceField, "__init__", __patched_ModelMultipleChoiceField__init__)

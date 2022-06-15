@@ -140,6 +140,17 @@ def test_fix_deletion_template_defaulttags_ifequal_ifnotequal():
     assert rendered.strip() == "ifequalgood\nifnotequalgood"
 
 
+def test_fix_deletion_forms_models_ModelMultipleChoiceField_error_messages_list_entry():
+    from django.forms.models import ModelMultipleChoiceField
+    from test_project.models import SimpleModel
+
+    field = ModelMultipleChoiceField(
+        queryset=SimpleModel.objects.all(),
+        error_messages={'list': 'NOT A LIST OF VALUES'},
+    )
+    assert field.error_messages['invalid_list'] == 'NOT A LIST OF VALUES'  # Properly transferred
+
+
 # Standalone test, unrelated to fixers
 @pytest.mark.django_db
 def test_NullBooleanField_still_operational():
