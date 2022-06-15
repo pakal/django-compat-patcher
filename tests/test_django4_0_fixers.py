@@ -13,6 +13,10 @@ def test_fix_deletion_conf_urls_url():
     assert conf_url(r'^regex/(?P<pk>[0-9]+)/$', empty_view, name='regex')
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (1, 9),
+    reason="Requires proper support of SimpleLazyObject in force_text"
+)
 def test_fix_deletion_utils_encoding_smart_force_text():
     from django.utils.encoding import smart_text, force_text
     from django.utils.translation import gettext_lazy
@@ -131,6 +135,10 @@ def test_fix_behaviour_utils_crypto_get_random_string_length():
     assert get_random_string(allowed_chars="f") ==  "f" * 12
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (2, 0),
+    reason="requires initial implementation of forms.JSONField",
+)
 def test_fix_deletion_contrib_postgres_forms_jsonb():
     from django.contrib.postgres import forms
     assert forms.JSONField()
