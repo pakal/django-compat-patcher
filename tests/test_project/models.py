@@ -1,5 +1,10 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField as PgJSONField
+import django
+
+if django.VERSION >= (2, 0):
+    from django.contrib.postgres.fields import JSONField as PgJSONField
+else:
+    PgJSONField = None
 
 
 class SimpleModel(models.Model):
@@ -7,7 +12,8 @@ class SimpleModel(models.Model):
     age = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     is_deleted = models.NullBooleanField()
-    misc_postgres_json = PgJSONField(null=True)
+    if PgJSONField:
+        misc_postgres_json = PgJSONField(null=True)
 
 
 class SimpleModelChild(models.Model):

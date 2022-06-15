@@ -92,6 +92,10 @@ def test_fix_behaviour_dispatch_dispatcher_Signal_providing_args():
     assert instance.use_caching
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (3, 1),
+    reason="requires InvalidQuery exception based on FieldError and FieldDoesNotExist",
+)
 def test_fix_deletion_db_models_query_utils_InvalidQuery():
     from django.db.models.query_utils import InvalidQuery, FieldError, FieldDoesNotExist
 
@@ -148,7 +152,9 @@ def test_fix_deletion_forms_models_ModelMultipleChoiceField_error_messages_list_
         queryset=SimpleModel.objects.all(),
         error_messages={'list': 'NOT A LIST OF VALUES'},
     )
-    assert field.error_messages['invalid_list'] == 'NOT A LIST OF VALUES'  # Properly transferred
+    assert field.error_messages['list'] == 'NOT A LIST OF VALUES'
+    if _test_utilities.DJANGO_VERSION_TUPLE >= (3, 1):
+        assert field.error_messages['invalid_list'] == 'NOT A LIST OF VALUES'  # Properly transferred
 
 
 def test_fix_behaviour_middleware_get_response_parameter_nullability():
@@ -197,11 +203,12 @@ def test_fix_behaviour_middleware_get_response_parameter_nullability():
     ]
 
     for middleware in middlewares:
-        obj = middleware()
-        assert callable(obj.get_response)  # Fallback on dummy callable
+        obj1 = middleware()
+        obj2 = middleware(None)
 
-        obj = middleware(None)
-        assert callable(obj.get_response)  # Fallback on dummy callable
+        # Fallback on dummy callable when Django>=4.0
+        assert obj1.get_response is None or callable(obj1.get_response)
+        assert obj2.get_response is None or callable(obj2.get_response)
 
         dummy_get_response = lambda *args, **kwargs: 777
         obj = middleware(dummy_get_response)
@@ -226,6 +233,10 @@ def test_NullBooleanField_still_operational():
 
 
 # Standalone test, unrelated to fixers
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (3, 1),
+    reason="requires common JSONField implementation (sqlite-compatible)",
+)
 @pytest.mark.django_db
 def test_postgres_JSONField_still_operational():
     """The django.contrib.postgres.fields.JSONField model field is removed in django 4.0, but still usable if checks are silenced"""

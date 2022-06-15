@@ -17,6 +17,6 @@ def test_fix_deletion_http_response_HttpResponseBase_private_headers():
         # headers={'X-Foo': 'foo'} =>  parameter NOT always available!
     )
     response['X-Foo'] = 'foo'
-    if django.VERSION >= (3, 2):
+    if _test_utilities.DJANGO_VERSION_TUPLE >= (3, 2):
         assert response.headers['X-Foo'] == 'foo'
     assert response._headers['x-foo'] == ('X-Foo', 'foo')
