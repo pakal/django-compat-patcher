@@ -334,3 +334,36 @@ def fix_deletion_contrib_postgres_forms_jsonb(utils):
     # We restore the "from .jsonb import *" in postgres.forms module
     utils.inject_class(django.contrib.postgres.forms, "JSONField",
                            contrib__postgres__forms__jsonb.JSONField)
+
+
+@django1_40_bc_fixer()
+def fix_deletion_contrib_postgres_fields_jsonb(utils):
+    """Preserve django.contrib.postgres.fields.jsonb.KeyTransform/KeyTextTransform as aliases
+    to django.db.models.fields.json objects"""
+    from django.db.models.fields.json import (
+        KeyTextTransform as BuiltinKeyTextTransform,
+        KeyTransform as BuiltinKeyTransform,
+    )
+
+    class KeyTransform(BuiltinKeyTransform):
+        def __init__(self, *args, **kwargs):
+            warnings.warn(
+                'django.contrib.postgres.fields.jsonb.KeyTransform is deprecated '
+                'in favor of django.db.models.fields.json.KeyTransform.',
+                RemovedInDjango40Warning, stacklevel=2,
+            )
+            super().__init__(*args, **kwargs)
+
+    class KeyTextTransform(BuiltinKeyTextTransform):
+        def __init__(self, *args, **kwargs):
+            warnings.warn(
+                'django.contrib.postgres.fields.jsonb.KeyTextTransform is '
+                'deprecated in favor of '
+                'django.db.models.fields.json.KeyTextTransform.',
+                RemovedInDjango40Warning, stacklevel=2,
+            )
+            super().__init__(*args, **kwargs)
+
+    from django.contrib.postgres.fields import jsonb
+    utils.inject_class(jsonb, "KeyTransform", KeyTransform)
+    utils.inject_class(jsonb, "KeyTextTransform", KeyTextTransform)

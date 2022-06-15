@@ -123,7 +123,14 @@ def test_fix_deletion_contrib_postgres_forms_jsonb():
     assert forms.JSONField()
 
     assert forms.jsonb  # Module was prelinked here
-    import django.contrib.postgres.forms.jsonb
+    import django.contrib.postgres.forms.jsonb as json
+    del json
+
+
+def test_fix_deletion_contrib_postgres_fields_jsonb():
+    from django.contrib.postgres.fields.jsonb import KeyTextTransform, KeyTransform
+    assert KeyTransform('foo', 'bar')
+    assert KeyTextTransform('foo', 'bar')
 
 
 # Standalone test, unrelated to fixers
