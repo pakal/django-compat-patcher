@@ -1,15 +1,15 @@
-dist: bionic
+sudo: false
+dist: focal
 language: python
-cache: pip
 python:
-  - 2.7.17
-  # - 3.4 not existing on bionic
-  - 3.5
-  - 3.6
-  - 3.7
-  - 3.8
-  - 3.9
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.10"
 install:
   - pip install tox-travis
 script:
+  - "pip install -U setuptools importlib-metadata"
+  - "pip list"
   - tox
