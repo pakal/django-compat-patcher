@@ -118,6 +118,14 @@ def test_fix_behaviour_utils_crypto_get_random_string_length():
     assert get_random_string(allowed_chars="f") ==  "f" * 12
 
 
+def test_fix_deletion_contrib_postgres_forms_jsonb():
+    from django.contrib.postgres import forms
+    assert forms.JSONField()
+
+    assert forms.jsonb  # Module was prelinked here
+    import django.contrib.postgres.forms.jsonb
+
+
 # Standalone test, unrelated to fixers
 @pytest.mark.django_db
 def test_NullBooleanField_still_operational():

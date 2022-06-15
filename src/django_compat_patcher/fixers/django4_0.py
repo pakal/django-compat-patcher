@@ -317,3 +317,20 @@ def fix_behaviour_utils_crypto_get_random_string_length(utils):
         return original_get_random_string(length, *args, **kwargs)
 
     utils.inject_callable(crypto, "get_random_string", get_random_string)
+
+
+@django1_40_bc_fixer()
+def fix_deletion_contrib_postgres_forms_jsonb(utils):
+    """
+    Preserve django.contrib.postgres.forms.JSONField and its jsonb source module
+    """
+    import django.utils
+    from django_compat_patcher.django_legacy.django4_0 import contrib__postgres__forms__jsonb
+    import django.contrib.postgres.forms
+
+    utils.inject_module("django.contrib.postgres.forms.jsonb", contrib__postgres__forms__jsonb)
+    utils.inject_attribute(django.contrib.postgres.forms, "jsonb", contrib__postgres__forms__jsonb)
+
+    # We restore the "from .jsonb import *" in postgres.forms module
+    utils.inject_class(django.contrib.postgres.forms, "JSONField",
+                           contrib__postgres__forms__jsonb.JSONField)
