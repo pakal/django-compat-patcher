@@ -107,7 +107,7 @@ def test_fix_deletion_contrib_admin_ModelAdmin_get_formsets():
     ma = ModelAdmin(SimpleModel, AdminSite())
 
     assert ma.get_fieldsets(request=MockRequest()) == [
-        (None, {"fields": ["name", "age", "is_active"]})
+        (None, {"fields": ["name", "age", "is_active", "is_deleted"]})
     ]
 
 

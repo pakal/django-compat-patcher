@@ -116,3 +116,22 @@ def test_fix_behaviour_utils_crypto_get_random_string_length():
     from django.utils.crypto import get_random_string
     assert len(get_random_string()) == 12  # Default length
     assert get_random_string(allowed_chars="f") ==  "f" * 12
+
+
+# Standalone test, unrelated to fixers
+@pytest.mark.django_db
+def test_NullBooleanField_still_operational():
+    """NullBooleanField model field is removed in django 4.0, but still usable if checks are silenced"""
+    from test_project.models import SimpleModel
+
+    record = SimpleModel()
+    record.save()
+    assert record.is_deleted is None
+
+    record.is_deleted = True
+    record.save()
+    assert record.is_deleted
+
+    assert SimpleModel.objects.first() == record
+
+

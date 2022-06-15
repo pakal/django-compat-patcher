@@ -26,6 +26,10 @@ INSTALLED_APPS = [
     "test_project",
 ]
 
+SILENCED_SYSTEM_CHECKS = [
+    "fields.E903"  # NullBooleanField is removed except for support in historical migrations
+]
+
 if not os.environ.get("IGNORE_CONTRIB_COMMENTS"):
     # old contrib packages, restored by proxifier in their original django.contrib.* namespace
     INSTALLED_APPS.append(
@@ -43,6 +47,8 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+MIDDLEWARE = MIDDLEWARE_CLASSES
+
 
 ROOT_URLCONF = "test_project.urls"
 
@@ -76,6 +82,8 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -95,3 +103,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = "/static/"
+
