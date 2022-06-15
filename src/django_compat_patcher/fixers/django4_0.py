@@ -475,3 +475,45 @@ def fix_deletion_forms_models_ModelMultipleChoiceField_error_messages_list_entry
             self.error_messages['invalid_list'] = self.error_messages['list']
 
     utils.inject_callable(ModelMultipleChoiceField, "__init__", __patched_ModelMultipleChoiceField__init__)
+
+
+@django1_40_bc_fixer(fixer_delayed=True)
+def fix_behaviour_middleware_get_response_parameter_nullability(utils):
+    """Keep `get_response` argument optional and nullable in middleware classes"""
+
+    # We patch subclasses to make the get_response parameters optional, and we give it
+    # a non-None value so that MiddlewareMixin doesn't raise a ValueError('get_response must be provided.')
+
+    def fake_get_response(*args, **kwargs):
+        raise NotImplementedError("You must provide a get_response callback to your middleware")
+
+    def _patch_middleware_class_init(cls):
+        original_cls_init = cls.__init__
+
+        def __patched_init__(self, get_response=None, *args, **kwargs):
+            if get_response is None:
+                get_response = fake_get_response
+
+            original_cls_init(self, get_response, *args, **kwargs)
+
+        utils.inject_callable(cls, "__init__", __patched_init__)
+
+    from django.utils.deprecation import MiddlewareMixin
+    from django.contrib.sessions.middleware import SessionMiddleware
+    from django.middleware.cache import UpdateCacheMiddleware, FetchFromCacheMiddleware, CacheMiddleware
+    from django.middleware.security import SecurityMiddleware
+
+    from django.conf import settings
+
+    middleware_classes = [MiddlewareMixin, #RedirectFallbackMiddleware,
+                    SessionMiddleware, UpdateCacheMiddleware, FetchFromCacheMiddleware,
+                    CacheMiddleware, SecurityMiddleware]
+
+    if "django.contrib.redirects" in settings.INSTALLED_APPS:
+        from django.contrib.redirects.middleware import RedirectFallbackMiddleware
+        middleware_classes.append(RedirectFallbackMiddleware)
+
+    for middleware_classe in middleware_classes:
+        _patch_middleware_class_init(middleware_classe)
+
+

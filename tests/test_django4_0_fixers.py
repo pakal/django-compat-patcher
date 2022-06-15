@@ -151,6 +151,63 @@ def test_fix_deletion_forms_models_ModelMultipleChoiceField_error_messages_list_
     assert field.error_messages['invalid_list'] == 'NOT A LIST OF VALUES'  # Properly transferred
 
 
+def test_fix_behaviour_middleware_get_response_parameter_nullability():
+    from django.contrib.admindocs.middleware import XViewMiddleware
+    from django.contrib.auth.middleware import (
+        AuthenticationMiddleware, RemoteUserMiddleware,
+    )
+    from django.contrib.flatpages.middleware import FlatpageFallbackMiddleware
+    from django.contrib.messages.middleware import MessageMiddleware
+    from django.contrib.redirects.middleware import RedirectFallbackMiddleware
+    from django.contrib.sessions.middleware import SessionMiddleware
+    from django.contrib.sites.middleware import CurrentSiteMiddleware
+    from django.middleware.cache import (
+        CacheMiddleware, FetchFromCacheMiddleware, UpdateCacheMiddleware,
+    )
+    from django.middleware.clickjacking import XFrameOptionsMiddleware
+    from django.middleware.common import (
+        BrokenLinkEmailsMiddleware, CommonMiddleware,
+    )
+    from django.middleware.csrf import CsrfViewMiddleware
+    from django.middleware.gzip import GZipMiddleware
+    from django.middleware.http import ConditionalGetMiddleware
+    from django.middleware.locale import LocaleMiddleware
+    from django.middleware.security import SecurityMiddleware
+
+    middlewares = [
+        AuthenticationMiddleware,
+        BrokenLinkEmailsMiddleware,
+        CacheMiddleware,
+        CommonMiddleware,
+        ConditionalGetMiddleware,
+        CsrfViewMiddleware,
+        CurrentSiteMiddleware,
+        FetchFromCacheMiddleware,
+        FlatpageFallbackMiddleware,
+        GZipMiddleware,
+        LocaleMiddleware,
+        MessageMiddleware,
+        RedirectFallbackMiddleware,
+        RemoteUserMiddleware,
+        SecurityMiddleware,
+        SessionMiddleware,
+        UpdateCacheMiddleware,
+        XFrameOptionsMiddleware,
+        XViewMiddleware,
+    ]
+
+    for middleware in middlewares:
+        obj = middleware()
+        assert callable(obj.get_response)  # Fallback on dummy callable
+
+        obj = middleware(None)
+        assert callable(obj.get_response)  # Fallback on dummy callable
+
+        dummy_get_response = lambda *args, **kwargs: 777
+        obj = middleware(dummy_get_response)
+        assert obj.get_response is dummy_get_response
+
+
 # Standalone test, unrelated to fixers
 @pytest.mark.django_db
 def test_NullBooleanField_still_operational():
@@ -180,4 +237,3 @@ def test_postgres_JSONField_still_operational():
 
     record = SimpleModel.objects.first()
     assert record.misc_postgres_json == dict(a="33")
-

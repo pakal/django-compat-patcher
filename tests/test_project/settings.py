@@ -24,6 +24,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "test_project",
+
+    # To access their middlewares for patching:
+    "django.contrib.redirects",
+    "django.contrib.flatpages",
 ]
 
 SILENCED_SYSTEM_CHECKS = [
