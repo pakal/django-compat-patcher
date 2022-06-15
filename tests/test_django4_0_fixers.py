@@ -60,7 +60,7 @@ def test_fix_deletion_utils_translation_ugettext_utilities():
 
 
 def test_fix_deletion_utils_text_unescape_entities():
-    from django.utils.functional import lazystr
+
     from django.utils import text as text_module
 
     items = [
@@ -74,11 +74,20 @@ def test_fix_deletion_utils_text_unescape_entities():
         ('foo &amp; bar', 'foo & bar'),
         ('foo & bar', 'foo & bar'),
     ]
+
     for value, output in items:
+
         assert text_module.unescape_entities(value) == output
-        assert text_module.unescape_entities(lazystr(value)) == output
+
+        if _test_utilities.DJANGO_VERSION_TUPLE >= (2, 0):
+            from django.utils.functional import lazystr
+            assert text_module.unescape_entities(lazystr(value)) == output
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (2, 0),
+    reason="requires new is_safe_url() with allowed_hosts parameter",
+)
 def test_fix_deletion_utils_http_is_safe_url():
     from django.utils.http import is_safe_url
     assert is_safe_url('https://example.com', allowed_hosts={'example.com'}, require_https=True)
@@ -131,6 +140,10 @@ def test_fix_deletion_contrib_postgres_forms_jsonb():
     del json
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (2, 0),
+    reason="requires initial implementation of django.contrib.postgres.fields.jsonb",
+)
 def test_fix_deletion_contrib_postgres_fields_jsonb():
     from django.contrib.postgres.fields.jsonb import KeyTextTransform, KeyTransform
     assert KeyTransform('foo', 'bar')
@@ -157,6 +170,10 @@ def test_fix_deletion_forms_models_ModelMultipleChoiceField_error_messages_list_
         assert field.error_messages['invalid_list'] == 'NOT A LIST OF VALUES'  # Properly transferred
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (2, 0),
+    reason="requires new middleware system with get_response attribute",
+)
 def test_fix_behaviour_middleware_get_response_parameter_nullability():
     from django.contrib.admindocs.middleware import XViewMiddleware
     from django.contrib.auth.middleware import (
@@ -203,16 +220,17 @@ def test_fix_behaviour_middleware_get_response_parameter_nullability():
     ]
 
     for middleware in middlewares:
-        obj1 = middleware()
-        obj2 = middleware(None)
 
+        obj1 = middleware()
         # Fallback on dummy callable when Django>=4.0
         assert obj1.get_response is None or callable(obj1.get_response)
+
+        obj2 = middleware(None)
         assert obj2.get_response is None or callable(obj2.get_response)
 
         dummy_get_response = lambda *args, **kwargs: 777
-        obj = middleware(dummy_get_response)
-        assert obj.get_response is dummy_get_response
+        obj3 = middleware(dummy_get_response)
+        assert obj3.get_response is dummy_get_response
 
 
 # Standalone test, unrelated to fixers
@@ -234,7 +252,7 @@ def test_NullBooleanField_still_operational():
 
 # Standalone test, unrelated to fixers
 @pytest.mark.skipif(
-    _test_utilities.DJANGO_VERSION_TUPLE < (3, 1),
+    _test_utilities.DJANGO_VERSION_TUPLE < (3, 2),
     reason="requires common JSONField implementation (sqlite-compatible)",
 )
 @pytest.mark.django_db

@@ -106,8 +106,12 @@ def test_fix_deletion_contrib_admin_ModelAdmin_get_formsets():
 
     ma = ModelAdmin(SimpleModel, AdminSite())
 
+    expected_fields = ["name", "age", "is_active", "is_deleted", "misc_postgres_json"]
+    if _test_utilities.DJANGO_VERSION_TUPLE < (3, 2):
+        expected_fields.pop()  # NO JSONField in project
+
     assert ma.get_fieldsets(request=MockRequest()) == [
-        (None, {"fields": ["name", "age", "is_active", "is_deleted", "misc_postgres_json"]})
+        (None, {"fields": expected_fields})
     ]
 
 

@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
         ('test_project', '0001_initial'),
     ]
 
-    if django.VERSION >= (2, 0):
+    if django.VERSION >= (3, 2):
         import django.contrib.postgres.fields.jsonb
         operations = [
             migrations.AddField(

@@ -1,7 +1,7 @@
 from django.db import models
 import django
 
-if django.VERSION >= (2, 0):
+if django.VERSION >= (3, 2):
     from django.contrib.postgres.fields import JSONField as PgJSONField
 else:
     PgJSONField = None
