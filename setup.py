@@ -15,15 +15,13 @@ classifiers = """\
 Development Status :: 5 - Production/Stable
 Intended Audience :: Developers
 Intended Audience :: Information Technology
-Intended Audience :: System Administrators
 License :: OSI Approved :: MIT License
-Programming Language :: Python
-Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3.4
-Programming Language :: Python :: 3.5
+Natural Language :: English
 Programming Language :: Python :: 3.6
 Programming Language :: Python :: 3.7
-Framework :: Django
+Programming Language :: Python :: 3.8
+Programming Language :: Python :: 3.9
+Programming Language :: Python :: 3.10
 Topic :: Software Development :: Libraries :: Python Modules
 Operating System :: Microsoft :: Windows
 Operating System :: Unix
@@ -61,8 +59,4 @@ setup(
         "pytest-cov",
         "django-compat",
     ],  # Beware, keep in sync with tox.ini
-    use_2to3=True,
-    # convert_2to3_doctests=['src/your/module/README.txt'],
-    # use_2to3_fixers=['your.fixers'],
-    use_2to3_exclude_fixers=["lib2to3.fixes.fix_import"],
 )
