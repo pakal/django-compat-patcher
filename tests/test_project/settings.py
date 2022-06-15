@@ -27,7 +27,8 @@ INSTALLED_APPS = [
 ]
 
 SILENCED_SYSTEM_CHECKS = [
-    "fields.E903"  # NullBooleanField is removed except for support in historical migrations
+    "fields.E903",  # NullBooleanField is removed except for support in historical migrations
+    "fields.E904",  # django.contrib.postgres.fields.JSONField is removed except for support in historical migrations
 ]
 
 if not os.environ.get("IGNORE_CONTRIB_COMMENTS"):
@@ -78,7 +79,7 @@ WSGI_APPLICATION = "test_project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "NAME": os.path.join(BASE_DIR, "test_project", "db.sqlite3"),
     }
 }
 

@@ -150,3 +150,19 @@ def test_NullBooleanField_still_operational():
     assert SimpleModel.objects.first() == record
 
 
+# Standalone test, unrelated to fixers
+@pytest.mark.django_db
+def test_postgres_JSONField_still_operational():
+    """The django.contrib.postgres.fields.JSONField model field is removed in django 4.0, but still usable if checks are silenced"""
+    from test_project.models import SimpleModel
+
+    # This works with sqlite because postgres->JSONField actually a generic field now
+    record = SimpleModel(misc_postgres_json=dict(a="33"))
+    record.save()
+
+    record = SimpleModel.objects.first()
+    assert record.misc_postgres_json == dict(a="33")
+
+
+
+
