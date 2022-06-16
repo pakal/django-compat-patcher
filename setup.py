@@ -6,11 +6,16 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))  # security
 
 from setuptools import setup, find_packages
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def read(fname):
+def read_file(fname):
+    if not os.path.isabs(fname):
+        fname = os.path.join(ROOT_DIR, fname)
     return open(os.path.join(os.path.dirname(__file__), fname)).read().strip()
 
+VERSION = read_file("VERSION").strip()
 
+assert VERSION == "0.11", VERSION  # ELSE CHECK THESE PYTHON VERSION CLASSIFIERS BELOW FOR UPDATES
 classifiers = """\
 Development Status :: 5 - Production/Stable
 Intended Audience :: Developers
@@ -37,7 +42,7 @@ extras = {"comments": ["django-contrib-comments"]}
 
 setup(
     name="django-compat-patcher",
-    version=read("VERSION"),
+    version=VERSION,
     author="Pascal Chambon & others",
     author_email="pythoniks@gmail.com",
     url="https://github.com/pakal/django-compat-patcher",
@@ -45,7 +50,7 @@ setup(
     platforms=["any"],
     description="A monkey-patcher to ease the transition of project to latest Django versions.",
     classifiers=filter(None, classifiers.split("\n")),
-    long_description=read("README.rst"),
+    long_description=read_file("README.rst"),
     package_dir={"": "src"},
     packages=packages,
     install_requires=['compat-patcher-core>=1.2',

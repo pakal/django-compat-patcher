@@ -1,11 +1,13 @@
 Version 0.11
 ==================
+
 * add fixers for Django 3.2 and Django 4.0
 * drop support for python 2.7, 3.4 and 3.5 due to lack of Pip support
 
 
 Version 0.10
 ==================
+
 * add more fixers for Django 3.0 and 3.1, especially old staticfiles tags
 
 

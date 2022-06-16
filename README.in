@@ -27,7 +27,18 @@ How to setup
 
 Django-compat-patcher is currently tested on python 3.6/3.7/3.8/3.9/3.10, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0/3.1/3.2/4.0, where these combinations make sense (e.g. Django2+ dropped support for Python2).
 
-First add :code:`django-compat-patcher` to your project requirements, or install it directly with `pip install django-compat-patcher`.
+First add :code:`django-compat-patcher` to your project requirements, or install it directly with :code:`pip install django-compat-patcher`.
+
+The Django settings of your project are not altered by compatibility shims, so they should be kept up-to-date with your installed Django version (eg. now use `TEMPLATES`, `MIDDLEWARE`, and not deprecated equivalents). In particular, always put real package names in your INSTALLED_APPS, not their potential "import aliases".
+
+Despite DCP patching, you might encounter errors raised by the Django check framework, like the following. Use the `SILENCED_SYSTEM_CHECKS <https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS>`_ setting to bypass such blocking checks.
+
+::
+
+    (fields.E900) IPAddressField has been removed except for support in historical migrations. HINT: Use GenericIPAddressField instead.
+    (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
+    (fields.E903) NullBooleanField is removed except for support in historical migrations.
+
 
 Activation method 1 - with code
 *********************************
@@ -40,17 +51,6 @@ You can activate patching with::
 This code should be placed before any use of Django (eg. in your :code:`manage.py` or your :code:`wsgi.py` script), but after the :code:`DJANGO_SETTINGS_MODULE` environment variable has been set.
 
 In particular, some fixers only work if they are applied before the loading of INSTALLED_APPS (so before django.setup() gets called).
-
-The Django settings of your project are not altered by compatibility shims, so they should be kept up-to-date with your installed Django version (eg. now use `TEMPLATES`, `MIDDLEWARE`, and not deprecated equivalents). In particular, always put real package names in INSTALLED_APPS, not their potential "import aliases".
-
-Despite DCP patching, you might encounter errors raised by the Django check framework, like the following. Use the `SILENCED_SYSTEM_CHECKS <https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS>`_ setting to bypass such blocking checks.
-
-::
-
-    (fields.E900) IPAddressField has been removed except for support in historical migrations. HINT: Use GenericIPAddressField instead.
-    (fields.E160) The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
-    (fields.E903) NullBooleanField is removed except for support in historical migrations.
-
 
 **Note for Pytest-Django users**
 
@@ -71,7 +71,7 @@ You may force the patching of Django at python startup using https://pypi.org/pr
 This unintrusive method is especially useful to repeatedly launch the unit-tests of a library, with different settings, and thus
 determine how many fixers it needs to function properly under latest Django version::
 
-    python-main-wrapper django_compat_patcher:patch django test
+    python-main-wrapper django_compat_patcher:patch manage.py test
     python-main-wrapper django_compat_patcher:patch pytest
     python-main-wrapper django_compat_patcher:patch -m <some-module>
 
