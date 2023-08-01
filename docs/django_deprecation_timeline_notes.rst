@@ -15,6 +15,80 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
 
 
 
+4.1
+----
+
+Miscellaneous
+
+    The context for sitemap index templates of a flat list of URLs is deprecated. Custom sitemap index templates should be updated for the adjusted context variables, expecting a list of objects with location and optional lastmod attributes.
+
+    CSRF_COOKIE_MASKED transitional setting is deprecated.
+
+    The name argument of django.utils.functional.cached_property() is deprecated as it’s unnecessary as of Python 3.6.
+
+    The opclasses argument of django.contrib.postgres.constraints.ExclusionConstraint is deprecated in favor of using OpClass() in ExclusionConstraint.expressions. To use it, you need to add 'django.contrib.postgres' in your INSTALLED_APPS.
+
+    After making this change, makemigrations will generate a new migration with two operations: RemoveConstraint and AddConstraint. Since this change has no effect on the database schema, the SeparateDatabaseAndState operation can be used to only update the migration state without running any SQL. Move the generated operations into the state_operations argument of SeparateDatabaseAndState. For example:
+
+    class Migration(migrations.Migration):
+        ...
+
+        operations = [
+            migrations.SeparateDatabaseAndState(
+                database_operations=[],
+                state_operations=[
+                    migrations.RemoveConstraint(...),
+                    migrations.AddConstraint(...),
+                ],
+            ),
+        ]
+
+    The undocumented ability to pass errors=None to SimpleTestCase.assertFormError() and assertFormsetError() is deprecated. Use errors=[] instead.
+
+    django.contrib.sessions.serializers.PickleSerializer is deprecated due to the risk of remote code execution.
+
+    The usage of QuerySet.iterator() on a queryset that prefetches related objects without providing the chunk_size argument is deprecated. In older versions, no prefetching was done. Providing a value for chunk_size signifies that the additional query per chunk needed to prefetch is desired.
+
+    Passing unsaved model instances to related filters is deprecated. In Django 5.0, the exception will be raised.
+
+    created=True is added to the signature of RemoteUserBackend.configure_user(). Support for RemoteUserBackend subclasses that do not accept this argument is deprecated.
+
+    The django.utils.timezone.utc alias to datetime.timezone.utc is deprecated. Use datetime.timezone.utc directly.
+
+    Passing a response object and a form/formset name to SimpleTestCase.assertFormError() and assertFormsetError() is deprecated. Use:
+
+    assertFormError(response.context["form_name"], ...)
+    assertFormsetError(response.context["formset_name"], ...)
+
+    or pass the form/formset object directly instead.
+
+    The undocumented django.contrib.gis.admin.OpenLayersWidget is deprecated.
+
+    django.contrib.auth.hashers.CryptPasswordHasher is deprecated.
+
+    The ability to pass nulls_first=False or nulls_last=False to Expression.asc() and Expression.desc() methods, and the OrderBy expression is deprecated. Use None instead.
+
+    The "django/forms/default.html" and "django/forms/formsets/default.html" templates which are a proxy to the table-based templates are deprecated. Use the specific template instead.
+
+    The undocumented LogoutView.get_next_page() method is renamed to get_success_url().
+
+Features removed in 4.1
+
+These features have reached the end of their deprecation cycle and are removed in Django 4.1.
+
+See Features deprecated in 3.2 for details on these changes, including how to remove usage of these features.
+
+    Support for assigning objects which don’t support creating deep copies with copy.deepcopy() to class attributes in TestCase.setUpTestData() is removed.
+    Support for using a boolean value in BaseCommand.requires_system_checks is removed.
+    The whitelist argument and domain_whitelist attribute of django.core.validators.EmailValidator are removed.
+    The default_app_config application configuration variable is removed.
+    TransactionTestCase.assertQuerysetEqual() no longer calls repr() on a queryset when compared to string values.
+    The django.core.cache.backends.memcached.MemcachedCache backend is removed.
+    Support for the pre-Django 3.2 format of messages used by django.contrib.messages.storage.cookie.CookieStorage is removed.
+
+
+
+
 4.0
 ----
 
