@@ -1,16 +1,19 @@
 # appveyor.yml
 ---
 environment:
+  # We only request a subset of the total Tox test matrix, here
   matrix:
-  - TOXENV: py37
+  - TOXENV: py37-django1_8
     PYTHON: "3.7"
-  - TOXENV: py38
+  - TOXENV: py38-django2_2
     PYTHON: "3.8"
-  - TOXENV: py39
+  - TOXENV: py39-django3_2
     PYTHON: "3.9"
-  - TOXENV: py310
+  - TOXENV: py310-django4_0
     PYTHON: "3.10"
-  - TOXENV: py311
+  - TOXENV: py311-django4_2
+    PYTHON: "3.11"
+  - TOXENV: py311-nocontribcomments
     PYTHON: "3.11"
   #FIXME add python 3.12 when available
 
