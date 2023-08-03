@@ -15,7 +15,7 @@ django1_41_bc_fixer = partial(
 
 @django1_41_bc_fixer()
 def fix_deletion_utils_text_replace_entity(utils):
-    """Preserve _replace_entity() and _entity_re in django.utils.text module"""
+    """Preserve undocumented _replace_entity() and _entity_re in django.utils.text module"""
     import html.entities
     from django.utils.regex_helper import _lazy_re_compile
     from django.utils import text
@@ -42,4 +42,15 @@ def fix_deletion_utils_text_replace_entity(utils):
 
     utils.inject_callable(text, "_replace_entity", _replace_entity)
     utils.inject_attribute(text, "_entity_re", _entity_re)
+
+
+@django1_41_bc_fixer()
+def fix_deletion_utils_timezone_utc(utils):
+    """Preserve django.utils.timezone.utc alias to datetime.timezone.utc"""
+    import django.utils.timezone
+    assert not hasattr(django.utils.timezone, "utc")
+
+    import datetime.timezone
+
+    utils.inject_attribute(django.utils.timezone, "utc", datetime.timezone.utc)
 
