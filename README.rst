@@ -1,9 +1,8 @@
 
 .. NOTE: only edit README.in, and use generate_readme.py to enrich it with the table of fixers
 
-
-.. image:: https://travis-ci.com/pakal/django-compat-patcher.svg?branch=master
-    :target: https://travis-ci.com/pakal/django-compat-patcher
+.. image:: https://ci.appveyor.com/api/projects/status/v4rmlu4o3a45q523/branch/master
+    :target: https://ci.appveyor.com/project/pakal/django-compat-patcher
 
 
 =====================
@@ -25,7 +24,7 @@ Feel free to ask for (or contribute) new fixers, for backwards or forwards compa
 How to setup
 ==================
 
-Django-compat-patcher is currently tested on python 3.6/3.7/3.8/3.9/3.10, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0/3.1/3.2/4.0, where these combinations make sense (e.g. Django2+ dropped support for Python2).
+Django-compat-patcher is currently tested on python 3.6/3.7/3.8/3.9/3.10/3.11, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0/3.1/3.2/4.0/4.1/4.2, where these combinations make sense (e.g. Django2+ dropped support for Python2).
 
 First add :code:`django-compat-patcher` to your project requirements, or install it directly with :code:`pip install django-compat-patcher`.
 
@@ -196,7 +195,7 @@ Note that DCP does NOT actually use stdlib loggers, because it mostly performs o
 Table of fixers
 ===============
 
-There are currently 86 fixers available.
+There are currently 86 available fixers.
 
 +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Fixer and its ID                                                                                                                                                                                                                                         | Fixer family                                                                                                                                                                                                                                             | Min version                                                                                                                                                                                                                                              | Max version                                                                                                                                                                                                                                              |
