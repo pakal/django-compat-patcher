@@ -12,19 +12,24 @@ def test_fix_deletion_utils_text_replace_entity():
 def test_fix_behaviour_core_validators_EmailValidator_whitelist():
     from django.core.validators import EmailValidator
 
+    has_allowlist = hasattr(EmailValidator, "domain_allowlist")
+
     validator = EmailValidator(whitelist=['localdomain'])
-    assert validator.domain_allowlist == ['localdomain']
     assert validator('email@localdomain') is None
-    assert validator.domain_allowlist == validator.domain_whitelist
+    if has_allowlist:
+        assert validator.domain_allowlist == ['localdomain']
+        assert validator.domain_allowlist == validator.domain_whitelist
 
     validator = EmailValidator()
     validator.domain_whitelist = ['mydomain2']
-    assert validator.domain_allowlist == validator.domain_whitelist == ['mydomain2']
+    if has_allowlist:
+        assert validator.domain_allowlist == validator.domain_whitelist == ['mydomain2']
 
-    validator = EmailValidator(allowlist=['localdomain3'])
-    assert validator.domain_allowlist == ['localdomain3']
-    assert validator('email@localdomain3') is None
-    assert validator.domain_allowlist == validator.domain_whitelist
+    if has_allowlist:
+        validator = EmailValidator(allowlist=['localdomain3'])
+        assert validator('email@localdomain3') is None
+        assert validator.domain_allowlist == ['localdomain3']
+        assert validator.domain_allowlist == validator.domain_whitelist
 
 
 def test_fix_behaviour_views_static_was_modified_since():
