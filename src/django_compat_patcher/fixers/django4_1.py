@@ -15,7 +15,7 @@ django1_41_bc_fixer = partial(
 
 @django1_41_bc_fixer()
 def fix_deletion_utils_text_replace_entity(utils):
-    """Preserve _replace_entity() and _entity_re in django.utils.text module"""
+    """Preserve undocumented _replace_entity() and _entity_re in django.utils.text module"""
     import html.entities
     from django.utils.regex_helper import _lazy_re_compile
     from django.utils import text
@@ -43,3 +43,42 @@ def fix_deletion_utils_text_replace_entity(utils):
     utils.inject_callable(text, "_replace_entity", _replace_entity)
     utils.inject_attribute(text, "_entity_re", _entity_re)
 
+
+@django1_41_bc_fixer()
+def fix_behaviour_core_validators_EmailValidator_whitelist(utils):
+    """Preserve whitelist parameter of EmailValidator, superseded by allowlist"""
+    from django.core.validators import EmailValidator
+    original_EmailValidator_init = EmailValidator.__init__
+
+    @property
+    def domain_whitelist(self):
+        utils.emit_warning(
+            'The domain_whitelist attribute is deprecated in favor of '
+            'domain_allowlist.',
+            RemovedInDjango41Warning,
+            stacklevel=2,
+        )
+        return self.domain_allowlist
+
+    @domain_whitelist.setter
+    def domain_whitelist(self, allowlist):
+        utils.emit_warning(
+            'The domain_whitelist attribute is deprecated in favor of '
+            'domain_allowlist.',
+            RemovedInDjango41Warning,
+            stacklevel=2,
+        )
+        self.domain_allowlist = allowlist
+
+    def __init__EmailValidator__(self, message=None, code=None, allowlist=None, *, whitelist=None):
+        if whitelist is not None:
+            allowlist = whitelist
+            warnings.warn(
+                'The whitelist argument is deprecated in favor of allowlist.',
+                RemovedInDjango41Warning,
+                stacklevel=2,
+            )
+        original_EmailValidator_init(self, message=message, code=code, allowlist=allowlist)
+
+    utils.inject_attribute(EmailValidator, "domain_whitelist", domain_whitelist)
+    utils.inject_callable(EmailValidator, "__init__", __init__EmailValidator__)
