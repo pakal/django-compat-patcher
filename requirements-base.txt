@@ -13,4 +13,4 @@ tox>=3.10
 check-manifest>=0.40
 
 # Necessary to test postgres utils, disable this to ensure all is OK with default DCP_EXCLUDE_FIXER_IDS
-psycopg2>=2.8
+psycopg2-binary>=2.8
