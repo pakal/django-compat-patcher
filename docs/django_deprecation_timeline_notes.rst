@@ -5,8 +5,6 @@ Annotated Django Deprecation Timeline
 This list is meant to help DCP keep track of what fixers have been implemented, which ones 
 would be welcome, and which ones will most probably never be added (eg. because they introduce security issues, or deal with too complex details...).
 
-See the different "kinds" available to triage changes, in CONTRIBUTE.rst
-
 .. role:: kind
 
 .. raw:: html
@@ -14,9 +12,71 @@ See the different "kinds" available to triage changes, in CONTRIBUTE.rst
     <style> .kind {color: blue} </style>
 
 
+4.2
+-----
+
+Miscellaneous
+
+    The undocumented django.http.multipartparser.parse_header() function is removed. Use django.utils.http.parse_header_parameters() instead.
+    {% blocktranslate asvar … %} result is now marked as safe for (HTML) output purposes.
+    The autofocus HTML attribute in the admin search box is removed as it can be confusing for screen readers.
+    The makemigrations --check option no longer creates missing migration files.
+    The alias argument for Expression.get_group_by_cols() is removed.
+    The minimum supported version of sqlparse is increased from 0.2.2 to 0.3.1.
+    The undocumented negated parameter of the Exists expression is removed.
+    The is_summary argument of the undocumented Query.add_annotation() method is removed.
+    The minimum supported version of SQLite is increased from 3.9.0 to 3.21.0.
+    The minimum supported version of asgiref is increased from 3.5.2 to 3.6.0.
+    UserCreationForm now rejects usernames that differ only in case. If you need the previous behavior, use BaseUserCreationForm instead.
+    The minimum supported version of mysqlclient is increased from 1.4.0 to 1.4.3.
+    The minimum supported version of argon2-cffi is increased from 19.1.0 to 19.2.0.
+    The minimum supported version of Pillow is increased from 6.2.0 to 6.2.1.
+    The minimum supported version of jinja2 is increased from 2.9.2 to 2.11.0.
+    The minimum supported version of redis-py is increased from 3.0.0 to 3.4.0.
+    Manually instantiated WSGIRequest objects must be provided a file-like object for wsgi.input. Previously, Django was more lax than the expected behavior as specified by the WSGI specification.
+    Support for PROJ < 5 is removed.
+    EmailBackend now verifies a hostname and certificates. If you need the previous behavior that is less restrictive and not recommended, subclass EmailBackend and override the ssl_context property.
+
+
+    The BaseUserManager.make_random_password() method is deprecated. See recipes and best practices for using Python’s secrets module to generate passwords.
+
+    The length_is template filter is deprecated in favor of length and the == operator within an {% if %} tag. For example
+
+    {% if value|length == 4 %}…{% endif %}
+    {% if value|length == 4 %}True{% else %}False{% endif %}
+
+    instead of:
+
+    {% if value|length_is:4 %}…{% endif %}
+    {{ value|length_is:4 }}
+
+    django.contrib.auth.hashers.SHA1PasswordHasher, django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher, and django.contrib.auth.hashers.UnsaltedMD5PasswordHasher are deprecated.
+
+    django.contrib.postgres.fields.CICharField is deprecated in favor of CharField(db_collation="…") with a case-insensitive non-deterministic collation.
+
+    django.contrib.postgres.fields.CIEmailField is deprecated in favor of EmailField(db_collation="…") with a case-insensitive non-deterministic collation.
+
+    django.contrib.postgres.fields.CITextField is deprecated in favor of TextField(db_collation="…") with a case-insensitive non-deterministic collation.
+
+    django.contrib.postgres.fields.CIText mixin is deprecated.
+
+    The map_height and map_width attributes of BaseGeometryWidget are deprecated, use CSS to size map widgets instead.
+
+    SimpleTestCase.assertFormsetError() is deprecated in favor of assertFormSetError().
+
+    TransactionTestCase.assertQuerysetEqual() is deprecated in favor of assertQuerySetEqual().
+
+    Passing positional arguments to Signer and TimestampSigner is deprecated in favor of keyword-only arguments.
+
+    The DEFAULT_FILE_STORAGE setting is deprecated in favor of STORAGES["default"].
+
+    The STATICFILES_STORAGE setting is deprecated in favor of STORAGES["staticfiles"].
+
+    The django.core.files.storage.get_storage_class() function is deprecated.
+
 
 4.1
-----
+-----
 
 Miscellaneous
 
@@ -80,17 +140,15 @@ See Features deprecated in 3.2 for details on these changes, including how to re
 
     Support for assigning objects which don’t support creating deep copies with copy.deepcopy() to class attributes in TestCase.setUpTestData() is removed.
     Support for using a boolean value in BaseCommand.requires_system_checks is removed.
-    The whitelist argument and domain_whitelist attribute of django.core.validators.EmailValidator are removed.
+    The whitelist argument and domain_whitelist attribute of django.core.validators.EmailValidator are removed.  :kind:`BEHAVIOUR` [FIXED]
     The default_app_config application configuration variable is removed.
     TransactionTestCase.assertQuerysetEqual() no longer calls repr() on a queryset when compared to string values.
     The django.core.cache.backends.memcached.MemcachedCache backend is removed.
     Support for the pre-Django 3.2 format of messages used by django.contrib.messages.storage.cookie.CookieStorage is removed.
 
 
-
-
 4.0
-----
+-----
 
 DeleteView now uses FormMixin to handle POST requests. As a consequence, any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
 
@@ -157,7 +215,7 @@ The DEFAULT_HASHING_ALGORITHM transitional setting is removed.
 
 
 3.2
-----
+-----
 
 **Miscellaneous**
 
@@ -209,7 +267,7 @@ The minimum supported version of asgiref is increased from 3.2.10 to 3.3.2.
 
 
 3.1
-----
+-----
 
 **Miscellaneous**
 The cache keys used by cache and generated by make_template_fragment_key() are different from the keys generated by older versions of Django. After upgrading to Django 3.1, the first request to any previously cached template fragment will be a cache miss.
@@ -248,7 +306,7 @@ ModelChoiceIterator, used by ModelChoiceField and ModelMultipleChoiceField, now 
 
 
 3.0
-----
+-----
 
 - Model.save() when providing a default for the primary key
 - New default value for the FILE_UPLOAD_PERMISSIONS setting
@@ -298,7 +356,7 @@ Features removed in 3.0:
 
 
 2.2
-----
+-----
 
 - Admin actions are no longer collected from base ModelAdmin classes
 - TransactionTestCase serialized data loading
@@ -414,7 +472,7 @@ MISSING ENTRY IN OFFICIAL DOCS:
 
 
 1.11
----------
+-----
 
 See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-changes-in-1-11
 
@@ -511,6 +569,7 @@ See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-
 - Support for the syntax of {% cycle %} that uses comma-separated arguments will be removed.
 - The warning that Signer issues when given an invalid separator will become an exception.
 
+
 1.9
 -----
 
@@ -567,6 +626,7 @@ See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-
 - The django.contrib.contenttypes.generic module will be removed.
 - Private APIs django.db.models.sql.where.WhereNode.make_atom() and django.db.models.sql.where.Constraint will be removed.
 
+
 1.8
 -----
 
@@ -604,6 +664,7 @@ See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-
 - Geographic Sitemaps will be removed (django.contrib.gis.sitemaps.views.index and django.contrib.gis.sitemaps.views.sitemap).
 - django.utils.html.fix_ampersands, the fix_ampersands template filter and django.utils.html.clean_html will be removed following an accelerated deprecation.
 
+
 1.7
 -----
 
@@ -623,7 +684,7 @@ See https://docs.djangoproject.com/en/2.2/releases/1.11/#backwards-incompatible-
 
     
 1.6
-###
+-----
 
 - The attribute HttpRequest.raw_post_data was renamed to HttpRequest.body in 1.4. The backward compatibility will be removed, HttpRequest.raw_post_data will no longer work. :kind:`DELETION` [FIXED]
     
