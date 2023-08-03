@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 # Filters applied first, the special value "*" means "all"
-DCP_INCLUDE_FIXER_IDS = "*"
+DCP_INCLUDE_FIXER_IDS = "*"  # FIXME change this as it surprises when setting just DCP_INCLUDE_FIXER_FAMILIES?
 DCP_INCLUDE_FIXER_FAMILIES = []
 
 # Filters applied last

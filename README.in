@@ -65,7 +65,8 @@ You may force the patching of Django at python startup using https://pypi.org/pr
 
     pip install main-wrapper
     export DJANGO_SETTINGS_MODULE=<your-settings-module>  # Mandatory
-    export DCP_INCLUDE_FIXER_FAMILIES='["django3.0"]'  # Optional DCP setting tweaks
+    export DCP_INCLUDE_FIXER_IDS='[]'  # Disable the "all fixers" set by default
+    export DCP_INCLUDE_FIXER_FAMILIES='["django3.0"]'  # Enable just this family of fixers
     python-main-wrapper django_compat_patcher:patch <your-normal-command-line>
 
 This unintrusive method is especially useful to repeatedly launch the unit-tests of a library, with different settings, and thus
