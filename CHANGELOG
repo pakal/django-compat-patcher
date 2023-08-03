@@ -1,3 +1,11 @@
+Version 0.12
+==================
+
+* add fixers for Django 4.1
+* add support for python 3.11
+* drop support for python 3.6
+
+
 Version 0.11
 ==================
 
