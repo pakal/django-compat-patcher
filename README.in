@@ -24,7 +24,7 @@ Feel free to ask for (or contribute) new fixers, for backwards or forwards compa
 How to setup
 ==================
 
-Django-compat-patcher is currently tested on python 3.6/3.7/3.8/3.9/3.10/3.11, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0/3.1/3.2/4.0/4.1/4.2, where these combinations make sense (e.g. Django2+ dropped support for Python2).
+Django-compat-patcher is currently tested on python 3.7/3.8/3.9/3.10/3.11, with Django versions 1.8/1.9/1.10/1.11/2.0/2.1/2.2/3.0/3.1/3.2/4.0/4.1/4.2, where these combinations make sense (e.g. Django2+ dropped support for Python2).
 
 First add :code:`django-compat-patcher` to your project requirements, or install it directly with :code:`pip install django-compat-patcher`.
 
