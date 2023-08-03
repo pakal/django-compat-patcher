@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-compat-patcher"
+version = "0.12"
+authors = [
+    {name = "Pascal Chambon", email = "pythoniks@gmail.com"},
+]
+description = "A monkey-patcher to ease the transition of project to latest Django versions"
+readme = "README.rst"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: System :: Filesystems",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Operating System :: MacOS :: MacOS X",
+]
+dependencies = [
+    'compat-patcher-core>=1.2',
+    'six',
+    'Django'
+]
+
+[tool.setuptools]
+#packages = ["compat_patcher_core"]
+include-package-data = false
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["django_compat_patcher*"]
+exclude = ["tests*"]  # exclude packages matching these glob patterns (empty by default)
+namespaces = false
