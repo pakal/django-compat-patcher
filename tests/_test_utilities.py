@@ -5,6 +5,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_project.settings")
 
 import django
@@ -17,7 +18,6 @@ django_compat_patcher.patch(settings)
 django.setup()  # idempotent
 
 DJANGO_VERSION_TUPLE = django.VERSION
-
 
 
 
