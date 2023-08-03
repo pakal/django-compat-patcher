@@ -9,7 +9,6 @@ authors = [
     {name = "Pascal Chambon", email = "pythoniks@gmail.com"},
 ]
 description = "A monkey-patcher to ease the transition of project to latest Django versions"
-repository = "https://github.com/pakal/django-compat-patcher"
 readme = "README.rst"
 requires-python = ">=3.7"
 license = {text = "MIT"}
@@ -36,6 +35,9 @@ dependencies = [
     'six',
     'Django'
 ]
+
+[project.urls]
+Repository = "https://github.com/pakal/django-compat-patcher"
 
 [tool.setuptools]
 #packages = ["compat_patcher_core"]
