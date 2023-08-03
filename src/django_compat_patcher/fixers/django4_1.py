@@ -82,3 +82,17 @@ def fix_behaviour_core_validators_EmailValidator_whitelist(utils):
 
     utils.inject_attribute(EmailValidator, "domain_whitelist", domain_whitelist)
     utils.inject_callable(EmailValidator, "__init__", __init__EmailValidator__)
+
+
+@django1_41_bc_fixer()
+def fix_behaviour_views_static_was_modified_since(utils):
+    """Preserve (but ignore) the 'size' parameter of was_modified_since()"""
+
+    import django.views.static
+    original_was_modified_since = django.views.static.was_modified_since
+
+    def _was_modified_since(header=None, mtime=0, size=0):
+        del size  # About nobody uses HTTP_IF_MODIFIED_SINCE with "length" subparameter
+        return original_was_modified_since(header=header, mtime=mtime)
+
+    utils.inject_callable(django.views.static, "was_modified_since", _was_modified_since)

@@ -25,3 +25,10 @@ def test_fix_behaviour_core_validators_EmailValidator_whitelist():
     assert validator.domain_allowlist == ['localdomain3']
     assert validator('email@localdomain3') is None
     assert validator.domain_allowlist == validator.domain_whitelist
+
+
+def test_fix_behaviour_views_static_was_modified_since():
+    import time
+    from django.views.static import was_modified_since
+    assert was_modified_since("Wed, 21 Oct 2015 07:28:00 GMT", time.time(), 8262726)
+    assert not was_modified_since("Wed, 21 Oct 2015 07:28:00 GMT", 100, size=2356)
