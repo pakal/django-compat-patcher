@@ -12,6 +12,114 @@ would be welcome, and which ones will most probably never be added (eg. because 
     <style> .kind {color: blue} </style>
 
 
+5.2
+-----
+
+Miscellaneous
+
+    Adding EmailMultiAlternatives.alternatives is now only supported via the attach_alternative() method.
+
+    The minimum supported version of gettext is increased from 0.15 to 0.19.
+
+    HttpRequest.accepted_types is now sorted by the client’s preference, based on the request’s Accept header.
+
+    The attributes UniqueConstraint.violation_error_code and UniqueConstraint.violation_error_message are now always used when provided. Previously, they were ignored if UniqueConstraint.fields was set without a UniqueConstraint.condition.
+
+    The debug() context processor is no longer included in the default project template.
+
+    The following methods now have alters_data=True set to prevent side effects when rendering a template context:
+        UserManager.create_user()
+        UserManager.acreate_user()
+        UserManager.create_superuser()
+        UserManager.acreate_superuser()
+        QuerySet.create()
+        QuerySet.acreate()
+        QuerySet.bulk_create()
+        QuerySet.abulk_create()
+        QuerySet.get_or_create()
+        QuerySet.aget_or_create()
+        QuerySet.update_or_create()
+        QuerySet.aupdate_or_create()
+
+    The minimum supported version of oracledb is increased from 1.3.2 to 2.3.0.
+
+    Built-in aggregate functions accepting only one argument (Avg, Count, Max, Min, StdDev, Sum, and Variance) now raise TypeError when called with an incorrect number of arguments.
+
+
+5.1
+-----
+
+Miscellaneous
+
+    In order to improve accessibility, the admin’s changelist filter is now rendered in a <nav> tag instead of a <div>.
+
+    In order to improve accessibility, the admin’s footer is now rendered in a <footer> tag instead of a <div>, and also moved below the <div id="main"> element.
+
+    In order to improve accessibility, the expandable widget used for ModelAdmin.fieldsets and InlineModelAdmin.fieldsets, when the fieldset has a name and use the collapse class, now includes <details> and <summary> elements.
+
+    The JavaScript file collapse.js is removed since it is no longer needed in the Django admin site.
+
+    SimpleTestCase.assertURLEqual() and assertInHTML() now add ": " to the msg_prefix. This is consistent with the behavior of other assertions.
+
+    django.utils.text.Truncator used by truncatechars_html and truncatewords_html template filters now uses html.parser.HTMLParser subclasses. This results in a more robust and faster operation, but there may be small differences in the output.
+
+    The undocumented django.urls.converters.get_converter() function is removed.
+
+    The minimum supported version of SQLite is increased from 3.27.0 to 3.31.0.
+
+    FileField now raises a FieldError when saving a file without a name.
+
+    ImageField.update_dimension_fields(force=True) is no longer called after saving the image to storage. If your storage backend resizes images, the width_field and height_field will not match the width and height of the image.
+
+    The minimum supported version of asgiref is increased from 3.7.0 to 3.8.1.
+
+    To improve performance, the delete_selected admin action now uses QuerySet.bulk_create() when creating multiple LogEntry objects. As a result, pre_save and post_save signals for LogEntry are not sent when multiple objects are deleted via this admin action.
+
+
+5.0
+-----
+
+Miscellaneous
+
+    The instance argument of the undocumented BaseModelFormSet.save_existing() method is renamed to obj.
+
+    The undocumented django.contrib.admin.helpers.checkbox is removed.
+
+    Integer fields are now validated as 64-bit integers on SQLite to match the behavior of sqlite3.
+
+    The undocumented Query.annotation_select_mask attribute is changed from a set of strings to an ordered list of strings.
+
+    ImageField.update_dimension_fields() is no longer called on the post_init signal if width_field and height_field are not set.
+
+    Now database function now uses LOCALTIMESTAMP instead of CURRENT_TIMESTAMP on Oracle.
+
+    AdminSite.site_header is now rendered in a <div> tag instead of <h1>. Screen reader users rely on heading elements for navigation within a page. Having two <h1> elements was confusing and the site header wasn’t helpful as it is repeated on all pages.
+
+    In order to improve accessibility, the admin’s main content area and header content area are now rendered in a <main> and <header> tag instead of <div>.
+
+    On databases without native support for the SQL XOR operator, ^ as the exclusive or (XOR) operator now returns rows that are matched by an odd number of operands rather than exactly one operand. This is consistent with the behavior of MySQL, MariaDB, and Python.
+
+    The minimum supported version of asgiref is increased from 3.6.0 to 3.7.0.
+
+    The minimum supported version of selenium is increased from 3.8.0 to 4.8.0.
+
+    The AlreadyRegistered and NotRegistered exceptions are moved from django.contrib.admin.sites to django.contrib.admin.exceptions.
+
+    The minimum supported version of SQLite is increased from 3.21.0 to 3.27.0.
+
+    Support for cx_Oracle < 8.3 is removed.
+
+    Executing SQL queries before the app registry has been fully populated now raises RuntimeWarning.
+
+    BadRequest is raised for non-UTF-8 encoded requests with the application/x-www-form-urlencoded content type. See RFC 1866 for more details.
+
+    The minimum supported version of colorama is increased to 0.4.6.
+
+    The minimum supported version of docutils is increased to 0.19.
+
+    Filtering querysets against overflowing integer values now always returns an empty queryset. As a consequence, you may need to use ExpressionWrapper() to explicitly wrap arithmetic against integer fields in such cases.
+
+
 4.2
 -----
 
@@ -36,7 +144,6 @@ Miscellaneous
     Manually instantiated WSGIRequest objects must be provided a file-like object for wsgi.input. Previously, Django was more lax than the expected behavior as specified by the WSGI specification.
     Support for PROJ < 5 is removed.
     EmailBackend now verifies a hostname and certificates. If you need the previous behavior that is less restrictive and not recommended, subclass EmailBackend and override the ssl_context property.
-
 
     The BaseUserManager.make_random_password() method is deprecated. See recipes and best practices for using Python’s secrets module to generate passwords.
 
