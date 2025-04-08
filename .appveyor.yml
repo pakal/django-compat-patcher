@@ -13,17 +13,17 @@ environment:
     PYTHON: "3.10"
   - TOXENV: py312-django4_2
     PYTHON: "3.12"
-  - TOXENV: py313-django5_2
-    PYTHON: "3.13"
-  - TOXENV: py313-nocontribcomments
-    PYTHON: "3.13"
-  #FIXME add python 3.14 when available
+  - TOXENV: py312-django5_1
+    PYTHON: "3.12"
+  - TOXENV: py312-nocontribcomments
+    PYTHON: "3.12"
+  # FIXME add python 3.14 when available
 
 stack: python %PYTHON%
 
 build: off
 
-image: Ubuntu
+image: Ubuntu2204
 
 install:
 - python -m pip install -U setuptools importlib-metadata tox
