@@ -500,7 +500,6 @@ def fix_behaviour_middleware_get_response_parameter_nullability(utils):
 
     from django.utils.deprecation import MiddlewareMixin
     from django.contrib.sessions.middleware import SessionMiddleware
-    from django.contrib.auth.middleware import RemoteUserMiddleware
     from django.middleware.cache import UpdateCacheMiddleware, FetchFromCacheMiddleware, CacheMiddleware
     from django.middleware.security import SecurityMiddleware
 
@@ -509,11 +508,15 @@ def fix_behaviour_middleware_get_response_parameter_nullability(utils):
     middleware_classes = [
         MiddlewareMixin,  # Most middlewares just use the __init__() of this base class, else add them below
         SessionMiddleware, UpdateCacheMiddleware, FetchFromCacheMiddleware,
-        CacheMiddleware, SecurityMiddleware, RemoteUserMiddleware]
+        CacheMiddleware, SecurityMiddleware]
 
     if "django.contrib.redirects" in settings.INSTALLED_APPS:
         from django.contrib.redirects.middleware import RedirectFallbackMiddleware
         middleware_classes.append(RedirectFallbackMiddleware)
+
+    if "django.contrib.contenttypes" in settings.INSTALLED_APPS:  # Required for Permissions
+        from django.contrib.auth.middleware import RemoteUserMiddleware
+        middleware_classes.append(RemoteUserMiddleware)
 
     for middleware_class in middleware_classes:
         _patch_middleware_class_init(middleware_class)
