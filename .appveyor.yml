@@ -11,11 +11,13 @@ environment:
     PYTHON: "3.9"
   - TOXENV: py310-django4_0
     PYTHON: "3.10"
-  - TOXENV: py311-django4_2
-    PYTHON: "3.11"
-  - TOXENV: py311-nocontribcomments
-    PYTHON: "3.11"
-  #FIXME add python 3.12 when available
+  - TOXENV: py312-django4_2
+    PYTHON: "3.12"
+  - TOXENV: py313-django5_2
+    PYTHON: "3.13"
+  - TOXENV: py313-nocontribcomments
+    PYTHON: "3.13"
+  #FIXME add python 3.14 when available
 
 stack: python %PYTHON%
 
