@@ -76,6 +76,40 @@ Miscellaneous
     To improve performance, the delete_selected admin action now uses QuerySet.bulk_create() when creating multiple LogEntry objects. As a result, pre_save and post_save signals for LogEntry are not sent when multiple objects are deleted via this admin action.
 
 
+Features removed in 5.1
+
+These features have reached the end of their deprecation cycle and are removed in Django 5.1.
+
+See Features deprecated in 4.2 for details on these changes, including how to remove usage of these features.
+
+    The BaseUserManager.make_random_password() method is removed.
+
+    The model’s Meta.index_together option is removed.
+
+    The length_is template filter is removed.
+
+    The django.contrib.auth.hashers.SHA1PasswordHasher, django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher, and django.contrib.auth.hashers.UnsaltedMD5PasswordHasher are removed.
+
+    The model django.contrib.postgres.fields.CICharField, django.contrib.postgres.fields.CIEmailField, and django.contrib.postgres.fields.CITextField are removed, except for support in historical migrations.
+
+    The django.contrib.postgres.fields.CIText mixin is removed.
+
+    The map_width and map_height attributes of BaseGeometryWidget are removed.
+
+    The SimpleTestCase.assertFormsetError() method is removed.
+
+    The TransactionTestCase.assertQuerysetEqual() method is removed.
+
+    Support for passing encoded JSON string literals to JSONField and associated lookups and expressions is removed.
+
+    Support for passing positional arguments to Signer and TimestampSigner is removed.
+
+    The DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings is removed.
+
+    The django.core.files.storage.get_storage_class() function is removed.    :kind:`DELETION` [FIXED]
+
+
+
 5.0
 -----
 
@@ -118,6 +152,89 @@ Miscellaneous
     The minimum supported version of docutils is increased to 0.19.
 
     Filtering querysets against overflowing integer values now always returns an empty queryset. As a consequence, you may need to use ExpressionWrapper() to explicitly wrap arithmetic against integer fields in such cases.
+
+
+Features removed in 5.0
+
+These features have reached the end of their deprecation cycle and are removed in Django 5.0.
+
+See Features deprecated in 4.0 for details on these changes, including how to remove usage of these features.
+
+    The SERIALIZE test setting is removed.
+
+    The undocumented django.utils.baseconv module is removed.
+
+    The undocumented django.utils.datetime_safe module is removed.
+
+    The default value of the USE_TZ setting is changed from False to True.
+
+    The default sitemap protocol for sitemaps built outside the context of a request is changed from 'http' to 'https'.
+
+    The extra_tests argument for DiscoverRunner.build_suite() and DiscoverRunner.run_tests() is removed.
+
+    The django.contrib.postgres.aggregates.ArrayAgg, JSONBAgg, and StringAgg aggregates no longer return [], [], and '', respectively, when there are no rows.
+
+    The USE_L10N setting is removed.
+
+    The USE_DEPRECATED_PYTZ transitional setting is removed.
+
+    Support for pytz timezones is removed.
+
+    The is_dst argument is removed from:
+        QuerySet.datetimes()
+        django.utils.timezone.make_aware()
+        django.db.models.functions.Trunc()
+        django.db.models.functions.TruncSecond()
+        django.db.models.functions.TruncMinute()
+        django.db.models.functions.TruncHour()
+        django.db.models.functions.TruncDay()
+        django.db.models.functions.TruncWeek()
+        django.db.models.functions.TruncMonth()
+        django.db.models.functions.TruncQuarter()
+        django.db.models.functions.TruncYear()
+
+    The django.contrib.gis.admin.GeoModelAdmin and OSMGeoAdmin classes are removed.
+
+    The undocumented BaseForm._html_output() method is removed.
+
+    The ability to return a str, rather than a SafeString, when rendering an ErrorDict and ErrorList is removed.
+
+See Features deprecated in 4.1 for details on these changes, including how to remove usage of these features.
+
+    The SitemapIndexItem.__str__() method is removed.
+
+    The CSRF_COOKIE_MASKED transitional setting is removed.
+
+    The name argument of django.utils.functional.cached_property() is removed.
+
+    The opclasses argument of django.contrib.postgres.constraints.ExclusionConstraint is removed.
+
+    The undocumented ability to pass errors=None to SimpleTestCase.assertFormError() and assertFormsetError() is removed.
+
+    django.contrib.sessions.serializers.PickleSerializer is removed.
+
+    The usage of QuerySet.iterator() on a queryset that prefetches related objects without providing the chunk_size argument is no longer allowed.
+
+    Passing unsaved model instances to related filters is no longer allowed.
+
+    created=True is required in the signature of RemoteUserBackend.configure_user() subclasses.
+
+    Support for logging out via GET requests in the django.contrib.auth.views.LogoutView and django.contrib.auth.views.logout_then_login() is removed.
+
+    The django.utils.timezone.utc alias to datetime.timezone.utc is removed.
+
+    Passing a response object and a form/formset name to SimpleTestCase.assertFormError() and assertFormSetError() is no longer allowed.
+
+    The django.contrib.gis.admin.OpenLayersWidget is removed.
+
+    The django.contrib.auth.hashers.CryptPasswordHasher is removed.
+
+    The "django/forms/default.html" and "django/forms/formsets/default.html" templates are removed.
+
+    The default form and formset rendering style is changed to the div-based.
+
+    Passing nulls_first=False or nulls_last=False to Expression.asc() and Expression.desc() methods, and the OrderBy expression is no longer allowed.
+
 
 
 4.2
