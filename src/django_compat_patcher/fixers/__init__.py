@@ -15,5 +15,7 @@ from . import (
     django3_2,
     django4_0,
     django4_1,
+    # No fix for Django4.2 and Django5.0 so far
+    django5_1
     # TODO - add and import new sets of fixers for more recent Django versions
 )
