@@ -7,7 +7,7 @@ def test_fix_deletion_core_files_storage_get_storage_class(settings):
     klass = get_storage_class()
     assert klass.__name__ == "FileSystemStorage"
 
-    assert not hasattr(settings, "DEFAULT_FILE_STORAGE")
+    # We override or create this (deprecated) setting
     settings.DEFAULT_FILE_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
     klass = get_storage_class()
