@@ -63,7 +63,7 @@ Miscellaneous
 
     django.utils.text.Truncator used by truncatechars_html and truncatewords_html template filters now uses html.parser.HTMLParser subclasses. This results in a more robust and faster operation, but there may be small differences in the output.
 
-    The undocumented django.urls.converters.get_converter() function is removed.
+    The undocumented django.urls.converters.get_converter() function is removed.    :kind:`DELETION` [FIXED]
 
     The minimum supported version of SQLite is increased from 3.27.0 to 3.31.0.
 
@@ -100,7 +100,7 @@ See Features deprecated in 4.2 for details on these changes, including how to re
 
     The TransactionTestCase.assertQuerysetEqual() method is removed.    :kind:`DELETION` [FIXED]
 
-    Support for passing encoded JSON string literals to JSONField and associated lookups and expressions is removed.
+    Support for passing encoded JSON string literals to JSONField and associated lookups and expressions is removed.    :kind:`BEHAVIOUR` [FIXED]
 
     Support for passing positional arguments to Signer and TimestampSigner is removed.    :kind:`BEHAVIOUR` [FIXED]
 

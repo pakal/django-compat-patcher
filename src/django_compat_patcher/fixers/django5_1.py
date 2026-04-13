@@ -226,3 +226,61 @@ def fix_deletion_conf_settings_DEFAULT_FILE_STORAGE(utils):
 
     utils.inject_attribute(StorageHandler, "backends", property(patched_backends))
 
+
+@django1_51_bc_fixer()
+def fix_deletion_urls_converters_get_converter(utils):
+    """Restore undocumented django.urls.converters.get_converter(), removed in Django 5.1"""
+    from django.urls import converters
+
+    def get_converter(raw_converter):
+        return converters.get_converters()[raw_converter]
+
+    utils.inject_callable(converters, "get_converter", get_converter)
+    if hasattr(converters, "__all__") and "get_converter" not in converters.__all__:
+        converters.__all__.append("get_converter")
+
+
+@django1_51_bc_fixer()
+def fix_behaviour_db_models_fields_json_JSONField_encoded_string_literals(utils):
+    """Restore support for JSON-encoded string literals passed to JSONField values/lookups/expressions."""
+    import json
+    from django.db.models import expressions
+    from django.db.models.fields.json import JSONField
+
+    _orig_get_prep_value = JSONField.get_prep_value
+    _orig_get_db_prep_save = JSONField.get_db_prep_save
+
+    def _decode_json_literal(value, *, stacklevel):
+        if not isinstance(value, str):
+            return value
+        try:
+            decoded = json.loads(value)
+        except (TypeError, ValueError):
+            return value
+        warnings.warn(
+            "Passing encoded JSON string literals to JSONField is deprecated; "
+            "pass Python objects instead.",
+            RemovedInDjango51Warning,
+            stacklevel=stacklevel,
+        )
+        return decoded
+
+    def patched_get_prep_value(self, value):
+        return _orig_get_prep_value(self, _decode_json_literal(value, stacklevel=3))
+
+    def patched_get_db_prep_save(self, value, connection):
+        if (
+            isinstance(value, expressions.Value)
+            and isinstance(value.output_field, JSONField)
+            and isinstance(value.value, str)
+        ):
+            value = expressions.Value(
+                _decode_json_literal(value.value, stacklevel=4),
+                output_field=value.output_field,
+            )
+        return _orig_get_db_prep_save(self, value, connection)
+
+    utils.inject_callable(JSONField, "get_prep_value", patched_get_prep_value)
+    utils.inject_callable(JSONField, "get_db_prep_save", patched_get_db_prep_save)
+
+

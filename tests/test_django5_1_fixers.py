@@ -179,3 +179,30 @@ def test_fix_deletion_conf_settings_DEFAULT_FILE_STORAGE(settings):
     handler2 = StorageHandler()
     default2 = handler2["default"]
     assert default2.__class__.__name__ == "InMemoryStorage"
+
+
+def test_fix_deletion_urls_converters_get_converter():
+    from django.urls.converters import get_converter, get_converters
+
+    int_converter = get_converter("int")
+    assert int_converter is get_converters()["int"]
+    assert int_converter.to_python("7") == 7
+
+
+def test_fix_behaviour_db_models_fields_json_JSONField_encoded_string_literals():
+    from django.db import connection
+    from django.db.models import Value
+    from django.db.models.fields.json import JSONField
+
+    field = JSONField()
+
+    assert field.get_prep_value("null") is None
+    assert field.get_prep_value("[]") == []
+    assert field.get_prep_value('"foo-bar"') == "foo-bar"
+    assert field.get_prep_value("not-json") == "not-json"
+
+    # Value() with JSON-encoded strings should be accepted for expression paths.
+    prepped = field.get_db_prep_save(Value("null", output_field=field), connection)
+    assert prepped == "null"
+
+
