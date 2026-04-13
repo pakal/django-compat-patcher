@@ -82,11 +82,11 @@ These features have reached the end of their deprecation cycle and are removed i
 
 See Features deprecated in 4.2 for details on these changes, including how to remove usage of these features.
 
-    The BaseUserManager.make_random_password() method is removed.
+    The BaseUserManager.make_random_password() method is removed.    :kind:`DELETION` [FIXED]
 
     The model’s Meta.index_together option is removed.
 
-    The length_is template filter is removed.
+    The length_is template filter is removed.    :kind:`DELETION` [FIXED]
 
     The django.contrib.auth.hashers.SHA1PasswordHasher, django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher, and django.contrib.auth.hashers.UnsaltedMD5PasswordHasher are removed.
 
@@ -96,15 +96,15 @@ See Features deprecated in 4.2 for details on these changes, including how to re
 
     The map_width and map_height attributes of BaseGeometryWidget are removed.
 
-    The SimpleTestCase.assertFormsetError() method is removed.
+    The SimpleTestCase.assertFormsetError() method is removed.    :kind:`DELETION` [FIXED]
 
-    The TransactionTestCase.assertQuerysetEqual() method is removed.
+    The TransactionTestCase.assertQuerysetEqual() method is removed.    :kind:`DELETION` [FIXED]
 
     Support for passing encoded JSON string literals to JSONField and associated lookups and expressions is removed.
 
-    Support for passing positional arguments to Signer and TimestampSigner is removed.
+    Support for passing positional arguments to Signer and TimestampSigner is removed.    :kind:`BEHAVIOUR` [FIXED]
 
-    The DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings is removed.
+    The DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings is removed.    :kind:`DELETION` [FIXED]
 
     The django.core.files.storage.get_storage_class() function is removed.    :kind:`DELETION` [FIXED]
 
@@ -162,9 +162,9 @@ See Features deprecated in 4.0 for details on these changes, including how to re
 
     The SERIALIZE test setting is removed.
 
-    The undocumented django.utils.baseconv module is removed.
+    The undocumented django.utils.baseconv module is removed.    :kind:`DELETION` [FIXED]
 
-    The undocumented django.utils.datetime_safe module is removed.
+    The undocumented django.utils.datetime_safe module is removed.    :kind:`DELETION` [FIXED]
 
     The default value of the USE_TZ setting is changed from False to True.
 
@@ -205,7 +205,7 @@ See Features deprecated in 4.1 for details on these changes, including how to re
 
     The CSRF_COOKIE_MASKED transitional setting is removed.
 
-    The name argument of django.utils.functional.cached_property() is removed.
+    The name argument of django.utils.functional.cached_property() is removed.    :kind:`BEHAVIOUR` [FIXED]
 
     The opclasses argument of django.contrib.postgres.constraints.ExclusionConstraint is removed.
 
@@ -221,7 +221,7 @@ See Features deprecated in 4.1 for details on these changes, including how to re
 
     Support for logging out via GET requests in the django.contrib.auth.views.LogoutView and django.contrib.auth.views.logout_then_login() is removed.
 
-    The django.utils.timezone.utc alias to datetime.timezone.utc is removed.
+    The django.utils.timezone.utc alias to datetime.timezone.utc is removed.    :kind:`DELETION` [FIXED]
 
     Passing a response object and a form/formset name to SimpleTestCase.assertFormError() and assertFormSetError() is no longer allowed.
 
