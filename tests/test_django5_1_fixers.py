@@ -1,4 +1,5 @@
 
+import pytest
 import _test_utilities
 
 
@@ -113,6 +114,11 @@ def test_fix_behaviour_core_signing_Signer_positional_args():
     assert ts_signer.key == "my-ts-key"
 
 
+# FIXME why wouldn't this test still work on django <5.1 ???
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 1),
+    reason="index_together is still valid in Django < 5.1; fixer only applies from 5.1",
+)
 def test_fix_deletion_db_models_options_index_together():
     from django.db import models
 
@@ -166,6 +172,10 @@ def test_fix_deletion_db_models_options_index_together():
     assert nodup_fields.count(("x", "y")) == 1
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (4, 2),
+    reason="STORAGES setting and StorageHandler[...] API require Django >= 4.2",
+)
 def test_fix_deletion_conf_settings_DEFAULT_FILE_STORAGE(settings):
     from django.core.files.storage import StorageHandler
 
@@ -189,6 +199,10 @@ def test_fix_deletion_urls_converters_get_converter():
     assert int_converter.to_python("7") == 7
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 1),
+    reason="JSONField string-literal decoding fixer only applies from Django 5.1",
+)
 def test_fix_behaviour_db_models_fields_json_JSONField_encoded_string_literals():
     from django.db import connection
     from django.db.models import Value

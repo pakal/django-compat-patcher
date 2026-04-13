@@ -228,6 +228,7 @@ def fix_behaviour_db_models_query_QuerySet_iterator_prefetch_without_chunk_size(
 @django1_50_bc_fixer(fixer_delayed=True)
 def fix_behaviour_contrib_auth_backends_RemoteUserBackend_configure_user_created_argument(utils):
     """Keep compatibility with RemoteUserBackend.configure_user(self, request, user) without "created" argument."""
+    utils.skip_if_app_not_installed("django.contrib.contenttypes")  # BEFORE IMPORTS!
     from django.contrib.auth import backends as auth_backends
     from django.contrib.auth.backends import RemoteUserBackend
 

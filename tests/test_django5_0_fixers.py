@@ -1,4 +1,5 @@
 
+import pytest
 import _test_utilities
 
 
@@ -56,6 +57,10 @@ def test_fix_deletion_utils_datetime_safe():
     assert django.utils.datetime_safe is datetime_safe
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (4, 0),
+    reason="django.utils.timezone.utc is pytz.UTC (not datetime.timezone.utc) in Django < 4.0",
+)
 def test_fix_deletion_utils_timezone_utc():
     import datetime
     from django.utils import timezone
@@ -92,6 +97,10 @@ def test_fix_behaviour_utils_functional_cached_property_name_argument():
     assert prop is not None
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
+    reason="is_dst compatibility fixer only applies from Django 5.0",
+)
 def test_fix_deletion_utils_timezone_make_aware_is_dst():
     import datetime
     from django.utils import timezone
@@ -216,6 +225,10 @@ def test_fix_behaviour_db_models_query_QuerySet_iterator_prefetch_without_chunk_
     assert isinstance(rows, list)
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
+    reason="RemoteUserBackend.configure_user(created=...) compatibility fixer only applies from Django 5.0",
+)
 def test_fix_behaviour_contrib_auth_backends_RemoteUserBackend_configure_user_created_argument(db):
     from django.contrib.auth.backends import RemoteUserBackend
 
@@ -248,6 +261,10 @@ def test_fix_behaviour_test_SimpleTestCase_assertFormError_response_and_form_nam
     test_case.assertFormError(response, "demo_form", "name", expected_error)
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
+    reason="nulls_first=False is still valid in Django < 5.0; fixer only applies from 5.0",
+)
 def test_fix_behaviour_db_models_expressions_OrderBy_nulls_false():
     from django.db.models import F
 
@@ -257,6 +274,10 @@ def test_fix_behaviour_db_models_expressions_OrderBy_nulls_false():
     assert desc_order.nulls_last is None
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (4, 2),
+    reason="assertFormSetError() was added in Django 4.2; unavailable in earlier versions",
+)
 def test_fix_behaviour_test_SimpleTestCase_assertFormSetError_response_and_formset_name_arguments():
     from types import SimpleNamespace
     from django import forms
