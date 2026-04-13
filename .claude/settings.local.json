@@ -3,7 +3,9 @@
     "allow": [
       "Bash(python *)",
       "Bash(gh *)",
-      "Bash(pip *)"
+      "Bash(pip *)",
+      "Bash(ls:*)",
+      "mcp__context7*"
     ]
   }
 }
