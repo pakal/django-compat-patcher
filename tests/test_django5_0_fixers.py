@@ -205,3 +205,99 @@ def test_fix_deletion_forms_BaseForm_html_output():
         errors_on_separate_row=True,
     )
     assert "errorlist" in err_html or "This field" in err_html
+
+
+def test_fix_behaviour_db_models_query_QuerySet_iterator_prefetch_without_chunk_size(db):
+    from django.contrib.auth import get_user_model
+
+    user_model = get_user_model()
+    qs = user_model._default_manager.all().prefetch_related("groups")
+    rows = list(qs.iterator())
+    assert isinstance(rows, list)
+
+
+def test_fix_behaviour_contrib_auth_backends_RemoteUserBackend_configure_user_created_argument(db):
+    from django.contrib.auth.backends import RemoteUserBackend
+
+    class LegacyConfigureUserBackend(RemoteUserBackend):
+        def configure_user(self, request, user):
+            user.first_name = "legacy"
+            user.save(update_fields=["first_name"])
+            return user
+
+    backend = LegacyConfigureUserBackend()
+    user = backend.authenticate(request=None, remote_user="legacy-remote-user")
+    assert user is not None
+    assert user.first_name == "legacy"
+
+
+def test_fix_behaviour_test_SimpleTestCase_assertFormError_response_and_form_name_arguments():
+    from types import SimpleNamespace
+    from django import forms
+    from django.test import SimpleTestCase
+
+    class DemoForm(forms.Form):
+        name = forms.IntegerField(required=True)
+
+    form = DemoForm(data={})
+    assert not form.is_valid()
+
+    response = SimpleNamespace(context={"demo_form": form})
+    test_case = SimpleTestCase()
+    expected_error = [form.fields["name"].error_messages["required"]]
+    test_case.assertFormError(response, "demo_form", "name", expected_error)
+
+
+def test_fix_behaviour_db_models_expressions_OrderBy_nulls_false():
+    from django.db.models import F
+
+    asc_order = F("id").asc(nulls_first=False)
+    desc_order = F("id").desc(nulls_last=False)
+    assert asc_order.nulls_first is None
+    assert desc_order.nulls_last is None
+
+
+def test_fix_behaviour_test_SimpleTestCase_assertFormSetError_response_and_formset_name_arguments():
+    from types import SimpleNamespace
+    from django import forms
+    from django.forms import formset_factory
+    from django.test import SimpleTestCase
+
+    class DemoForm(forms.Form):
+        name = forms.IntegerField(required=True)
+
+    demo_formset_class = formset_factory(DemoForm, extra=1)
+
+    invalid_formset = demo_formset_class(
+        data={
+            "form-TOTAL_FORMS": "1",
+            "form-INITIAL_FORMS": "0",
+            "form-MIN_NUM_FORMS": "0",
+            "form-MAX_NUM_FORMS": "1000",
+            "form-0-name": "not-a-number",
+        }
+    )
+    assert not invalid_formset.is_valid()
+
+    response = SimpleNamespace(context={"demo_formset": invalid_formset})
+    test_case = SimpleTestCase()
+    expected_error = [invalid_formset.forms[0].fields["name"].error_messages["invalid"]]
+    test_case.assertFormSetError(response, "demo_formset", 0, "name", expected_error)
+
+    valid_formset = demo_formset_class(
+        data={
+            "form-TOTAL_FORMS": "1",
+            "form-INITIAL_FORMS": "0",
+            "form-MIN_NUM_FORMS": "0",
+            "form-MAX_NUM_FORMS": "1000",
+            "form-0-name": "1",
+        }
+    )
+    assert valid_formset.is_valid()
+
+    valid_response = SimpleNamespace(context={"demo_formset": valid_formset})
+    test_case.assertFormSetError(valid_response, "demo_formset", 0, "name", None)
+    if hasattr(test_case, "assertFormsetError"):
+        test_case.assertFormsetError(valid_response, "demo_formset", 0, "name", None)
+
+

@@ -1,0 +1,5 @@
+Review django_deprecation_timeline_notes.rst, and find 10 compatibility breakages which can easily be fixed (moved attribute, changed signature, removed code...) in latest Django version.
+
+Then, for each of these 10 breakages, write a compatibility shim that can be added to the Django-Compat-Patcher project, along with its test, so that the breakage is automatically fixed when using the latest Django version.
+
+If needed, checkout with "gh" cli the Django repository (https://github.com/django/django) and search for the breaking changes in the commit history, to find out how to fix them.

@@ -209,21 +209,21 @@ See Features deprecated in 4.1 for details on these changes, including how to re
 
     The opclasses argument of django.contrib.postgres.constraints.ExclusionConstraint is removed.
 
-    The undocumented ability to pass errors=None to SimpleTestCase.assertFormError() and assertFormsetError() is removed.
+    The undocumented ability to pass errors=None to SimpleTestCase.assertFormError() and assertFormsetError() is removed.    :kind:`BEHAVIOUR` [FIXED]
 
     django.contrib.sessions.serializers.PickleSerializer is removed.
 
-    The usage of QuerySet.iterator() on a queryset that prefetches related objects without providing the chunk_size argument is no longer allowed.
+    The usage of QuerySet.iterator() on a queryset that prefetches related objects without providing the chunk_size argument is no longer allowed.    :kind:`BEHAVIOUR` [FIXED]
 
     Passing unsaved model instances to related filters is no longer allowed.
 
-    created=True is required in the signature of RemoteUserBackend.configure_user() subclasses.
+    created=True is required in the signature of RemoteUserBackend.configure_user() subclasses.    :kind:`BEHAVIOUR` [FIXED]
 
     Support for logging out via GET requests in the django.contrib.auth.views.LogoutView and django.contrib.auth.views.logout_then_login() is removed.
 
     The django.utils.timezone.utc alias to datetime.timezone.utc is removed.    :kind:`DELETION` [FIXED]
 
-    Passing a response object and a form/formset name to SimpleTestCase.assertFormError() and assertFormSetError() is no longer allowed.
+    Passing a response object and a form/formset name to SimpleTestCase.assertFormError() and assertFormSetError() is no longer allowed.    :kind:`BEHAVIOUR` [FIXED]
 
     The django.contrib.gis.admin.OpenLayersWidget is removed.
 
@@ -233,7 +233,7 @@ See Features deprecated in 4.1 for details on these changes, including how to re
 
     The default form and formset rendering style is changed to the div-based.
 
-    Passing nulls_first=False or nulls_last=False to Expression.asc() and Expression.desc() methods, and the OrderBy expression is no longer allowed.
+    Passing nulls_first=False or nulls_last=False to Expression.asc() and Expression.desc() methods, and the OrderBy expression is no longer allowed.    :kind:`BEHAVIOUR` [FIXED]
 
 
 

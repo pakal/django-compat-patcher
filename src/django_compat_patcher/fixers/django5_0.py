@@ -202,3 +202,207 @@ def fix_deletion_forms_BaseForm_html_output(utils):
         return mark_safe("\n".join(output))
 
     utils.inject_callable(BaseForm, "_html_output", _html_output)
+
+
+@django1_50_bc_fixer()
+def fix_behaviour_db_models_query_QuerySet_iterator_prefetch_without_chunk_size(utils):
+    """Restore pre-5.0 iterator() behavior when prefetch_related() is used without chunk_size."""
+    from django.db.models.query import QuerySet
+
+    _orig_iterator = QuerySet.iterator
+
+    def patched_iterator(self, chunk_size=None):
+        if chunk_size is None and self._prefetch_related_lookups:
+            warnings.warn(
+                "Using QuerySet.iterator() after prefetch_related() without chunk_size "
+                "is deprecated; pass chunk_size explicitly.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            chunk_size = 2000
+        return _orig_iterator(self, chunk_size=chunk_size)
+
+    utils.inject_callable(QuerySet, "iterator", patched_iterator)
+
+
+@django1_50_bc_fixer(fixer_delayed=True)
+def fix_behaviour_contrib_auth_backends_RemoteUserBackend_configure_user_created_argument(utils):
+    """Keep compatibility with RemoteUserBackend.configure_user(self, request, user) without "created" argument."""
+    from django.contrib.auth import backends as auth_backends
+    from django.contrib.auth.backends import RemoteUserBackend
+
+    _orig_authenticate = RemoteUserBackend.authenticate
+
+    def patched_authenticate(self, request, remote_user):
+        if not remote_user:
+            return
+
+        created = False
+        user = None
+        username = self.clean_username(remote_user)
+
+        if self.create_unknown_user:
+            user, created = auth_backends.UserModel._default_manager.get_or_create(
+                **{auth_backends.UserModel.USERNAME_FIELD: username}
+            )
+        else:
+            try:
+                user = auth_backends.UserModel._default_manager.get_by_natural_key(username)
+            except auth_backends.UserModel.DoesNotExist:
+                pass
+
+        try:
+            user = self.configure_user(request, user, created=created)
+        except TypeError as exc:
+            if "created" not in str(exc):
+                raise
+            warnings.warn(
+                "Support for RemoteUserBackend.configure_user() without the created "
+                "argument is deprecated.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            user = self.configure_user(request, user)
+
+        return user if self.user_can_authenticate(user) else None
+
+    utils.inject_callable(RemoteUserBackend, "authenticate", patched_authenticate)
+    utils.inject_callable(auth_backends.AllowAllUsersRemoteUserBackend, "authenticate", patched_authenticate)
+
+
+@django1_50_bc_fixer()
+def fix_behaviour_test_SimpleTestCase_assertFormError_response_and_form_name_arguments(utils):
+    """Restore deprecated assertFormError(response, form_name, ...) calling style."""
+    from django.test import SimpleTestCase
+
+    _orig_assert_form_error = SimpleTestCase.assertFormError
+
+    def patched_assert_form_error(self, *args, **kwargs):
+        msg_prefix = kwargs.pop("msg_prefix", "")
+        if kwargs:
+            return _orig_assert_form_error(self, *args, msg_prefix=msg_prefix, **kwargs)
+
+        if len(args) >= 4 and hasattr(args[0], "context") and isinstance(args[1], str):
+            response, form_name, field, errors = args[:4]
+            if len(args) >= 5:
+                msg_prefix = args[4]
+            if errors is None:
+                warnings.warn(
+                    "Passing errors=None to assertFormError() is deprecated; use errors=[] instead.",
+                    RemovedInDjango50Warning,
+                    stacklevel=2,
+                )
+                errors = []
+            warnings.warn(
+                "Passing a response object and form name to assertFormError() is "
+                "deprecated; pass the form object directly instead.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            form = response.context[form_name]
+            return _orig_assert_form_error(self, form, field, errors, msg_prefix=msg_prefix)
+
+        if len(args) >= 3 and args[2] is None:
+            args = list(args)
+            warnings.warn(
+                "Passing errors=None to assertFormError() is deprecated; use errors=[] instead.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            args[2] = []
+            args = tuple(args)
+
+        return _orig_assert_form_error(self, *args, msg_prefix=msg_prefix)
+
+    utils.inject_callable(SimpleTestCase, "assertFormError", patched_assert_form_error)
+
+
+@django1_50_bc_fixer()
+def fix_behaviour_db_models_expressions_OrderBy_nulls_false(utils):
+    """Accept nulls_first=False/nulls_last=False again by treating them as None."""
+    from django.db.models.expressions import OrderBy
+
+    _orig_orderby_init = OrderBy.__init__
+
+    def patched_orderby_init(self, expression, descending=False, nulls_first=None, nulls_last=None):
+        if nulls_first is False:
+            warnings.warn(
+                "Passing nulls_first=False is deprecated; use None instead.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            nulls_first = None
+        if nulls_last is False:
+            warnings.warn(
+                "Passing nulls_last=False is deprecated; use None instead.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            nulls_last = None
+        _orig_orderby_init(
+            self,
+            expression,
+            descending=descending,
+            nulls_first=nulls_first,
+            nulls_last=nulls_last,
+        )
+
+    utils.inject_callable(OrderBy, "__init__", patched_orderby_init)
+
+
+@django1_50_bc_fixer()
+def fix_behaviour_test_SimpleTestCase_assertFormSetError_response_and_formset_name_arguments(utils):
+    """Restore deprecated assertFormSetError(response, formset_name, ...) calling style."""
+    from django.test import SimpleTestCase
+
+    _orig_assert_formset_error = SimpleTestCase.assertFormSetError
+
+    def patched_assert_formset_error(self, *args, **kwargs):
+        msg_prefix = kwargs.pop("msg_prefix", "")
+        if kwargs:
+            return _orig_assert_formset_error(self, *args, msg_prefix=msg_prefix, **kwargs)
+
+        if len(args) >= 5 and hasattr(args[0], "context") and isinstance(args[1], str):
+            response, formset_name, form_index, field, errors = args[:5]
+            if len(args) >= 6:
+                msg_prefix = args[5]
+            if errors is None:
+                warnings.warn(
+                    "Passing errors=None to assertFormsetError() is deprecated; use errors=[] instead.",
+                    RemovedInDjango50Warning,
+                    stacklevel=2,
+                )
+                errors = []
+            warnings.warn(
+                "Passing a response object and formset name to assertFormSetError() is "
+                "deprecated; pass the formset object directly instead.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            formset = response.context[formset_name]
+            return _orig_assert_formset_error(
+                self,
+                formset,
+                form_index,
+                field,
+                errors,
+                msg_prefix=msg_prefix,
+            )
+
+        if len(args) >= 4 and args[3] is None:
+            args = list(args)
+            warnings.warn(
+                "Passing errors=None to assertFormsetError() is deprecated; use errors=[] instead.",
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+            args[3] = []
+            args = tuple(args)
+
+        return _orig_assert_formset_error(self, *args, msg_prefix=msg_prefix)
+
+    utils.inject_callable(SimpleTestCase, "assertFormSetError", patched_assert_formset_error)
+    if hasattr(SimpleTestCase, "assertFormsetError"):
+        utils.inject_callable(SimpleTestCase, "assertFormsetError", patched_assert_formset_error)
+
+
