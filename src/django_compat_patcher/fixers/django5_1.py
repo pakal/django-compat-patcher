@@ -140,6 +140,59 @@ def fix_behaviour_core_signing_Signer_positional_args(utils):
 
 
 @django1_51_bc_fixer()
+def fix_deletion_db_models_options_index_together(utils):
+    """Restore support for Meta.index_together option, removed in Django 5.1; converts entries to Meta.indexes automatically"""
+    from django.db.models import options as options_module
+    from django.db.models.options import Options
+    from django.db.models import Index
+
+    # DEFAULT_NAMES is a module-level tuple in django.db.models.options.
+    # Re-add index_together so contribute_to_class() recognises it as valid.
+    if "index_together" not in options_module.DEFAULT_NAMES:
+        utils.inject_attribute(
+            options_module, "DEFAULT_NAMES",
+            options_module.DEFAULT_NAMES + ("index_together",),
+        )
+
+    # Options.__init__ no longer initialises self.index_together — add it back.
+    _orig_init = Options.__init__
+
+    def patched_init(self, meta, app_label=None):
+        _orig_init(self, meta, app_label)
+        if not hasattr(self, "index_together"):
+            self.index_together = []
+
+    utils.inject_callable(Options, "__init__", patched_init)
+
+    # After the standard contribute_to_class processing, convert any
+    # index_together entries to Index objects and append them to self.indexes.
+    _orig_ctc = Options.contribute_to_class
+
+    def patched_contribute_to_class(self, cls, name):
+        _orig_ctc(self, cls, name)
+        index_together = getattr(self, "index_together", None)
+        if index_together:
+            warnings.warn(
+                "Meta.index_together is deprecated in favor of "
+                "Meta.indexes = [models.Index(fields=[...])].",
+                RemovedInDjango51Warning,
+                stacklevel=2,
+            )
+            existing_fields = {
+                tuple(idx.fields) for idx in self.indexes if hasattr(idx, "fields")
+            }
+            new_indexes = [
+                Index(fields=list(fields))
+                for fields in index_together
+                if tuple(fields) not in existing_fields
+            ]
+            if new_indexes:
+                self.indexes = list(self.indexes) + new_indexes
+
+    utils.inject_callable(Options, "contribute_to_class", patched_contribute_to_class)
+
+
+@django1_51_bc_fixer()
 def fix_deletion_conf_settings_DEFAULT_FILE_STORAGE(utils):
     """Preserve DEFAULT_FILE_STORAGE and STATICFILES_STORAGE settings, superseded by STORAGES and removed in Django 5.1"""
     from django.conf import settings

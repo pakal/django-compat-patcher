@@ -84,7 +84,7 @@ See Features deprecated in 4.2 for details on these changes, including how to re
 
     The BaseUserManager.make_random_password() method is removed.    :kind:`DELETION` [FIXED]
 
-    The model’s Meta.index_together option is removed.
+    The model’s Meta.index_together option is removed.    :kind:`DELETION` [FIXED]
 
     The length_is template filter is removed.    :kind:`DELETION` [FIXED]
 
@@ -174,13 +174,13 @@ See Features deprecated in 4.0 for details on these changes, including how to re
 
     The django.contrib.postgres.aggregates.ArrayAgg, JSONBAgg, and StringAgg aggregates no longer return [], [], and '', respectively, when there are no rows.
 
-    The USE_L10N setting is removed.
+    The USE_L10N setting is removed.    :kind:`DELETION` [FIXED]
 
     The USE_DEPRECATED_PYTZ transitional setting is removed.
 
     Support for pytz timezones is removed.
 
-    The is_dst argument is removed from:
+    The is_dst argument is removed from:    :kind:`DELETION` [FIXED]
         QuerySet.datetimes()
         django.utils.timezone.make_aware()
         django.db.models.functions.Trunc()
@@ -195,7 +195,7 @@ See Features deprecated in 4.0 for details on these changes, including how to re
 
     The django.contrib.gis.admin.GeoModelAdmin and OSMGeoAdmin classes are removed.
 
-    The undocumented BaseForm._html_output() method is removed.
+    The undocumented BaseForm._html_output() method is removed.    :kind:`DELETION` [FIXED]
 
     The ability to return a str, rather than a SafeString, when rendering an ErrorDict and ErrorList is removed.
 

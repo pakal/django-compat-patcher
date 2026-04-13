@@ -90,3 +90,118 @@ def test_fix_behaviour_utils_functional_cached_property_name_argument():
 
     # __set_name__ sets the name; after patching, passing name= should work
     assert prop is not None
+
+
+def test_fix_deletion_utils_timezone_make_aware_is_dst():
+    import datetime
+    from django.utils import timezone
+
+    naive = datetime.datetime(2023, 6, 15, 12, 0)
+
+    # Basic usage without is_dst must still work unchanged
+    aware = timezone.make_aware(naive, datetime.timezone.utc)
+    assert aware.tzinfo is not None
+
+    # Passing is_dst=False must not raise TypeError (parameter was removed)
+    aware2 = timezone.make_aware(naive, datetime.timezone.utc, is_dst=False)
+    assert aware == aware2
+
+    # Passing is_dst=None must not raise TypeError
+    aware3 = timezone.make_aware(naive, datetime.timezone.utc, is_dst=None)
+    assert aware == aware3
+
+    # TruncBase subclass must accept is_dst without TypeError
+    from django.db.models.functions import TruncMonth
+    trunc = TruncMonth("created", is_dst=None)
+    assert trunc is not None
+
+    # TruncMonth without is_dst still works normally
+    trunc_no_dst = TruncMonth("created")
+    assert trunc_no_dst is not None
+
+    # QuerySet.datetimes also accepts is_dst (verify via signature inspection)
+    from django.db.models.query import QuerySet
+    import inspect
+    sig = inspect.signature(QuerySet.datetimes)
+    assert "is_dst" in sig.parameters
+
+
+def test_fix_deletion_conf_settings_USE_L10N():
+    from django.utils import formats
+    from django.test.utils import override_settings
+
+    # get_format should work regardless of USE_L10N value
+    result = formats.get_format("DATE_FORMAT")
+    assert result is not None
+
+    # With USE_L10N=True in settings: localization enabled, function works
+    with override_settings(USE_L10N=True):
+        result_l10n = formats.get_format("DATE_FORMAT")
+        assert result_l10n is not None
+
+    # With USE_L10N=False in settings: function still returns a valid format string
+    with override_settings(USE_L10N=False):
+        result_no_l10n = formats.get_format("DATE_FORMAT")
+        assert result_no_l10n is not None
+
+    # Explicit use_l10n kwarg is still accepted and respected
+    result_explicit = formats.get_format("DATE_FORMAT", use_l10n=False)
+    assert result_explicit is not None
+
+    result_explicit_true = formats.get_format("DATE_FORMAT", use_l10n=True)
+    assert result_explicit_true is not None
+
+
+def test_fix_deletion_forms_BaseForm_html_output():
+    from django import forms
+
+    class ContactForm(forms.Form):
+        name = forms.CharField()
+        email = forms.EmailField()
+
+    form = ContactForm(data={"name": "Alice", "email": "alice@example.com"})
+    assert form.is_valid()
+
+    # Method must exist and be callable
+    assert callable(getattr(form, "_html_output", None))
+
+    # Calling _html_output must produce HTML without raising
+    html = form._html_output(
+        normal_row=(
+            '<tr%(html_class_attr)s><th>%(label)s</th>'
+            '<td>%(errors)s%(field)s%(help_text)s</td></tr>'
+        ),
+        error_row='<tr><td colspan="2">%s</td></tr>',
+        row_ender="</td></tr>",
+        help_text_html=' <span class="helptext">%s</span>',
+        errors_on_separate_row=False,
+    )
+    assert "<tr" in html
+    assert "<input" in html
+
+    # Hidden fields are appended to the last row
+    class FormWithHidden(forms.Form):
+        visible = forms.CharField()
+        token = forms.CharField(widget=forms.HiddenInput())
+
+    hform = FormWithHidden(data={"visible": "x", "token": "secret"})
+    h_html = hform._html_output(
+        normal_row='<p>%(label)s %(field)s%(help_text)s</p>',
+        error_row="<p>%s</p>",
+        row_ender="</p>",
+        help_text_html=" %s",
+        errors_on_separate_row=False,
+    )
+    assert 'type="hidden"' in h_html
+
+    # Invalid form: errors are rendered
+    invalid_form = ContactForm(data={"name": "", "email": "not-an-email"})
+    assert not invalid_form.is_valid()
+    err_html = invalid_form._html_output(
+        normal_row='<p>%(label)s %(errors)s %(field)s%(help_text)s</p>',
+        error_row="<p>%s</p>",
+        row_ender="</p>",
+        help_text_html=" %s",
+        errors_on_separate_row=True,
+    )
+    assert "errorlist" in err_html or "This field" in err_html

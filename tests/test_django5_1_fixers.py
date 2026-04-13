@@ -113,6 +113,59 @@ def test_fix_behaviour_core_signing_Signer_positional_args():
     assert ts_signer.key == "my-ts-key"
 
 
+def test_fix_deletion_db_models_options_index_together():
+    from django.db import models
+
+    # Model with index_together must not raise TypeError
+    class SampleModel(models.Model):
+        name = models.CharField(max_length=100)
+        rank = models.IntegerField()
+
+        class Meta:
+            app_label = "django_compat_patcher"
+            index_together = [["name", "rank"]]
+
+    # The index_together fields must appear as an Index in _meta.indexes
+    idx_fields = [tuple(idx.fields) for idx in SampleModel._meta.indexes if hasattr(idx, "fields")]
+    assert ("name", "rank") in idx_fields
+
+    # Models without index_together are not affected
+    class CleanModel(models.Model):
+        title = models.CharField(max_length=50)
+
+        class Meta:
+            app_label = "django_compat_patcher"
+
+    assert CleanModel._meta.indexes == []
+
+    # Multiple index groups are all converted
+    class MultiIndexModel(models.Model):
+        a = models.IntegerField()
+        b = models.IntegerField()
+        c = models.IntegerField()
+
+        class Meta:
+            app_label = "django_compat_patcher"
+            index_together = [["a", "b"], ["b", "c"]]
+
+    multi_fields = [tuple(idx.fields) for idx in MultiIndexModel._meta.indexes if hasattr(idx, "fields")]
+    assert ("a", "b") in multi_fields
+    assert ("b", "c") in multi_fields
+
+    # Explicit Meta.indexes entries are not duplicated
+    class NoDupModel(models.Model):
+        x = models.IntegerField()
+        y = models.IntegerField()
+
+        class Meta:
+            app_label = "django_compat_patcher"
+            indexes = [models.Index(fields=["x", "y"])]
+            index_together = [["x", "y"]]
+
+    nodup_fields = [tuple(idx.fields) for idx in NoDupModel._meta.indexes if hasattr(idx, "fields")]
+    assert nodup_fields.count(("x", "y")) == 1
+
+
 def test_fix_deletion_conf_settings_DEFAULT_FILE_STORAGE(settings):
     from django.core.files.storage import StorageHandler
 
