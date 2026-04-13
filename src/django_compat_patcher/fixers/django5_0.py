@@ -41,7 +41,7 @@ def fix_deletion_utils_timezone_utc(utils):
 
 @django1_50_bc_fixer()
 def fix_behaviour_utils_functional_cached_property_name_argument(utils):
-    """Preserve the deprecated name argument of django.utils.functional.cached_property, removed in Django 5.0"""
+    """Preserve the deprecated 'name' argument of django.utils.functional.cached_property, removed in Django 5.0"""
     from django.utils.functional import cached_property
     original_init = cached_property.__init__
 
