@@ -222,28 +222,6 @@ def fix_behaviour_contrib_admin_ChangeList_get_filters_lookup_allowed_request_ar
 
 
 @django1_60_bc_fixer()
-def fix_behaviour_forms_URLField_default_scheme(utils):
-    """Restore "http" as the default scheme assumed by forms.URLField, changed to "https" in Django 6.0"""
-    from django.forms.fields import URLField
-
-    _orig_init = URLField.__init__
-
-    def patched_init(self, *args, assume_scheme=None, **kwargs):
-        if assume_scheme is None:
-            warnings.warn(
-                "The default scheme assumed by forms.URLField will be 'https' "
-                "instead of 'http'; pass assume_scheme explicitly to silence "
-                "this warning.",
-                RemovedInDjango60Warning,
-                stacklevel=2,
-            )
-            assume_scheme = "http"
-        _orig_init(self, *args, assume_scheme=assume_scheme, **kwargs)
-
-    utils.inject_callable(URLField, "__init__", patched_init)
-
-
-@django1_60_bc_fixer()
 def fix_deletion_db_models_enums_ChoicesMeta(utils):
     """Restore the ChoicesMeta alias to django.db.models.enums.ChoicesType, removed in Django 6.0"""
     from django.db.models import enums

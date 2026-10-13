@@ -133,20 +133,6 @@ def test_fix_behaviour_contrib_admin_ChangeList_get_filters_lookup_allowed_reque
 
 @pytest.mark.skipif(
     _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
-    reason="forms.URLField's assume_scheme keyword argument was only added in Django 5.0",
-)
-def test_fix_behaviour_forms_URLField_default_scheme():
-    from django import forms
-
-    field = forms.URLField(required=False)
-    assert field.clean("example.com") == "http://example.com"
-
-    field_https = forms.URLField(required=False, assume_scheme="https")
-    assert field_https.clean("example.com") == "https://example.com"
-
-
-@pytest.mark.skipif(
-    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
     reason="django.db.models.enums.ChoicesType was only added in Django 5.0",
 )
 def test_fix_deletion_db_models_enums_ChoicesMeta():

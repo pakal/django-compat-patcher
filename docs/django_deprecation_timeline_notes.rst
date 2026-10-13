@@ -161,7 +161,7 @@ See Features deprecated in 5.0 for details on these changes, including how to re
 
     Support for calling format_html() without passing args or kwargs is removed.    :kind:`BEHAVIOUR` [FIXED]
 
-    The default scheme for forms.URLField has changed from "http" to "https".    :kind:`BEHAVIOUR` [FIXED]
+    The default scheme for forms.URLField has changed from "http" to "https".
 
     The FORMS_URLFIELD_ASSUME_HTTPS transitional setting is removed.
 
