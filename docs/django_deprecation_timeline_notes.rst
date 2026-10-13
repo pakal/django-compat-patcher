@@ -96,13 +96,13 @@ These features have reached the end of their deprecation cycle and are removed i
 
 See Features deprecated in 5.2 for details on these changes, including how to remove usage of these features.
 
-    The all parameter for the django.contrib.staticfiles.finders.find() function is removed in favor of the find_all parameter.
+    The all parameter for the django.contrib.staticfiles.finders.find() function is removed in favor of the find_all parameter.    :kind:`DELETION` [FIXED]
 
     Fallbacks to request.user and request.auser() when user is None in django.contrib.auth.login() and django.contrib.auth.alogin(), respectively, are removed.
 
     The ordering keyword parameter of the PostgreSQL specific aggregation functions django.contrib.postgres.aggregates.ArrayAgg, django.contrib.postgres.aggregates.JSONBAgg, and django.contrib.postgres.aggregates.StringAgg are removed in favor of the order_by parameter.
 
-    Support for subclasses of RemoteUserMiddleware that override process_request() without overriding aprocess_request() is removed.
+    Support for subclasses of RemoteUserMiddleware that override process_request() without overriding aprocess_request() is removed.    :kind:`BEHAVIOUR` [FIXED]
 
 
 6.0
@@ -157,11 +157,11 @@ See Features deprecated in 5.0 for details on these changes, including how to re
 
     BaseDatabaseOperations.field_cast_sql() is removed.
 
-    request is required in the signature of ModelAdmin.lookup_allowed() subclasses.
+    request is required in the signature of ModelAdmin.lookup_allowed() subclasses.    :kind:`BEHAVIOUR` [FIXED]
 
-    Support for calling format_html() without passing args or kwargs is removed.
+    Support for calling format_html() without passing args or kwargs is removed.    :kind:`BEHAVIOUR` [FIXED]
 
-    The default scheme for forms.URLField has changed from "http" to "https".
+    The default scheme for forms.URLField has changed from "http" to "https".    :kind:`BEHAVIOUR` [FIXED]
 
     The FORMS_URLFIELD_ASSUME_HTTPS transitional setting is removed.
 
@@ -173,7 +173,7 @@ See Features deprecated in 5.0 for details on these changes, including how to re
 
     Support for cx_Oracle is removed.
 
-    The ChoicesMeta alias to django.db.models.enums.ChoicesType is removed.
+    The ChoicesMeta alias to django.db.models.enums.ChoicesType is removed.    :kind:`DELETION` [FIXED]
 
     The Prefetch.get_current_queryset() method is removed.
 
@@ -193,11 +193,11 @@ See Features deprecated in 5.1 for details on these changes, including how to re
 
     The django.contrib.gis.geoip2.GeoIP2.open() method is removed.
 
-    Support for passing positional arguments to Model.save() and Model.asave() is removed.
+    Support for passing positional arguments to Model.save() and Model.asave() is removed.    :kind:`BEHAVIOUR` [FIXED]
 
     The setter for django.contrib.gis.gdal.OGRGeometry.coord_dim is removed.
 
-    The check keyword argument of CheckConstraint is removed.
+    The check keyword argument of CheckConstraint is removed.    :kind:`DELETION` [FIXED]
 
     The get_cache_name() method of FieldCacheMixin is removed.
 

@@ -1,3 +1,9 @@
+Version 0.15
+==================
+
+* add fixers to restore deprecated/removed features of Django 6.0 and 6.1: Model.save()/asave() positional arguments, CheckConstraint "check" keyword argument, format_html() without args/kwargs, ModelAdmin.lookup_allowed() overrides not accepting a "request" argument, forms.URLField default scheme ("http"), django.db.models.enums.ChoicesMeta alias, staticfiles.finders.find() "all" keyword argument, RemoteUserMiddleware subclasses overriding process_request() without aprocess_request()
+
+
 Version 0.14
 ==================
 
