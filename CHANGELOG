@@ -1,14 +1,9 @@
-Version 0.15
-==================
-
-* add fixers to restore deprecated/removed features of Django 6.0 and 6.1: Model.save()/asave() positional arguments, CheckConstraint "check" keyword argument, format_html() without args/kwargs, ModelAdmin.lookup_allowed() overrides not accepting a "request" argument, django.db.models.enums.ChoicesMeta alias, staticfiles.finders.find() "all" keyword argument, RemoteUserMiddleware subclasses overriding process_request() without aprocess_request()
-
-
 Version 0.14
 ==================
 
 * add fixers to restore deprecated/removed features of Django 5.0 and 5.1: make_aware() is_dst argument, TruncBase, QuerySet.datetimes, USE_L10N setting, BaseForm._html_output(), Meta.index_together, BaseUserManager.make_random_password, length_is template filter, SimpleTestCase.assertFormsetError/assertFormError/assertFormSetError, TransactionTestCase.assertQuerysetEqual, DEFAULT_FILE_STORAGE/STATICFILES_STORAGE settings, QuerySet.iterator() without chunk_size, RemoteUserBackend.configure_user() without "created" argument, OrderBy nulls_first/nulls_last=False, django.urls.converters.get_converter(), JSON-encoded string literals in JSONField
-* add support for python 3.14 and Django 6.0, drop support for python 3.7
+* add fixers to restore deprecated/removed features of Django 6.0 and 6.1: Model.save()/asave() positional arguments, CheckConstraint "check" keyword argument, format_html() without args/kwargs, ModelAdmin.lookup_allowed() overrides not accepting a "request" argument, django.db.models.enums.ChoicesMeta alias, staticfiles.finders.find() "all" keyword argument, RemoteUserMiddleware subclasses overriding process_request() without aprocess_request()
+* add support for python 3.14 and Django 6.0/6.1, drop support for python 3.7
 * update compat-patcher-core version requirement to 2.4
 
 
