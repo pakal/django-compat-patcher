@@ -3,6 +3,10 @@ import pytest
 import _test_utilities
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (4, 2),
+    reason="Model.asave() was only added in Django 4.2",
+)
 @pytest.mark.django_db
 def test_fix_behaviour_db_models_Model_save_positional_args():
     from test_project.models import SimpleModel
@@ -27,6 +31,10 @@ def test_fix_behaviour_db_models_Model_save_positional_args():
     assert SimpleModel.asave.alters_data is True
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (4, 2),
+    reason="Model.asave() was only added in Django 4.2",
+)
 @pytest.mark.django_db
 def test_fix_behaviour_db_models_Model_asave_positional_args():
     from asgiref.sync import async_to_sync
@@ -42,6 +50,10 @@ def test_fix_behaviour_db_models_Model_asave_positional_args():
     assert obj2.pk is not None
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 1),
+    reason="CheckConstraint's condition= keyword argument was only added in Django 5.1",
+)
 def test_fix_deletion_db_models_constraints_CheckConstraint_check_kwarg():
     from django.db.models import CheckConstraint, Q
 
@@ -66,6 +78,11 @@ def test_fix_deletion_utils_html_format_html_without_args():
     assert result2 == "<b>&lt;script&gt;</b>"
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
+    reason="ChangeList.get_filters() only accepts a request argument, and uses the "
+    "filter_params attribute, since Django 5.0",
+)
 def test_fix_behaviour_contrib_admin_ChangeList_get_filters_lookup_allowed_request_arg():
     from django.contrib.admin.exceptions import DisallowedModelAdminLookup
     from django.contrib.admin.options import ModelAdmin
@@ -114,6 +131,10 @@ def test_fix_behaviour_contrib_admin_ChangeList_get_filters_lookup_allowed_reque
         changelist3.get_filters(request=None)
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
+    reason="forms.URLField's assume_scheme keyword argument was only added in Django 5.0",
+)
 def test_fix_behaviour_forms_URLField_default_scheme():
     from django import forms
 
@@ -124,6 +145,10 @@ def test_fix_behaviour_forms_URLField_default_scheme():
     assert field_https.clean("example.com") == "https://example.com"
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 0),
+    reason="django.db.models.enums.ChoicesType was only added in Django 5.0",
+)
 def test_fix_deletion_db_models_enums_ChoicesMeta():
     from django.db.models import enums
 

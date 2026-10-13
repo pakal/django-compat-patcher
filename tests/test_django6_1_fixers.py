@@ -3,6 +3,10 @@ import pytest
 import _test_utilities
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 2),
+    reason="staticfiles.finders.find()'s find_all keyword argument was only added in Django 5.2",
+)
 def test_fix_deletion_contrib_staticfiles_finders_find_all_kwarg():
     from django.contrib.staticfiles import finders
 
@@ -16,6 +20,10 @@ def test_fix_deletion_contrib_staticfiles_finders_find_all_kwarg():
     assert finders.find("admin/css/base.css") == result_find_all[0]
 
 
+@pytest.mark.skipif(
+    _test_utilities.DJANGO_VERSION_TUPLE < (5, 2),
+    reason="RemoteUserMiddleware.aprocess_request() was only added in Django 5.2",
+)
 def test_fix_behaviour_contrib_auth_RemoteUserMiddleware_aprocess_request_fallback():
     from asgiref.sync import async_to_sync
     from django.contrib.auth.middleware import RemoteUserMiddleware

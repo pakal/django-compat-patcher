@@ -33,9 +33,10 @@ def fix_deletion_contrib_staticfiles_finders_find_all_kwarg(utils):
     utils.inject_callable(finders, "find", patched_find)
 
 
-@django1_61_bc_fixer()
+@django1_61_bc_fixer(fixer_delayed=True)
 def fix_behaviour_contrib_auth_RemoteUserMiddleware_aprocess_request_fallback(utils):
     """Restore the aprocess_request() fallback to process_request() for RemoteUserMiddleware subclasses that don't override aprocess_request(), removed in Django 6.1"""
+    utils.skip_if_app_not_installed("django.contrib.contenttypes")  # BEFORE IMPORTS!
     from django.contrib.auth.middleware import RemoteUserMiddleware
     from asgiref.sync import sync_to_async
 
