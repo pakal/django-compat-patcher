@@ -3,12 +3,6 @@
 environment:
   # We only request a subset of the total Tox test matrix, here
   matrix:
-  - TOXENV: py37-django1_8
-    PYTHON: "3.7"
-  - TOXENV: py38-django2_2
-    PYTHON: "3.8"
-  - TOXENV: py39-django3_2
-    PYTHON: "3.9"
   - TOXENV: py310-django4_0
     PYTHON: "3.10"
   - TOXENV: py312-django4_2
@@ -17,13 +11,16 @@ environment:
     PYTHON: "3.12"
   - TOXENV: py312-nocontribcomments
     PYTHON: "3.12"
-  # FIXME add python 3.14 when available
+  - TOXENV: py313-django5_1
+    PYTHON: "3.13"
+  - TOXENV: py314-nocontribcomments
+    PYTHON: "3.14"
 
 stack: python %PYTHON%
 
 build: off
 
-image: Ubuntu2204
+image: Ubuntu2404
 
 install:
 - python -m pip install -U setuptools importlib-metadata tox
