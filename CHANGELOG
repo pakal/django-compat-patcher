@@ -1,3 +1,11 @@
+Version 0.14
+==================
+
+* add fixers to restore deprecated/removed features of Django 5.0 and 5.1: make_aware() is_dst argument, TruncBase, QuerySet.datetimes, USE_L10N setting, BaseForm._html_output(), Meta.index_together, BaseUserManager.make_random_password, length_is template filter, SimpleTestCase.assertFormsetError/assertFormError/assertFormSetError, TransactionTestCase.assertQuerysetEqual, DEFAULT_FILE_STORAGE/STATICFILES_STORAGE settings, QuerySet.iterator() without chunk_size, RemoteUserBackend.configure_user() without "created" argument, OrderBy nulls_first/nulls_last=False, django.urls.converters.get_converter(), JSON-encoded string literals in JSONField
+* add support for python 3.14 and Django 6.0, drop support for python 3.7
+* update compat-patcher-core version requirement to 2.4
+
+
 Version 0.13
 ==================
 
