@@ -238,7 +238,7 @@ class TzinfoTests(unittest.TestCase):
     def setUpClass(cls):
         super(TzinfoTests, cls).setUpClass()
         cls.old_TZ = os.environ.get("TZ")
-        os.environ["TZ"] = "US/Eastern"
+        os.environ["TZ"] = "America/New_York"
 
         try:
             # Check if a timezone has been set
@@ -281,9 +281,9 @@ class TzinfoTests(unittest.TestCase):
         from django.utils.tzinfo import LocalTimezone
 
         ts = 1289106000
-        # Midnight at the end of DST in US/Eastern: 2010-11-07T05:00:00Z
+        # Midnight at the end of DST in America/New_York: 2010-11-07T05:00:00Z
         dt = datetime.datetime.utcfromtimestamp(ts)
-        # US/Eastern -- we force its representation to "EST"
+        # America/New_York -- we force its representation to "EST"
         tz = LocalTimezone(dt + datetime.timedelta(days=1))
         self.assertEqual(
             repr(datetime.datetime.fromtimestamp(ts - 3600, tz)),
