@@ -23,6 +23,7 @@ build: off
 image: Ubuntu2404
 
 install:
+- sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
 - python -m pip install -U setuptools importlib-metadata tox
 
 test_script:
